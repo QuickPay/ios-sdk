@@ -14,7 +14,6 @@ class ExampleViewController: BaseViewController, WKNavigationDelegate {
     // MARK: - IBActions
     @IBAction func doPayment(_ sender: Any) {
         QuickPaySDK.testStuff()
-
     }
     
 }

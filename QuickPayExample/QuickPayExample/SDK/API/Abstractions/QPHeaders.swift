@@ -9,6 +9,8 @@
 import Foundation
 
 protocol QPHeaders {
-    var acceptVersion: String? {get}
-    var authorization: String? {get}
+    var acceptVersion: String {get}
+    var authorization: String {get}
+    
+    func encodedAuthorization() -> String
 }

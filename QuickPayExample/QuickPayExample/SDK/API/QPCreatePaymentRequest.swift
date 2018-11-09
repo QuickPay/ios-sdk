@@ -24,49 +24,32 @@ class QPCreatePaymentRequest {
     }
     
     
-    // MARK: Business Logic
+    // MARK: Request
     
-    func sendRequestWithCompletionHandler(completion: (_ success: Bool) -> Void) {
-        guard let url = URL(string: "https://api.quickpay.net/payments") else {
-            completion(false)
+    func sendRequestWithCompletionHandler(completion: @escaping (_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void) {
+        guard let url = URL(string: "https://api.quickpay.net/payments"),
+              let postData = try? JSONSerialization.data(withJSONObject: self.parameters.toDictionary(), options: []) else {
             return
         }
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        request.httpBody = postData
+        request.setValue(headers.encodedAuthorization(), forHTTPHeaderField: "Authorization")
+        request.setValue(String(format: "%lu", postData.count), forHTTPHeaderField: "Content-Length")
+        request.setValue(headers.acceptVersion, forHTTPHeaderField: "Accept-Version")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        // Create a memory-only session.
+        let config = URLSessionConfiguration.ephemeral
+        let session = URLSession(configuration: config)
 
+         // Create a new data-task for the session, which queues the HTTP call
+        let task = session.dataTask(with: request, completionHandler: completion)
+        task.resume()
         
-        
+         // Tell the session to close down, and free all associated objects, once the data-task is completed.
+        session.finishTasksAndInvalidate()
     }
 }
-
-/*
- -(void)sendRequestWithCompletionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler {
- NSError *error;
- NSData *postData = [NSJSONSerialization dataWithJSONObject:self.parameters.toDictionary options:0 error:&error];
- 
- NSURL *url = [NSURL URLWithString:@"https://api.quickpay.net/payments"];
- NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
- 
- 
- NSString* authString = [self.header encodedAuthorization];
- request.HTTPMethod = @"POST";
- [request setValue:authString forHTTPHeaderField:@"Authorization"];
- [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)postData.length] forHTTPHeaderField:@"Content-Length"];
- [request setValue:self.header.acceptVersion forHTTPHeaderField:@"Accept-Version"];
- [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
- [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
- [request setHTTPBody:postData];
- 
- // Create a memory-only session.
- NSURLSessionConfiguration *sessionConffig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
- NSURLSession *ephemeralSession = [NSURLSession sessionWithConfiguration:sessionConffig];
- // Create a new data-task for the session, which queues the HTTP call
- NSURLSessionTask * task = [ephemeralSession dataTaskWithRequest:request completionHandler : completionHandler];
- if(task){
- [task resume];
- }
- // Tell the session to close down, and free all associated objects, once the data-task is completed.
- [ephemeralSession finishTasksAndInvalidate];
- }
-*/

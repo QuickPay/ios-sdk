@@ -17,13 +17,33 @@ class QPBasket {
     var itemName: String?
     var itemPrice: Int?
     var vatRate: Int?
+ 
     
-}
+    // MARK: - JSON
+    
+    public func toDictionary() -> Dictionary<String, Any> {
+        var dict: Dictionary = Dictionary<String, Any>()
+        
+        dict["qty"] = qty
+        dict["item_no"] = itemNo
+        dict["item_name"] = itemName
+        dict["item_price"] = itemPrice
+        dict["vat_rate"] = vatRate
 
-// TODO if needed
-//-(NSDictionary*) toDictionary;
-//-(void) fromDictionary:(NSDictionary*) dict;
-//+(NSDictionary*) basketToDictionary:(QPLBasket *)basket;
-//+(NSArray *) basketsToDictionaries:(NSArray<QPLBasket *>*) baskets;
-//+(QPLBasket*) basketFromDictionary:(NSDictionary *) dict;
-//+(NSArray<QPLBasket*> *) basketsFromDictionaries:(NSArray<NSDictionary*>*)array;
+        return dict
+    }
+    
+    public class func arrayToDictionary(baskets: Array<QPBasket>?) -> Array<Dictionary<String, Any>> {
+        var res = Array<Dictionary<String, Any>>()
+
+        guard let baskets = baskets else {
+            return res
+        }
+
+        for basket in baskets {
+            res.append(basket.toDictionary())
+        }
+        
+        return res;
+    }
+}

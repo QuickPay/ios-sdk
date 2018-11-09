@@ -18,10 +18,20 @@ class QPShipping {
     var vatRate: Float?
     var trackingNumber: String?
     var trackingUrl: String?
+    
+    
+    // MARK: - JSON
+    
+    public func toDictionary() -> Dictionary<String, Any> {
+        var dict: Dictionary = Dictionary<String, Any>()
+        
+        dict["method"]          = method
+        dict["company"]         = company
+        dict["amount"]          = amount
+        dict["vat_rate"]        = vatRate
+        dict["tracking_number"] = trackingNumber
+        dict["tracking_url"]    = trackingUrl
+        
+        return dict
+    }
 }
-
-
-//-(NSDictionary *) toDictionary;
-//-(void) fromDictionary:(NSDictionary *)dict;
-//+(NSDictionary*) shippingToDictionary:(QPLShipping *)shipping;
-//+(QPLShipping*) shippingFromDictionary:(NSDictionary*) dict;

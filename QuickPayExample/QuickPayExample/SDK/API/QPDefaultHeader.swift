@@ -12,12 +12,12 @@ public class QPDefaultHeader: QPHeaders {
     
     // MARK: - Properties
     
-    public var acceptVersion: String? {
+    public var acceptVersion: String {
         get {
             return "v10"
         }
     }
-    public var authorization: String?
+    public var authorization: String
 
     
     // MARK: - Init
@@ -25,5 +25,15 @@ public class QPDefaultHeader: QPHeaders {
     init(authorization: String) {
         self.authorization = authorization
     }
-}
+    
+    
+    // MARK: Auth
+    
+    public func encodedAuthorization() -> String {
+        let loginString = String(format: "%@:%@", "", authorization)
+        let loginData = loginString.data(using: String.Encoding.ascii)!
+        let base64LoginString = loginData.base64EncodedString(options: .endLineWithLineFeed)
 
+        return String(format: "Basic %@", base64LoginString)
+    }
+}

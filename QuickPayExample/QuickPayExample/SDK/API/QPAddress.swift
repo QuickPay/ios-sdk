@@ -25,10 +25,27 @@ class QPAddress {
     var phoneNumber: String?
     var mobileNumber: String?
     var email: String?
+    
+    
+    // MARK: - JSON
+    
+    public func toDictionary() -> Dictionary<String, Any> {
+        var dict: Dictionary = Dictionary<String, Any>()
+        
+        dict["name"] = name
+        dict["att"] = att
+        dict["street"] = street
+        dict["house_number"] = houseNumber
+        dict["house_extension"] = houseExtension
+        dict["city"] = city
+        dict["zip_code"] = zipCode
+        dict["region"] = region
+        dict["country_code"] = countryCode
+        dict["vat_no"] = vatNo
+        dict["phone_number"] = phoneNumber
+        dict["mobile_number"] = mobileNumber
+        dict["email"] = email
+        
+        return dict
+    }
 }
-
-
-//-(NSDictionary*) toDictionary;
-//-(void) fromDictionary:(NSDictionary*) dict;
-//+(NSDictionary*) addressToDictionary:(QPLAddress *)address;
-//+(QPLAddress *) addressFromDictionary:(NSDictionary *) dict;
