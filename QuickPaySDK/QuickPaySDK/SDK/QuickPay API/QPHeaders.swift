@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol QPHeaders {
+public protocol QPHeaders {
     var acceptVersion: String {get}
     var authorization: String {get}
     

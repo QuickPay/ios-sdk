@@ -22,7 +22,7 @@ public class QPDefaultHeader: QPHeaders {
     
     // MARK: - Init
     
-    init(authorization: String) {
+    public init(authorization: String) {
         self.authorization = authorization
     }
     

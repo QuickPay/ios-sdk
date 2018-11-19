@@ -4,19 +4,13 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>QuickPaySDK.xcscheme_^#shared#^_</key>
+		<key>Pods-QuickPayExample.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>0</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict>
-		<key>E16313002192249900A75B73</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-	</dict>
+	<dict/>
 </dict>
 </plist>

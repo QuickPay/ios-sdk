@@ -8,7 +8,7 @@
 
 import Foundation
 
-class QPShipping {
+public class QPShipping {
 
     // MARK: - Properties
     
@@ -18,6 +18,13 @@ class QPShipping {
     var vatRate: Float?
     var trackingNumber: String?
     var trackingUrl: String?
+    
+    
+    // MARK: - Init
+    
+    public init() {
+        
+    }
     
     
     // MARK: - JSON

@@ -8,25 +8,32 @@
 
 import Foundation
 
-class QPAddress {
+public class QPAddress {
 
     // MARK: - Properties
     
-    var name: String?
-    var att: String?
-    var street: String?
-    var houseNumber: String?
-    var houseExtension: String?
-    var city: String?
-    var zipCode: String?
-    var region: String?
-    var countryCode: String?
-    var vatNo: String?
-    var phoneNumber: String?
-    var mobileNumber: String?
-    var email: String?
+    public var name: String?
+    public var att: String?
+    public var street: String?
+    public var houseNumber: String?
+    public var houseExtension: String?
+    public var city: String?
+    public var zipCode: String?
+    public var region: String?
+    public var countryCode: String?
+    public var vatNo: String?
+    public var phoneNumber: String?
+    public var mobileNumber: String?
+    public var email: String?
     
     
+    // MARK: - Init
+    
+    public init() {
+        
+    }
+
+        
     // MARK: - JSON
     
     public func toDictionary() -> Dictionary<String, Any> {

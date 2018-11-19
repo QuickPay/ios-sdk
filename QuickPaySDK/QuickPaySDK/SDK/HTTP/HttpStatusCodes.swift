@@ -6,7 +6,13 @@
 //  Copyright © 2018 QuickPay. All rights reserved.
 //
 
-enum HTTPStatusCode: Int {
+public let HTTPStatusInformationalRange = 100..<200
+public let HTTPStatusSuccessRange = 200..<300
+public let HTTPStatusRedirectionRange = 300..<400
+public let HTTPStatusClientErrorRange = 400..<500
+public let HTTPStatusServerErrorRange = 500..<600
+
+public enum HTTPStatusCode: Int {
     // 100 Informational
     case `continue` = 100
     case switchingProtocols
