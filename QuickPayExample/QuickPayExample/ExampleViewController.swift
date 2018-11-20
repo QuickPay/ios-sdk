@@ -46,15 +46,15 @@ class ExampleViewController: BaseViewController, WKNavigationDelegate {
             let createLinkRequest = self.createLinkRequest(paymentId: paymentResponse.id)
             createLinkRequest.errorDelegate = self
 
-            createLinkRequest.sendRequest(completion: { (linkResponse, data) in
-                guard let linkResponse = linkResponse else {
-                    self.printToErrorLabel(error: "linkResponse is nil")
+            createLinkRequest.sendRequest(completion: { (paymentLink, data) in
+                guard let paymentLink = paymentLink else {
+                    self.printToErrorLabel(error: "paymentLink is nil")
                     return
                 }
                 
                 // Step 3: Open the payment URL
                 OperationQueue.main.addOperation {
-                    QuickPay.openLink(url: linkResponse.url, cancelHandler: {
+                    QuickPay.openLink(url: paymentLink.url, cancelHandler: {
                         self.printToErrorLabel(error: "The payment flow was cancelled")
                     }, responseHandler: { (success) in
                         if success == false {
@@ -78,7 +78,7 @@ class ExampleViewController: BaseViewController, WKNavigationDelegate {
                             }
                             
                             OperationQueue.main.addOperation {
-                                let alert = UIAlertController(title: "Payment success", message: "The payment was a success and the acquirer is \(payment.acquirer)", preferredStyle: .alert)
+                                let alert = UIAlertController(title: "Payment success", message: "The payment was a success and the acquirer is \(payment.acquirer ?? "Ukendt")", preferredStyle: .alert)
                                 alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: nil))
                                 self.present(alert, animated: true, completion: nil)
                             }
@@ -98,34 +98,25 @@ class ExampleViewController: BaseViewController, WKNavigationDelegate {
     
     // Generate a QPGeneratePaymentLinkRequest for testing
     private func createLinkRequest(paymentId: Int) -> QPGeneratePaymentLinkRequest {
-        let linkParams = QPGeneratePaymentLinkParameters()
-        linkParams.id = paymentId
-        linkParams.amount = 4200
-        linkParams.paymentMethods = "creditcard,mobilepay"
+        let linkParams = QPGeneratePaymentLinkParameters(id: paymentId, amount: 4200)
+        linkParams.payment_methods = "creditcard,mobilepay"
         
         return QPGeneratePaymentLinkRequest(parameters: linkParams)
     }
     
     // Generate a QPCreatePaymentRequest for testing
     private func createPaymentRequest() -> QPCreatePaymentRequest {
-        // The orderId and currency parameters are required.
-        let params = QPCreatePaymentParameters()
-        params.orderId = self.orderIdTextField?.text ?? "0" // Remember to increment the orderId since the values needs to be unique
-        params.currency = "DKK"
-        params.textOnStatement = "QuickPay SDK on iOS"
+        let params = QPCreatePaymentParameters(currency: "DKK", order_id: self.orderIdTextField?.text ?? "0")
+        params.text_on_statement = "QuickPay SDK on iOS"
         
-        params.invoiceAddress = QPAddress()
-        params.invoiceAddress?.name = "CV"
-        params.invoiceAddress?.city = "Aarhus"
-        params.invoiceAddress?.countryCode = "DNK"
+        let invoiceAddress = QPAddress()
+        invoiceAddress.name = "CV"
+        invoiceAddress.city = "Aarhus"
+        invoiceAddress.country_code = "DNK"
+        params.invoice_address = invoiceAddress
         
-        let basket1 = QPBasket()
-        basket1.itemName = "White Dress"
-        basket1.itemNo = "123"
-        basket1.itemPrice = 42
-        basket1.qty = 1
-        basket1.vatRate = 0.25
-        params.basket?.append(basket1)
+        let basket = QPBasket(qty: 1, item_no: "123", item_name: "White Dress", item_price: 42, vat_rate: 0.25)
+        params.basket?.append(basket)
         
         return QPCreatePaymentRequest(parameters: params)
     }

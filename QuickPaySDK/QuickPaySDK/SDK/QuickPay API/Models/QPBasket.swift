@@ -12,65 +12,21 @@ public class QPBasket : Codable {
 
     // MARK: - Properties
     
-    public var qty: Int?
-    public var itemNo: String?
-    public var itemName: String?
-    public var itemPrice: Double?
-    public var vatRate: Double?
+    public var qty: Int
+    public var item_no: String
+    public var item_name: String
+    public var item_price: Double
+    public var vat_rate: Double
  
     
-    // MARK: - Init
+    // MARK: Init
     
-    public init() {
-        
-    }
-
-        
-    // MARK: - JSON
-    
-    public func toDictionary() -> Dictionary<String, Any> {
-        var dict: Dictionary = Dictionary<String, Any>()
-        
-        dict[CodingKeys.qty.rawValue] 		= qty
-        dict[CodingKeys.itemNo.rawValue] 	= itemNo
-        dict[CodingKeys.itemName.rawValue] 	= itemName
-        dict[CodingKeys.itemPrice.rawValue] = itemPrice
-        dict[CodingKeys.vatRate.rawValue] 	= vatRate
-        
-        return dict
+    public init(qty: Int, item_no: String, item_name: String, item_price: Double, vat_rate: Double) {
+        self.qty = qty
+        self.item_no = item_no
+        self.item_name = item_name
+        self.item_price = item_price
+        self.vat_rate = vat_rate
     }
     
-    public func fromDictionary(dict: Dictionary<String, Any>) -> QPBasket {
-        let resultBasket = QPBasket()
-        
-        resultBasket.qty 		= dict[CodingKeys.qty.rawValue] as? Int
-        resultBasket.itemNo 	= dict[CodingKeys.itemNo.rawValue] as? String
-        resultBasket.itemName	= dict[CodingKeys.itemName.rawValue] as? String
-        resultBasket.itemPrice	= dict[CodingKeys.itemPrice.rawValue] as? Double
-        resultBasket.vatRate	= dict[CodingKeys.vatRate.rawValue] as? Double
-        
-        return resultBasket
-    }
-    
-    public class func arrayToDictionary(baskets: Array<QPBasket>?) -> Array<Dictionary<String, Any>> {
-        var res = Array<Dictionary<String, Any>>()
-        
-        guard let baskets = baskets else {
-            return res
-        }
-        
-        for basket in baskets {
-            res.append(basket.toDictionary())
-        }
-        
-        return res;
-    }
-    
-    enum CodingKeys: String, CodingKey {
-        case qty
-        case itemNo		= "item_no"
-        case itemName	= "item_name"
-        case itemPrice	= "item_price"
-        case vatRate	= "vat_rate"
-    }
 }

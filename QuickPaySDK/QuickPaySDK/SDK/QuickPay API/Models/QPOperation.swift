@@ -8,24 +8,25 @@
 
 import Foundation
 
-public class QPOperation {
+public class QPOperation : Codable {
     
     // MARK: - Properties
     
-    public var id: Int?
-    public var type: Int?
+    public var id: Int
+    public var type: String?
     public var amount: Int?
-    public var pending: Int?
-    public var qpStatusCode: String?
-    public var qpStatusMsg: String?
-    public var aqStatusCode: String?
+    public var pending: Bool?
+    public var qp_status_code: String?
+    public var qp_status_msg: String?
+    public var aq_status_msg: String?
     public var aqStatusMsg: String?
-    public var data: Dictionary<String, Any>?
-    public var callbackUrl: String?
-    public var callbackSuccess: Int?
-    public var callbackResponseCode: Int?
-    public var callbackDuration: Int?
+//    public var data: Dictionary<String, Any>?
+    public var callback_url: String?
+    public var callback_success: Bool?
+    public var callback_response_code: Int?
+    public var callback_duration: Int?
     public var acquirer: String?
-    public var callbackAt: String?
-    public var createdAt: String?
+    public var callback_at: String?
+    public var created_at: String?
+
 }

@@ -24,23 +24,23 @@ public class QPGeneratePaymentLinkRequest : QPRequest {
     
     // MARK: - URL Request
     
-    public func sendRequest(completion: @escaping (_ response: QPGeneratePaymentLinkResponse?, _ data: Data?) -> Void) {
-        if parameters.cancelUrl == nil {
-            parameters.cancelUrl = "https://qp.payment.failure"
+    public func sendRequest(completion: @escaping (_ paymentLink: QPPaymentLink?, _ data: Data?) -> Void) {
+        if parameters.cancel_url == nil {
+            parameters.cancel_url = "https://qp.payment.failure"
         }
         else {
             print("Warning: You have set cancelUrl manually. QPViewController will not be able to detect unsuccessfull input of payment details")
         }
 
-        if parameters.continueUrl == nil {
-            parameters.continueUrl = "https://qp.payment.success"
+        if parameters.continue_url == nil {
+            parameters.continue_url = "https://qp.payment.success"
         }
         else {
             print("Warning: You have set continueUrl manually. QPViewController will not be able to detect successfull input of payment details");
         }
         
-        guard let url = URL(string: "\(quickPayAPIBaseUrl)/payments/\(parameters.id ?? 0)/link"),
-              let putData = try? JSONSerialization.data(withJSONObject: self.parameters.toDictionary(), options: []) else {
+        let encoder = JSONEncoder()
+        guard let url = URL(string: "\(quickPayAPIBaseUrl)/payments/\(parameters.id)/link"), let putData = try? encoder.encode(parameters) else {
                 return
         }
         
@@ -59,7 +59,7 @@ public class QPGeneratePaymentLinkRequest : QPRequest {
                 return
             }
 
-            if let result = try? JSONDecoder().decode(QPGeneratePaymentLinkResponse.self, from: data) {
+            if let result = try? JSONDecoder().decode(QPPaymentLink.self, from: data) {
                 completion(result, data)
             }
             else {
@@ -67,8 +67,4 @@ public class QPGeneratePaymentLinkRequest : QPRequest {
             }
         }
     }
-}
-
-public struct QPGeneratePaymentLinkResponse : Codable {
-    public let url: String
 }

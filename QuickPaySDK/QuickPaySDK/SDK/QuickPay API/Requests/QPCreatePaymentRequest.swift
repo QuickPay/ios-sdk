@@ -24,8 +24,10 @@ public class QPCreatePaymentRequest : QPRequest {
     
     // MARK: - URL Request
     
-    public func sendRequest(completion: @escaping (_ response: QPCreatePaymentResponse?, _ data: Data?) -> Void) {
-        guard let url = URL(string: "\(quickPayAPIBaseUrl)/payments"), let postData = try? JSONSerialization.data(withJSONObject: self.parameters.toDictionary(), options: []) else {
+    public func sendRequest(completion: @escaping (_ payment: QPPayment?, _ data: Data?) -> Void) {
+        let encoder = JSONEncoder()
+
+        guard let url = URL(string: "\(quickPayAPIBaseUrl)/payments"), let postData = try? encoder.encode(parameters) else {
             return
         }
         
@@ -44,7 +46,7 @@ public class QPCreatePaymentRequest : QPRequest {
                 return
             }
             
-            if let result = try? JSONDecoder().decode(QPCreatePaymentResponse.self, from: data) {
+            if let result = try? JSONDecoder().decode(QPPayment.self, from: data) {
                 completion(result, data)
             }
             else {
@@ -52,8 +54,4 @@ public class QPCreatePaymentRequest : QPRequest {
             }
         }
     }
-}
-
-public struct QPCreatePaymentResponse : Codable {
-    public let id: Int
 }

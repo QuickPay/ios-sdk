@@ -8,49 +8,25 @@
 
 import Foundation
 
-public class QPCreatePaymentParameters {
+public class QPCreatePaymentParameters : Codable {
     
     // MARK: - Properties
     
-    public var currency: String?
-    public var orderId: String?
-    public var brandingId: Int?
-    public var textOnStatement: String?
-    public var variables: Dictionary<String, Any> = Dictionary<String, Any>()
-
+    public var currency: String
+    public var order_id: String
+    public var branding_id: Int?
+    public var text_on_statement: String?
     public var basket: Array<QPBasket>? = Array<QPBasket>()
     public var shipping: QPShipping?
-    public var invoiceAddress: QPAddress?
-    public var shippingAddress:QPAddress?
-    
-    public var additionalParameters: Dictionary<String, Any>? = Dictionary<String, Any>()
+    public var invoice_address: QPAddress?
+    public var shipping_address:QPAddress?
     
     
-    // MARK: - Init
+    // MARK: Init
     
-    public init() {
-        
+    public init(currency: String, order_id: String) {
+        self.currency = currency
+        self.order_id = order_id
     }
     
-    
-    // MARK: - Ecodeable
-    
-    public func toDictionary() -> Dictionary<String, Any> {
-        var dict: Dictionary = Dictionary<String, Any>()
-        
-        dict["currency"]          	= currency
-        dict["order_id"]          	= orderId
-        dict["branding_id"]       	= brandingId
-        dict["text_on_statement"] 	= textOnStatement
-
-        dict["basket"]				= QPBasket.arrayToDictionary(baskets: basket)
-        dict["public_variables"]    = variables
-        dict["shipping"]          	= shipping?.toDictionary()
-        dict["invoice_address"]  	= invoiceAddress?.toDictionary()
-        dict["shipping_address"] 	= shippingAddress?.toDictionary()
-        
-        additionalParameters?.forEach { (k,v) in dict[k] = v }
-
-        return dict
-    }
 }

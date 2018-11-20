@@ -8,37 +8,22 @@
 
 import Foundation
 
-public class QPShipping {
+public class QPShipping : Codable {
 
     // MARK: - Properties
     
-    var method: String?
-    var company: String?
-    var amount: Int?
-    var vatRate: Float?
-    var trackingNumber: String?
-    var trackingUrl: String?
+    public var method: String?
+    public var company: String?
+    public var amount: Int?
+    public var vat_rate: Double?
+    public var tracking_number: String?
+    public var tracking_url: String?
     
     
-    // MARK: - Init
+    // MARK: Init
     
     public init() {
         
     }
     
-    
-    // MARK: - JSON
-    
-    public func toDictionary() -> Dictionary<String, Any> {
-        var dict: Dictionary = Dictionary<String, Any>()
-        
-        dict["method"]          = method
-        dict["company"]         = company
-        dict["amount"]          = amount
-        dict["vat_rate"]        = vatRate
-        dict["tracking_number"] = trackingNumber
-        dict["tracking_url"]    = trackingUrl
-        
-        return dict
-    }
 }

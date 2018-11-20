@@ -8,51 +8,30 @@
 
 import Foundation
 
-public class QPAddress {
+public class QPAddress : Codable {
 
     // MARK: - Properties
     
     public var name: String?
     public var att: String?
     public var street: String?
-    public var houseNumber: String?
-    public var houseExtension: String?
     public var city: String?
-    public var zipCode: String?
+    public var zip_code: String?
     public var region: String?
-    public var countryCode: String?
-    public var vatNo: String?
-    public var phoneNumber: String?
-    public var mobileNumber: String?
+    public var country_code: String?
+    public var vat_no: String?
+    public var company_name: String?
+    public var house_number: String?
+    public var house_extension: String?
+    public var phone_number: String?
+    public var mobile_number: String?
     public var email: String?
     
-    
-    // MARK: - Init
+
+    // MARK: Init
     
     public init() {
         
     }
-
-        
-    // MARK: - JSON
     
-    public func toDictionary() -> Dictionary<String, Any> {
-        var dict: Dictionary = Dictionary<String, Any>()
-        
-        dict["name"] = name
-        dict["att"] = att
-        dict["street"] = street
-        dict["house_number"] = houseNumber
-        dict["house_extension"] = houseExtension
-        dict["city"] = city
-        dict["zip_code"] = zipCode
-        dict["region"] = region
-        dict["country_code"] = countryCode
-        dict["vat_no"] = vatNo
-        dict["phone_number"] = phoneNumber
-        dict["mobile_number"] = mobileNumber
-        dict["email"] = email
-        
-        return dict
-    }
 }

@@ -23,6 +23,8 @@
 		E1897CB4219C6B00002CE64A /* QPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CAA219C6B00002CE64A /* QPViewController.swift */; };
 		E1897CB7219C6B20002CE64A /* HttpStatusCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CB6219C6B20002CE64A /* HttpStatusCodes.swift */; };
 		E1897CB9219C6B74002CE64A /* QuickPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CB8219C6B74002CE64A /* QuickPay.swift */; };
+		E1C3984A21A432D600086C9D /* QPMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C3984921A432D600086C9D /* QPMetadata.swift */; };
+		E1C3984C21A4342100086C9D /* QPPaymentLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C3984B21A4342100086C9D /* QPPaymentLink.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,8 @@
 		E1897CAA219C6B00002CE64A /* QPViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPViewController.swift; sourceTree = "<group>"; };
 		E1897CB6219C6B20002CE64A /* HttpStatusCodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpStatusCodes.swift; sourceTree = "<group>"; };
 		E1897CB8219C6B74002CE64A /* QuickPay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickPay.swift; sourceTree = "<group>"; };
+		E1C3984921A432D600086C9D /* QPMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPMetadata.swift; sourceTree = "<group>"; };
+		E1C3984B21A4342100086C9D /* QPPaymentLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPPaymentLink.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +137,8 @@
 				E1897CA3219C6AFF002CE64A /* QPBasket.swift */,
 				E12EE4EC219EE76E00843B0D /* QPPayment.swift */,
 				E12EE4EE219EEEB100843B0D /* QPOperation.swift */,
+				E1C3984921A432D600086C9D /* QPMetadata.swift */,
+				E1C3984B21A4342100086C9D /* QPPaymentLink.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -226,9 +232,11 @@
 				E1897CB0219C6B00002CE64A /* QPCreatePaymentParameters.swift in Sources */,
 				E1897CAE219C6B00002CE64A /* QPCreatePaymentRequest.swift in Sources */,
 				E1897CB7219C6B20002CE64A /* HttpStatusCodes.swift in Sources */,
+				E1C3984C21A4342100086C9D /* QPPaymentLink.swift in Sources */,
 				E1897CB4219C6B00002CE64A /* QPViewController.swift in Sources */,
 				E1897CB9219C6B74002CE64A /* QuickPay.swift in Sources */,
 				E1897CAB219C6B00002CE64A /* QPGeneratePaymentLinkParameters.swift in Sources */,
+				E1C3984A21A432D600086C9D /* QPMetadata.swift in Sources */,
 				E1897CB3219C6B00002CE64A /* QPAddress.swift in Sources */,
 				E12EE4EB219EE30C00843B0D /* QPGetPaymentRequest.swift in Sources */,
 			);

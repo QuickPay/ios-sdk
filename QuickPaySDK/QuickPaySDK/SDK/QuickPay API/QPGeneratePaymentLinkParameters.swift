@@ -8,73 +8,38 @@
 
 import Foundation
 
-public class QPGeneratePaymentLinkParameters {
+public class QPGeneratePaymentLinkParameters : Codable {
     
     // MARK: - Properties
 
-    public var id: Int?
-    public var amount: Double?
-    public var agreementId: Int?
+    public var id: Int
+    public var amount: Double
+    public var agreement_id: Int?
     public var language: String?
-    public var continueUrl: String?
-    public var cancelUrl: String?
-    public var callbackUrl: String?
-    public var paymentMethods: String?
-    public var autoFee: Bool?
-    public var brandingId: Int?
-    public var googleAnalyticsTrackingId: String?
-    public var googleAnalyticsClientId: String?
+    public var continue_url: String?
+    public var cancel_url: String?
+    public var callback_url: String?
+    public var payment_methods: String?
+    public var auto_fee: Bool?
+    public var branding_id: Int?
+    public var google_analytics_tracking_id: String?
+    public var google_analytics_client_id: String?
     public var acquirer: String?
     public var deadline: String?
     public var framed: Int?
-    public var brandingConfig: Dictionary<String, Any>? = Dictionary<String, Any>()
-    public var vatAmount: Int?
+    public var vat_amount: Int?
     public var category: String?
-    public var referenceTitle: String?
-    public var productId: String?
-    public var customerEmail: String?
-    public var autoCapture: Int?
-    public var additionalParameters: Dictionary<String, Any>? = Dictionary<String, Any>()
+    public var reference_title: String?
+    public var product_id: String?
+    public var customer_email: String?
+    public var auto_capture: Int?
     
     
     // MARK: Init
     
-    public init() {
-        
+    public init(id: Int, amount: Double) {
+        self.id = id
+        self.amount = amount
     }
     
-    
-    // MARK: - JSON
-    
-    public func toDictionary() -> Dictionary<String, Any> {
-        var dict: Dictionary = Dictionary<String, Any>()
-        
-        dict["id"] 								= id
-        dict["amount"] 							= amount
-        dict["agreement_id"] 					= agreementId
-        dict["language"] 						= language
-        dict["continue_url"] 					= continueUrl
-        dict["cancel_url"] 						= cancelUrl
-        dict["callback_url"] 					= callbackUrl
-        dict["payment_methods"] 			 	= paymentMethods
-        dict["auto_fee"] 					 	= autoFee
-        dict["branding_id"]                  	= brandingId
-        dict["google_analytics_tracking_id"] 	= googleAnalyticsTrackingId
-        dict["google_analytics_client_id"]   	= googleAnalyticsClientId
-        dict["acquirer"]                     	= acquirer
-        dict["deadline"]                     	= deadline
-        dict["framed"]						 	= framed
-        dict["branding_config"]              	= brandingConfig
-        dict["google_analytics_tracking_id"] 	= googleAnalyticsTrackingId
-        dict["vat_amount"] 						= vatAmount
-        dict["category"] 						= category
-        dict["reference_title"] 				= referenceTitle
-        dict["product_id"] 						= productId
-        dict["customer_email"] 					= customerEmail
-        dict["auto_capture"] 					= autoCapture
-        
-        additionalParameters?.forEach { (k,v) in dict[k] = v }
-        
-        return dict
-    }
 }
