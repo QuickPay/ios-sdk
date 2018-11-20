@@ -59,9 +59,11 @@ class ExampleViewController: BaseViewController, WKNavigationDelegate {
                     }, responseHandler: { (success) in
                         if success == false {
                             self.printToErrorLabel(error: "Payment failed")
-                            let alert = UIAlertController(title: "Payment failed", message: "The payment failed", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: nil))
-                            self.present(alert, animated: true, completion: nil)
+                            OperationQueue.main.addOperation {
+                                let alert = UIAlertController(title: "Payment failed", message: "The payment failed", preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: nil))
+                                self.present(alert, animated: true, completion: nil)
+                            }
                             return;
                         }
 
@@ -75,9 +77,11 @@ class ExampleViewController: BaseViewController, WKNavigationDelegate {
                                 return
                             }
                             
-                            let alert = UIAlertController(title: "Payment success", message: "The payment was a success and the acquirer is \(payment.acquirer)", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: nil))
-                            self.present(alert, animated: true, completion: nil)
+                            OperationQueue.main.addOperation {
+                                let alert = UIAlertController(title: "Payment success", message: "The payment was a success and the acquirer is \(payment.acquirer)", preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: nil))
+                                self.present(alert, animated: true, completion: nil)
+                            }
                         })
                     })
                 }
@@ -89,28 +93,21 @@ class ExampleViewController: BaseViewController, WKNavigationDelegate {
     // MARK: - Helpers
     
     private func creategetPaymentRequest(paymentId: Int) -> QPGetPaymentRequest {
-        let headers = createQPDefaultHeader()
-        return QPGetPaymentRequest(headers: headers, id: paymentId)
+        return QPGetPaymentRequest(id: paymentId)
     }
     
     // Generate a QPGeneratePaymentLinkRequest for testing
     private func createLinkRequest(paymentId: Int) -> QPGeneratePaymentLinkRequest {
-        // Create the needed headers
-        let headers = createQPDefaultHeader()
-
         let linkParams = QPGeneratePaymentLinkParameters()
         linkParams.id = paymentId
         linkParams.amount = 4200
         linkParams.paymentMethods = "creditcard,mobilepay"
         
-        return QPGeneratePaymentLinkRequest(headers: headers, parameters: linkParams)
+        return QPGeneratePaymentLinkRequest(parameters: linkParams)
     }
     
     // Generate a QPCreatePaymentRequest for testing
     private func createPaymentRequest() -> QPCreatePaymentRequest {
-        // Create the needed headers
-        let headers = createQPDefaultHeader()
-        
         // The orderId and currency parameters are required.
         let params = QPCreatePaymentParameters()
         params.orderId = self.orderIdTextField?.text ?? "0" // Remember to increment the orderId since the values needs to be unique
@@ -130,11 +127,7 @@ class ExampleViewController: BaseViewController, WKNavigationDelegate {
         basket1.vatRate = 0.25
         params.basket?.append(basket1)
         
-        return QPCreatePaymentRequest(headers: headers, parameters: params)
-    }
-    
-    private func createQPDefaultHeader() -> QPDefaultHeader {
-        return QPDefaultHeader(authorization: "e42538f4ca60b415f13d147aa3158d09c25c8f4f4111c5c0b8356518c2fb03a7")
+        return QPCreatePaymentRequest(parameters: params)
     }
     
     private func printToErrorLabel(error: String) {

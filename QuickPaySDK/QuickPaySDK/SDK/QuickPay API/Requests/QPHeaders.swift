@@ -8,28 +8,25 @@
 
 import Foundation
 
-public class QPDefaultHeader: QPHeaders {
+class QPHeaders {
     
     // MARK: - Properties
     
-    public var acceptVersion: String {
+    var acceptVersion: String {
         get {
             return "v10"
         }
     }
-    public var authorization: String
-
-    
-    // MARK: - Init
-    
-    public init(authorization: String) {
-        self.authorization = authorization
+    var authorization: String {
+        get {
+            return QuickPay.authorization ?? ""
+        }
     }
-    
-    
+
+        
     // MARK: Auth
     
-    public func encodedAuthorization() -> String {
+    func encodedAuthorization() -> String {
         let loginString = String(format: "%@:%@", "", authorization)
         let loginData = loginString.data(using: String.Encoding.ascii)!
         let base64LoginString = loginData.base64EncodedString(options: .endLineWithLineFeed)

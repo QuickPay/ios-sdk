@@ -17,9 +17,8 @@ public class QPGetPaymentRequest : QPRequest {
     
     // MARK: - Init
     
-    public init(headers: QPHeaders, id: Int) {
+    public init(id: Int) {
         self.id = id
-        super.init(headers: headers)
     }
     
     

@@ -17,9 +17,8 @@ public class QPGeneratePaymentLinkRequest : QPRequest {
     
     // MARK: Init
     
-    public init(headers: QPHeaders, parameters: QPGeneratePaymentLinkParameters) {
+    public init(parameters: QPGeneratePaymentLinkParameters) {
         self.parameters = parameters
-        super.init(headers: headers)
     }
     
     

@@ -24,19 +24,12 @@ public class QPRequest {
     // MARK: - Properties
     
     public let quickPayAPIBaseUrl = "https://api.quickpay.net"
-    var headers: QPHeaders
-
+    internal let headers = QPHeaders()
+    
     
     // MARK: Delegates
     
     public var errorDelegate: QPErrorRequestDelegate?
-    
-    
-    // MARK: - Init
-    
-    init(headers: QPHeaders) {
-        self.headers = headers
-    }
     
     
     // MARK: - URL Request

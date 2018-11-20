@@ -17,9 +17,8 @@ public class QPCreatePaymentRequest : QPRequest {
     
     // MARK: Init
     
-    public init(headers: QPHeaders, parameters: QPCreatePaymentParameters) {
+    public init(parameters: QPCreatePaymentParameters) {
         self.parameters = parameters
-        super.init(headers: headers)
     }
     
     

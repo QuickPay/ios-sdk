@@ -10,12 +10,39 @@ import Foundation
 import UIKit
 
 public class QuickPay {
+    
+    // MARK: Properties
+
+    private static var _authorization: String?
+    static var authorization: String? {
+        get {
+            if _authorization == nil {
+                print("QuickPay SDK has not been initialised. Please execute QuickPay.initWith(authorization: <YOU_API_KEY>)")
+            }
+            
+            return _authorization
+        }
+        set {
+            _authorization = newValue
+        }
+    }
+    
+    
+    // MARK: Init
+    
     // Only static access to the SDK
     private init() {
         
     }
     
-    public class func openLink(url: String, cancelHandler: @escaping () -> Void, responseHandler: @escaping (Bool) -> Void) {
+    public static func initWith(authorization: String) {
+        self.authorization = authorization
+    }
+
+    
+    // MARK: SDK
+    
+    public static func openLink(url: String, cancelHandler: @escaping () -> Void, responseHandler: @escaping (Bool) -> Void) {
         let mainController = UIApplication.shared.keyWindow?.rootViewController
         
         let controller = QPViewController()

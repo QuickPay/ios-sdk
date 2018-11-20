@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import QuickPaySDK
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Init the SDK with your API key
+        QuickPay.initWith(authorization: "e42538f4ca60b415f13d147aa3158d09c25c8f4f4111c5c0b8356518c2fb03a7")
+        
         return true
     }
 

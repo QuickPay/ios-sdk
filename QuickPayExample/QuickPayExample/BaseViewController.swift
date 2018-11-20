@@ -11,6 +11,8 @@ import UIKit
 
 class BaseViewController: UIViewController {
     
+    // MARK: - Lifefcycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()        
         styleNavigationBar()
