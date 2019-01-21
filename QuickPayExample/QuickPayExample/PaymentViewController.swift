@@ -9,24 +9,92 @@
 import UIKit
 import WebKit
 import QuickPaySDK
+import PassKit
 
 class ExampleViewController: BaseViewController, WKNavigationDelegate {
 
     // MARK: Outlets
     
-    @IBOutlet var orderIdTextField:  UITextField?
-    @IBOutlet var errorMessageLabel: UILabel?
+    @IBOutlet weak var orderIdTextField:  UITextField?
+    @IBOutlet weak var errorMessageLabel: UILabel?
+    @IBOutlet weak var applePayContainer: UIView?
+    
+    
+    // MARK: Properties
+    
+    let paymentNetworks = [PKPaymentNetwork.masterCard, PKPaymentNetwork.visa]
+    
+    
+    // MARK: Init
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
     
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        generateOrderId(self)
+        
         errorMessageLabel?.text = ""
+        
+        applePayContainer?.backgroundColor = UIColor.clear
+
+        
+        var applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
+        
+        if !PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: paymentNetworks) {
+            applePayButton = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: .black)
+        }
+        applePayButton.translatesAutoresizingMaskIntoConstraints = false
+        applePayButton.addTarget(self, action: #selector(doApplePayPayment), for: .touchUpInside)
+
+        applePayContainer?.addSubview(applePayButton)
+        
+        applePayContainer?.addConstraint(NSLayoutConstraint(item: applePayButton, attribute: .centerX, relatedBy: .equal, toItem: applePayContainer, attribute: .centerX, multiplier: 1, constant: 0))
+        applePayContainer?.addConstraint(NSLayoutConstraint(item: applePayButton, attribute: .centerY, relatedBy: .equal, toItem: applePayContainer, attribute: .centerY, multiplier: 1, constant: 0))
+    }
+
+    
+    // MARK: Actions
+    
+    @objc func doApplePayPayment() {
+        let request = PKPaymentRequest()
+        
+        // This merchantIdentifier should have been created for you in Xcode when you set up the ApplePay capabilities.
+        request.merchantIdentifier = "merchant.com.codebaseivs.quickpayexample"
+        request.countryCode = "DK" // Standard ISO country code. The country in which you make the charge.
+        request.currencyCode = "DKK" // Standard ISO currency code. Any currency you like.
+        request.supportedNetworks = paymentNetworks
+        request.merchantCapabilities = .capability3DS // 3DS or EMV. Check with your payment platform or processor.
+        
+        // Set the items that you are charging for. The last item is the total amount you want to charge.
+        let shinobiToySummaryItem = PKPaymentSummaryItem(label: "Shinobi Cuddly Toy", amount: NSDecimalNumber(floatLiteral: 22.99), type: .final)
+        let shinobiPostageSummaryItem = PKPaymentSummaryItem(label: "Postage", amount: NSDecimalNumber(floatLiteral: 3.99), type: .final)
+        let shinobiTaxSummaryItem = PKPaymentSummaryItem(label: "Tax", amount: NSDecimalNumber(floatLiteral: 2.29), type: .final)
+        let total = PKPaymentSummaryItem(label: "Total", amount: NSDecimalNumber(floatLiteral: 29.27), type: .final)
+        
+        request.paymentSummaryItems = [shinobiToySummaryItem, shinobiPostageSummaryItem, shinobiTaxSummaryItem, total]
+        
+        // Create a PKPaymentAuthorizationViewController from the request
+        if let authorizationViewController = PKPaymentAuthorizationViewController(paymentRequest: request) {
+            authorizationViewController.delegate = self
+            present(authorizationViewController, animated: true, completion: nil)
+        }
+        else {
+            print("Nope not now")
+        }
     }
     
     
     // MARK: - IBActions
+    
+    @IBAction func generateOrderId(_ sender: Any) {
+        let randomString = UUID().uuidString.replacingOccurrences(of: "-", with: "")
+        orderIdTextField?.text = String(randomString.prefix(20))
+    }
     
     @IBAction func doPayment(_ sender: Any) {
         // Clear the message label
@@ -99,7 +167,7 @@ class ExampleViewController: BaseViewController, WKNavigationDelegate {
     // Generate a QPGeneratePaymentLinkRequest for testing
     private func createLinkRequest(paymentId: Int) -> QPGeneratePaymentLinkRequest {
         let linkParams = QPGeneratePaymentLinkParameters(id: paymentId, amount: 4200)
-        linkParams.payment_methods = "creditcard,mobilepay"
+//        linkParams.payment_methods = "creditcard,mobilepay,applepay"
         
         return QPGeneratePaymentLinkRequest(parameters: linkParams)
     }
@@ -149,5 +217,15 @@ extension ExampleViewController : QPErrorRequestDelegate {
     
     func onError(request: QPRequest, qpError: QPRequestError) {
         printToErrorLabel(error: qpError.message)
+    }
+}
+
+extension ExampleViewController : PKPaymentAuthorizationViewControllerDelegate {
+    func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
+        print("you need to do stuff")
     }
 }

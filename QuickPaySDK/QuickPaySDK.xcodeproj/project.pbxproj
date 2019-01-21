@@ -64,6 +64,8 @@
 		E12EE4E9219EE2F700843B0D /* Requests */ = {
 			isa = PBXGroup;
 			children = (
+				E1897CA6219C6B00002CE64A /* QPCreatePaymentParameters.swift */,
+				E1897CA1219C6AFF002CE64A /* QPGeneratePaymentLinkParameters.swift */,
 				E1897CA8219C6B00002CE64A /* QPHeaders.swift */,
 				E1897CA4219C6AFF002CE64A /* QPCreatePaymentRequest.swift */,
 				E1897CA5219C6B00002CE64A /* QPGeneratePaymentLinkRequest.swift */,
@@ -114,8 +116,6 @@
 			children = (
 				E12EE4E9219EE2F700843B0D /* Requests */,
 				E1897CBE219CC1CC002CE64A /* Models */,
-				E1897CA6219C6B00002CE64A /* QPCreatePaymentParameters.swift */,
-				E1897CA1219C6AFF002CE64A /* QPGeneratePaymentLinkParameters.swift */,
 				E1897CAA219C6B00002CE64A /* QPViewController.swift */,
 			);
 			path = "QuickPay API";

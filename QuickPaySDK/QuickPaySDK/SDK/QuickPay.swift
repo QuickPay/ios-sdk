@@ -32,7 +32,7 @@ public class QuickPay {
     
     // Only static access to the SDK
     private init() {
-        
+
     }
     
     public static func initWith(authorization: String) {
@@ -40,7 +40,7 @@ public class QuickPay {
     }
 
     
-    // MARK: SDK
+    // MARK: API
     
     public static func openLink(url: String, cancelHandler: @escaping () -> Void, responseHandler: @escaping (Bool) -> Void) {
         let mainController = UIApplication.shared.keyWindow?.rootViewController
