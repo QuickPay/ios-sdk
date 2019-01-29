@@ -1,9 +1,9 @@
 //
 //  HttpStatusCodes.swift
-//  QuickPayExample
+//  QuickPaySDK
 //
-//  Created by Steffen Lund Andersen on 09/11/2018.
-//  Copyright © 2018 QuickPay. All rights reserved.
+//  Created on 29/01/2019
+//  Copyright © 2019 QuickPay. All rights reserved.
 //
 
 public let HTTPStatusInformationalRange = 100..<200

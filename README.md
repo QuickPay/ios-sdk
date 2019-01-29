@@ -1,12 +1,5 @@
 # ios-sdk
 
-## Created by
-Steffen Lund Andersen @ Codebase IVS  
-[www.codebaseivs.dk](http://www.codebaseivs.dk)
-
-For questions and support, please contact  
-[quickpay@codebaseivs.dk](mailto:quickpay@codebaseivs.dk?subject=QuickPaySDK)
-
 ## Usage
 Last updated 20. November 2018
 

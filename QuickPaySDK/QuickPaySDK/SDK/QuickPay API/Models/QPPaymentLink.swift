@@ -2,7 +2,7 @@
 //  QPPaymentLink.swift
 //  QuickPaySDK
 //
-//  Created by Steffen Lund Andersen on 20/11/2018.
+//  Created on 20/11/2018
 //  Copyright © 2018 QuickPay. All rights reserved.
 //
 

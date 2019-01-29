@@ -1,8 +1,8 @@
 //
 //  QPDefaultHeaders.swift
-//  QuickPayExample
+//  QuickPaySDK
 //
-//  Created by Steffen Lund Andersen on 06/11/2018.
+//  Created on 06/11/2018
 //  Copyright © 2018 QuickPay. All rights reserved.
 //
 

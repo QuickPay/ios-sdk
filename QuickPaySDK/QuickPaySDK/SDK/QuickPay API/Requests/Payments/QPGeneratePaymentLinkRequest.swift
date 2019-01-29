@@ -1,8 +1,8 @@
 //
-//  QPGeneratePaymentLinkRequest.swift
-//  QuickPayExample
+//  QPCreatePaymentRequest.swift
+//  QuickPaySDK
 //
-//  Created by Steffen Lund Andersen on 12/11/2018.
+//  Created on 12/11/2018
 //  Copyright © 2018 QuickPay. All rights reserved.
 //
 
