@@ -1,37 +1,37 @@
 //
-//  QPCreatePaymentRequest.swift
+//  QPCreateSubscriptionLinkRequest.swift
 //  QuickPaySDK
 //
-//  Created on 12/11/2018
-//  Copyright © 2018 QuickPay. All rights reserved.
+//  Created on 30/01/2019
+//  Copyright © 2019 QuickPay. All rights reserved.
 //
 
 import Foundation
 
-public class QPGeneratePaymentLinkRequest : QPRequest {
-
+public class QPCreateSubscriptionLinkRequest : QPRequest {
+    
     // MARK: - Properties
     
-    var parameters: QPGeneratePaymentLinkParameters
-
+    var parameters: QPCreateSubscriptionLinkParameters
+    
     
     // MARK: Init
     
-    public init(parameters: QPGeneratePaymentLinkParameters) {
+    public init(parameters: QPCreateSubscriptionLinkParameters) {
         self.parameters = parameters
     }
     
     
     // MARK: - URL Request
     
-    public func sendRequest(completion: @escaping (_ paymentLink: QPPaymentLink?, _ data: Data?) -> Void) {
+    public func sendRequest(success: @escaping (_ result: QPSubscriptionLink) -> Void, failure: ((_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void)?) {
         if parameters.cancel_url == nil {
             parameters.cancel_url = "https://qp.payment.failure"
         }
         else {
             print("Warning: You have set cancelUrl manually. QPViewController will not be able to detect unsuccessfull input of payment details")
         }
-
+        
         if parameters.continue_url == nil {
             parameters.continue_url = "https://qp.payment.success"
         }
@@ -39,9 +39,8 @@ public class QPGeneratePaymentLinkRequest : QPRequest {
             print("Warning: You have set continueUrl manually. QPViewController will not be able to detect successfull input of payment details");
         }
         
-        let encoder = JSONEncoder()
-        guard let url = URL(string: "\(quickPayAPIBaseUrl)/payments/\(parameters.id)/link"), let putData = try? encoder.encode(parameters) else {
-                return
+        guard let url = URL(string: "\(quickPayAPIBaseUrl)/subscriptions/\(parameters.id)/link"), let putData = try? JSONEncoder().encode(parameters) else {
+            return
         }
         
         var request = URLRequest(url: url)
@@ -53,18 +52,6 @@ public class QPGeneratePaymentLinkRequest : QPRequest {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        super.sendRequest(request: request) { (data) in
-            guard let data = data else {
-                completion(nil, nil)
-                return
-            }
-
-            if let result = try? JSONDecoder().decode(QPPaymentLink.self, from: data) {
-                completion(result, data)
-            }
-            else {
-                completion(nil, data)
-            }
-        }
+        super.sendRequest(request: request, success: success, failure: failure)
     }
 }

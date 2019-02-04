@@ -24,7 +24,7 @@ public class QPGetPaymentRequest : QPRequest {
     
     // MARK: - URL Request
     
-    public func sendRequest(completion: @escaping (_ response: QPPayment?, _ data: Data?) -> Void) {
+    public func sendRequest(success: @escaping (_ result: QPPayment) -> Void, failure: ((_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void)?) {
         guard let url = URL(string: "\(quickPayAPIBaseUrl)/payments/\(self.id)") else {
             return
         }
@@ -36,18 +36,6 @@ public class QPGetPaymentRequest : QPRequest {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        super.sendRequest(request: request) { (data) in
-            guard let data = data else {
-                completion(nil, nil)
-                return
-            }
-            
-            if let result = try? JSONDecoder().decode(QPPayment.self, from: data) {
-                completion(result, data)
-            }
-            else {
-                completion(nil, data)
-            }
-        }
+        super.sendRequest(request: request, success: success, failure: failure)
     }
 }

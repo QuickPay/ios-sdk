@@ -10,7 +10,7 @@ import Foundation
 
 public class QPMetadata : Codable {
     
-    // MARK: Properties
+    // MARK:  - Properties
     
     public var type: String?
     public var origin: String?

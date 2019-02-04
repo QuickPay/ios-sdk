@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class QPCreatePaymentRequest : QPRequest {
+public class QPCreatePaymentRequest: QPRequest {
     
     // MARK: - Properties
     
@@ -24,10 +24,8 @@ public class QPCreatePaymentRequest : QPRequest {
     
     // MARK: - URL Request
     
-    public func sendRequest(completion: @escaping (_ payment: QPPayment?, _ data: Data?) -> Void) {
-        let encoder = JSONEncoder()
-
-        guard let url = URL(string: "\(quickPayAPIBaseUrl)/payments"), let postData = try? encoder.encode(parameters) else {
+    public func sendRequest(success: @escaping (_ result: QPPayment) -> Void, failure: ((_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void)?) {
+        guard let url = URL(string: "\(quickPayAPIBaseUrl)/payments"), let postData = try? JSONEncoder().encode(parameters) else {
             return
         }
         
@@ -40,18 +38,30 @@ public class QPCreatePaymentRequest : QPRequest {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        super.sendRequest(request: request) { (data) in
-            guard let data = data else {
-                completion(nil, nil)
-                return
-            }
-            
-            if let result = try? JSONDecoder().decode(QPPayment.self, from: data) {
-                completion(result, data)
-            }
-            else {
-                completion(nil, data)
-            }
-        }
+        super.sendRequest(request: request, success: success, failure: failure)
     }
+}
+
+public class QPCreatePaymentParameters : Codable {
+    
+    // MARK: - Properties
+    
+    public var currency: String
+    public var order_id: String
+    
+    public var branding_id: Int?
+    public var text_on_statement: String?
+    public var basket: Array<QPBasket>? = Array<QPBasket>()
+    public var shipping: QPShipping?
+    public var invoice_address: QPAddress?
+    public var shipping_address:QPAddress?
+    
+    
+    // MARK: Init
+    
+    public init(currency: String, order_id: String) {
+        self.currency = currency
+        self.order_id = order_id
+    }
+    
 }

@@ -14,10 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Init the SDK with your API key
-        QuickPay.initWith(authorization: "e42538f4ca60b415f13d147aa3158d09c25c8f4f4111c5c0b8356518c2fb03a7")
+        QuickPay.initWith(authorization: "f1a4b80189c73862655552d06f9419dd7574c65de916fef88cf9854f6907f1b4")
+        
+        // Init Stripe
+        Stripe.setDefaultPublishableKey("pk_test_jbgIi1ikV5LMZQ4LHIKtYMN4")
         
         return true
     }
@@ -29,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.S
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -46,4 +48,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-

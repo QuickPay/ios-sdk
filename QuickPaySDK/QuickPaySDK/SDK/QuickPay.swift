@@ -12,14 +12,14 @@ import UIKit
 public class QuickPay {
     
     // MARK: Properties
-
+    
+    
     private static var _authorization: String?
-    static var authorization: String? {
+    static private(set) var authorization: String? {
         get {
             if _authorization == nil {
-                print("QuickPay SDK has not been initialised. Please execute QuickPay.initWith(authorization: <YOU_API_KEY>)")
+                fatalError("QuickPay SDK has not been initialized, please do so before usage.\nQuickPay.initWith(authorization: <YOU_API_KEY>)")
             }
-            
             return _authorization
         }
         set {
@@ -30,30 +30,47 @@ public class QuickPay {
     
     // MARK: Init
     
+    
     // Only static access to the SDK
-    private init() {
-
-    }
+    private init() {}
     
     public static func initWith(authorization: String) {
         self.authorization = authorization
     }
-
+    
     
     // MARK: API
     
-    public static func openLink(url: String, cancelHandler: @escaping () -> Void, responseHandler: @escaping (Bool) -> Void) {
-        let mainController = UIApplication.shared.keyWindow?.rootViewController
-        
-        let controller = QPViewController()
-        controller.gotoUrl = url
-        controller.onCancel = cancelHandler
-        controller.onResponse = responseHandler
-        
-        let navController = UINavigationController(rootViewController: controller)
-        
-        controller.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: controller, action: #selector(controller.cancel))
-        
-        mainController?.present(navController, animated: true, completion: nil)
+    public static func openLink(paymentLink: QPPaymentLink, cancelHandler: @escaping () -> Void, responseHandler: @escaping (Bool) -> Void) {
+        QuickPay.openLink(url: paymentLink.url, cancelHandler: cancelHandler, responseHandler: responseHandler, animated: true, completion: nil)
+    }
+    
+    public static func openLink(paymentLink: QPPaymentLink, cancelHandler: @escaping () -> Void, responseHandler: @escaping (Bool) -> Void, animated: Bool, completion: (()->Void)?) {
+        QuickPay.openLink(url: paymentLink.url, cancelHandler: cancelHandler, responseHandler: responseHandler, animated: animated, completion: completion)
+    }
+    
+    public static func openLink(subscriptionLink: QPSubscriptionLink, cancelHandler: @escaping () -> Void, responseHandler: @escaping (Bool) -> Void) {
+        QuickPay.openLink(url: subscriptionLink.url, cancelHandler: cancelHandler, responseHandler: responseHandler, animated: true, completion: nil)
+    }
+
+    public static func openLink(subscriptionLink: QPSubscriptionLink, cancelHandler: @escaping () -> Void, responseHandler: @escaping (Bool) -> Void, animated: Bool, completion: (()->Void)?) {
+        QuickPay.openLink(url: subscriptionLink.url, cancelHandler: cancelHandler, responseHandler: responseHandler, animated: animated, completion: completion)
+    }
+    
+    internal static func openLink(url: String, cancelHandler: @escaping () -> Void, responseHandler: @escaping (Bool) -> Void, animated: Bool, completion: (()->Void)?) {
+        OperationQueue.main.addOperation {
+            let mainController = UIApplication.shared.keyWindow?.rootViewController
+            
+            let controller = QPViewController()
+            controller.gotoUrl = url
+            controller.onCancel = cancelHandler
+            controller.onResponse = responseHandler
+            
+            let navController = UINavigationController(rootViewController: controller)
+            
+            controller.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: controller, action: #selector(controller.cancel))
+            
+            mainController?.present(navController, animated: animated, completion: completion)
+        }
     }
 }
