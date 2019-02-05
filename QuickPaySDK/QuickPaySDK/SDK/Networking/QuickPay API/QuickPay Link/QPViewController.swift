@@ -29,6 +29,7 @@ class QPViewController: UIViewController {
     // MARK: - Properties
     
     var gotoUrl: String?
+    var webView: WKWebView?
     
     
     // MARK: - Lifecycle
@@ -39,20 +40,27 @@ class QPViewController: UIViewController {
         let containerView = UIView(frame: UIScreen.main.bounds)
         
         let webViewConfig = WKWebViewConfiguration()
-        let webView = WKWebView(frame: containerView.bounds, configuration: webViewConfig)
+        webView = WKWebView(frame: containerView.bounds, configuration: webViewConfig)
 
-        webView.navigationDelegate = self
+        webView!.navigationDelegate = self
         self.view = containerView
-        containerView.addSubview(webView)
+        containerView.addSubview(webView!)
 
         if let gotoUrl = self.gotoUrl, let url = URL(string: gotoUrl) {
-            webView.load(URLRequest(url: url))
+            webView!.load(URLRequest(url: url))
         }
     }
     
     @objc func cancel() {
         dismiss(animated: true, completion: {
             self.onCancel?()
+        })
+    }
+    
+    @objc func printHTML() {
+        webView!.evaluateJavaScript("document.documentElement.outerHTML.toString()",
+                                   completionHandler: { (html: Any?, error: Error?) in
+                                    print(html ?? "HTML IS NULL")
         })
     }
 

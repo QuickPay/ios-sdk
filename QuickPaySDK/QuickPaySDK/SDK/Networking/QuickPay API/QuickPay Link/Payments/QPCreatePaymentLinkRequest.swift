@@ -57,7 +57,7 @@ public class QPCreatePaymentLinkRequest : QPRequest {
 }
 
 
-public class QPCreatePaymentLinkParameters : Codable {
+public class QPCreatePaymentLinkParameters: Codable {
     
     // MARK: - Properties
     

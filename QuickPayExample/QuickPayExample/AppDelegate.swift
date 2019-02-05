@@ -17,10 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Init the SDK with your API key
         QuickPay.initWith(authorization: "f1a4b80189c73862655552d06f9419dd7574c65de916fef88cf9854f6907f1b4")
-        
-        // Init Stripe
-        Stripe.setDefaultPublishableKey("pk_test_jbgIi1ikV5LMZQ4LHIKtYMN4")
-        
+                
         return true
     }
 

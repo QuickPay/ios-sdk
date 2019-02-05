@@ -42,7 +42,7 @@ public class QPCreatePaymentRequest: QPRequest {
     }
 }
 
-public class QPCreatePaymentParameters : Codable {
+public class QPCreatePaymentParameters: Codable {
     
     // MARK: - Properties
     

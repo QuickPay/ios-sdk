@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class QPPaymentLink : Codable {
+public class QPPaymentLink: Codable {
     
     // MARK: Properties
     

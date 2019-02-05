@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public class QuickPay {
+public class QuickPay: NSObject {
     
     // MARK: Properties
     
@@ -32,7 +32,7 @@ public class QuickPay {
     
     
     // Only static access to the SDK
-    private init() {}
+    private override init() {}
     
     public static func initWith(authorization: String) {
         self.authorization = authorization
@@ -69,6 +69,7 @@ public class QuickPay {
             let navController = UINavigationController(rootViewController: controller)
             
             controller.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: controller, action: #selector(controller.cancel))
+            controller.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.action, target: controller, action: #selector(controller.printHTML))
             
             mainController?.present(navController, animated: animated, completion: completion)
         }
