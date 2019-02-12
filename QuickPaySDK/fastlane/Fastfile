@@ -27,6 +27,8 @@ default_platform(:ios)
 
 platform :ios do
 
+  # Build the SDK for iPhone OS and iPhone Simulator architectures.
+  # We specify a derived data path, else fastlane will use the one given by XCode wich changes from time to time
   desc "Build the SDK"
   lane :build do
     xcodebuild(
@@ -47,6 +49,9 @@ platform :ios do
     )
   end
 
+
+  # Build the SDK and bundle the nessesary resources into a Release folder ready to push to CocoaPods
+  # TODO: Push to CocoaPods
   desc "Release the SDK"
   lane :release do
     # Start by empty the release folder, rationale being that if the build fails unnoticed, the release folder won't be occupied by an older relaese, potentially messing things up
