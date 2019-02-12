@@ -9,7 +9,7 @@
 import Foundation
 import PassKit
 
-public class QPApplePayToken: Codable {
+class QPApplePayToken: Codable {
     
     // MARK: - Properties
     public let paymentData: QPPaymentData

@@ -33,7 +33,7 @@ public class QPCard: Codable {
     public var expiration: String?
     public var cvd: String?
     public var token: String?
-    public var apple_pay_token: QPApplePayToken?
+    var apple_pay_token: QPApplePayToken?
     public var issued_to: String?
     public var brand: String? // TODO: Convert this to an array of enums instead
     public var status: String?

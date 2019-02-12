@@ -386,6 +386,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = "$(PROJECT_DIR)/../QuickPaySDK/DerivedData/Build/Products/Release-iphoneos";
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = "$(PROJECT_DIR)/../QuickPaySDK/DerivedData/Build/Products/Release-iphonesimulator";
 				INFOPLIST_FILE = QuickPayExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (

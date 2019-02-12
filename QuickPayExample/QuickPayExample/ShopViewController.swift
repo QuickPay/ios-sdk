@@ -9,6 +9,7 @@
 // Used for Apple Pay
 import PassKit
 import QuickPaySDK
+import SafariServices
 
 
 class ShopViewController: BaseViewController {
@@ -152,9 +153,13 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
         request.merchantCapabilities = .capability3DS // 3DS or EMV. Check with your payment platform or processor.
         
         // Set the items that you are charging for. The last item is the total amount you want to charge.
-        let tshirt =   PKPaymentSummaryItem(label: "T-Shirt  x \(tshirtsInBasket)", amount: NSDecimalNumber(floatLiteral: Double(tshirtsInBasket) * tshirtPrice), type: .final)
-        let football = PKPaymentSummaryItem(label: "Football x \(footballsInBasket)", amount: NSDecimalNumber(floatLiteral: Double(footballsInBasket) * footballPrice), type: .final)
-        let total =    PKPaymentSummaryItem(label: "Total", amount: NSDecimalNumber(floatLiteral: totalBasketValue()), type: .final)
+//        let tshirt =   PKPaymentSummaryItem(label: "T-Shirt  x \(tshirtsInBasket)", amount: NSDecimalNumber(floatLiteral: Double(tshirtsInBasket) * tshirtPrice), type: .final)
+//        let football = PKPaymentSummaryItem(label: "Football x \(footballsInBasket)", amount: NSDecimalNumber(floatLiteral: Double(footballsInBasket) * footballPrice), type: .final)
+//        let total =    PKPaymentSummaryItem(label: "Total", amount: NSDecimalNumber(floatLiteral: totalBasketValue()), type: .final)
+
+        let tshirt =   PKPaymentSummaryItem(label: "T-Shirt  x \(tshirtsInBasket)", amount: NSDecimalNumber(floatLiteral: 0.5), type: .final)
+        let football = PKPaymentSummaryItem(label: "Football x \(footballsInBasket)", amount: NSDecimalNumber(floatLiteral: 0.5), type: .final)
+        let total =    PKPaymentSummaryItem(label: "Total", amount: NSDecimalNumber(floatLiteral: 1.0), type: .final)
         
         request.paymentSummaryItems = [tshirt, football, total]
         
@@ -189,15 +194,17 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
         params.invoice_address = invoiceAddress
         
         // Fill the basket with the customers cosen items
-        let tshirtBasket =   QPBasket(qty: tshirtsInBasket, item_no: "123", item_name: "T-Shirt", item_price: tshirtPrice, vat_rate: 0.25)
-        let footballBasket = QPBasket(qty: footballsInBasket, item_no: "321", item_name: "Football", item_price: footballPrice, vat_rate: 0.25)
+        let tshirtBasket =   QPBasket(qty: tshirtsInBasket, item_no: "123", item_name: "T-Shirt", item_price: 0.5, vat_rate: 0.25)
+        let footballBasket = QPBasket(qty: footballsInBasket, item_no: "321", item_name: "Football", item_price: 0.5, vat_rate: 0.25)
         params.basket?.append(tshirtBasket)
         params.basket?.append(footballBasket)
 
         let createPaymentRequest = QPCreatePaymentRequest(parameters: params)
         
         createPaymentRequest.sendRequest(success: { (qpPayment) in
-            let authParams = QPAuthorizePaymentParams(id: qpPayment.id, amount: Int(exactly: self.totalBasketValue() * 100) ?? 1400)
+            print("PAYMENT ID: \(qpPayment.id)")
+            
+            let authParams = QPAuthorizePaymentParams(id: qpPayment.id, amount: 100)
             let card = QPCard()
             card.apple_pay_token = QPApplePayToken(pkPaymentToken: payment.token)
             authParams.card = card
@@ -386,10 +393,17 @@ extension ShopViewController {
             // Step 2: Now that we have the paymentId, we can have QuickPay generate a payment URL for us
             
             // Create the params needed
-            let linkParams = QPCreatePaymentLinkParameters(id: payment.id, amount: self.totalBasketValue() * 100.0)
-//            linkParams.payment_methods = "creditcard,mobilepay,applepay"
+//            let linkParams = QPCreatePaymentLinkParameters(id: payment.id, amount: self.totalBasketValue() * 100.0)
+            let linkParams = QPCreatePaymentLinkParameters(id: payment.id, amount: 100.0)
             
             QPCreatePaymentLinkRequest(parameters: linkParams).sendRequest(success: { (paymentLink) in
+                if let url = URL(string: paymentLink.url) {
+                    OperationQueue.main.addOperation {
+                        UIApplication.shared.open(url)
+                    }
+                    return
+                }
+                
                 // Step 3: Open the payment URL
                 QuickPay.openLink(paymentLink: paymentLink, cancelHandler: {
                     self.displayOkAlert(title: "Payment Cancelled", message: "The payment flow was cancelled")

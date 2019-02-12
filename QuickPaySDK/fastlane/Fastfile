@@ -1,0 +1,71 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+############
+# Variables
+############
+# Paths
+ENV["DERIVED_DATA_PATH"] = "#{ENV['PWD']}/DerivedData"
+ENV["IOS_FRAMEWORK_PATH"] =       "#{ENV['DERIVED_DATA_PATH']}/Build/Products/Release-iphoneos/QuickPaySDK.framework"
+ENV["SIMULATOR_FRAMEWORK_PATH"] = "#{ENV['DERIVED_DATA_PATH']}/Build/Products/Release-iphonesimulator/QuickPaySDK.framework"
+ENV["RELEASE_PATH"] = "#{ENV['PWD']}/../Release"
+ENV["README_FILE"] = "#{ENV['PWD']}/../README.md"
+
+default_platform(:ios)
+
+platform :ios do
+
+  desc "Build the SDK"
+  lane :build do
+    xcodebuild(
+        scheme: "QuickPaySDK",
+        configuration: "Release",
+        clean: true,
+        build: true,
+        sdk: "iphoneos",
+        derivedDataPath: ENV["DERIVED_DATA_PATH"]
+    )
+
+    xcodebuild(
+        scheme: "QuickPaySDK",
+        configuration: "Release",
+        build: true,
+        sdk: "iphonesimulator",
+        derivedDataPath: ENV["DERIVED_DATA_PATH"]
+    )
+  end
+
+  desc "Release the SDK"
+  lane :release do
+    # Start by empty the release folder, rationale being that if the build fails unnoticed, the release folder won't be occupied by an older relaese, potentially messing things up
+
+    # Create the RELEASE folder if it does not exists and empty it
+    Dir.mkdir ENV["RELEASE_PATH"] unless File.exists?(ENV["RELEASE_PATH"])
+    FileUtils.rm_rf("#{ENV["RELEASE_PATH"]}/.")
+
+    # Build the SDK
+    build
+
+    # Create the folder structure
+    Dir.mkdir "#{ENV["RELEASE_PATH"]}/iphoneos"
+    Dir.mkdir "#{ENV["RELEASE_PATH"]}/iphonesimulator"
+
+    # Copy the frameworks and the README.md into the release folder
+    FileUtils.cp("#{ENV['README_FILE']}", "#{ENV["RELEASE_PATH"]}")
+    FileUtils.cp_r("#{ENV['IOS_FRAMEWORK_PATH']}", "#{ENV["RELEASE_PATH"]}/iphoneos/QuickPaySDK.framework")
+    FileUtils.cp_r("#{ENV['SIMULATOR_FRAMEWORK_PATH']}", "#{ENV["RELEASE_PATH"]}/iphonesimulator/QuickPaySDK.framework")
+  end
+
+end
