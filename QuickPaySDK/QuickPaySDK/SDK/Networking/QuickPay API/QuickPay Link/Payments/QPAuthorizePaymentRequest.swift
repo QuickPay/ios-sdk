@@ -28,11 +28,6 @@ public class QPAuthorizePaymentRequest: QPRequest {
         guard let url = URL(string: "\(quickPayAPIBaseUrl)/payments/\(parameters.id)/authorize"), let postData = try? JSONEncoder().encode(parameters) else {
             return
         }
-
-        print("AUTH POST DATA")
-        if let json = String(data: postData, encoding: String.Encoding.utf8) {
-            print(json)
-        }
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

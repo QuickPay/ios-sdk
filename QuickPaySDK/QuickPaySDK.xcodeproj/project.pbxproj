@@ -28,6 +28,9 @@
 		E1708A0C2205C0020060AB1C /* URLRequestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1708A0B2205C0020060AB1C /* URLRequestExtensions.swift */; };
 		E1708A112205CA1B0060AB1C /* QPHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1708A102205CA1B0060AB1C /* QPHeaders.swift */; };
 		E1708A132205DBE60060AB1C /* QPGetSubscriptionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1708A122205DBE60060AB1C /* QPGetSubscriptionRequest.swift */; };
+		E18490932219A3B900CB734C /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18490922219A3B900CB734C /* StringExtensions.swift */; };
+		E1849095221A058D00CB734C /* QPCreatePaymentSessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1849094221A058D00CB734C /* QPCreatePaymentSessionRequest.swift */; };
+		E1849097221A1F7D00CB734C /* JSONExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1849096221A1F7D00CB734C /* JSONExtensions.swift */; };
 		E1897CAC219C6B00002CE64A /* QPShipping.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CA2219C6AFF002CE64A /* QPShipping.swift */; };
 		E1897CAD219C6B00002CE64A /* QPBasket.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CA3219C6AFF002CE64A /* QPBasket.swift */; };
 		E1897CAE219C6B00002CE64A /* QPCreatePaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CA4219C6AFF002CE64A /* QPCreatePaymentRequest.swift */; };
@@ -80,6 +83,9 @@
 		E1708A0B2205C0020060AB1C /* URLRequestExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestExtensions.swift; sourceTree = "<group>"; };
 		E1708A102205CA1B0060AB1C /* QPHeaders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPHeaders.swift; sourceTree = "<group>"; };
 		E1708A122205DBE60060AB1C /* QPGetSubscriptionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPGetSubscriptionRequest.swift; sourceTree = "<group>"; };
+		E18490922219A3B900CB734C /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		E1849094221A058D00CB734C /* QPCreatePaymentSessionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPCreatePaymentSessionRequest.swift; sourceTree = "<group>"; };
+		E1849096221A1F7D00CB734C /* JSONExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONExtensions.swift; sourceTree = "<group>"; };
 		E1897CA2219C6AFF002CE64A /* QPShipping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPShipping.swift; sourceTree = "<group>"; };
 		E1897CA3219C6AFF002CE64A /* QPBasket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPBasket.swift; sourceTree = "<group>"; };
 		E1897CA4219C6AFF002CE64A /* QPCreatePaymentRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPCreatePaymentRequest.swift; sourceTree = "<group>"; };
@@ -131,6 +137,7 @@
 				E1897CA5219C6B00002CE64A /* QPCreatePaymentLinkRequest.swift */,
 				E12EE4EA219EE30C00843B0D /* QPGetPaymentRequest.swift */,
 				E13893AE22089A1000789826 /* QPAuthorizePaymentRequest.swift */,
+				E1849094221A058D00CB734C /* QPCreatePaymentSessionRequest.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -200,6 +207,8 @@
 			isa = PBXGroup;
 			children = (
 				E1708A0B2205C0020060AB1C /* URLRequestExtensions.swift */,
+				E18490922219A3B900CB734C /* StringExtensions.swift */,
+				E1849096221A1F7D00CB734C /* JSONExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -387,6 +396,7 @@
 				E12EE4EF219EEEB100843B0D /* QPOperation.swift in Sources */,
 				E12EE4F1219EF0B000843B0D /* QPRequest.swift in Sources */,
 				E13893A92208964300789826 /* QPCard.swift in Sources */,
+				E18490932219A3B900CB734C /* StringExtensions.swift in Sources */,
 				E13893AB220898C600789826 /* QPPerson.swift in Sources */,
 				E1897CAF219C6B00002CE64A /* QPCreatePaymentLinkRequest.swift in Sources */,
 				E1708A112205CA1B0060AB1C /* QPHeaders.swift in Sources */,
@@ -398,6 +408,8 @@
 				E1897CB9219C6B74002CE64A /* QuickPay.swift in Sources */,
 				E12A008A2200CD07005D05FB /* QPSubscription.swift in Sources */,
 				E1708A132205DBE60060AB1C /* QPGetSubscriptionRequest.swift in Sources */,
+				E1849095221A058D00CB734C /* QPCreatePaymentSessionRequest.swift in Sources */,
+				E1849097221A1F7D00CB734C /* JSONExtensions.swift in Sources */,
 				E1CA62EC2201A65700C8592F /* QPCreateSubscriptionLinkParameters.swift in Sources */,
 				E1CA62EA2201A5FC00C8592F /* QPCreateSubscriptionLinkRequest.swift in Sources */,
 				E1C3984A21A432D600086C9D /* QPMetadata.swift in Sources */,

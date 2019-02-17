@@ -23,6 +23,7 @@
 			<string>net.quickpay.testshop</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>mobilepayonline</string>
 				<string>quickpaytestshop</string>
 			</array>
 		</dict>

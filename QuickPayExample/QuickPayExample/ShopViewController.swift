@@ -69,6 +69,66 @@ class ShopViewController: BaseViewController {
         }
     }
     
+    @IBAction func buyMobilePay(_ sender: Any) {
+        // Create the params needed for creating a payment
+        let params = QPCreatePaymentParameters(currency: "DKK", order_id: generateRandomOrderId())
+        params.text_on_statement = "QuickPay Example Shop"
+        
+        let invoiceAddress = QPAddress()
+        invoiceAddress.name = "CV"
+        invoiceAddress.city = "Aarhus"
+        invoiceAddress.country_code = "DNK"
+        params.invoice_address = invoiceAddress
+        
+        // Fill the basket with the customers cosen items
+        let tshirtBasket =   QPBasket(qty: tshirtsInBasket, item_no: "123", item_name: "T-Shirt", item_price: 0.5, vat_rate: 0.25)
+        let footballBasket = QPBasket(qty: footballsInBasket, item_no: "321", item_name: "Football", item_price: 0.5, vat_rate: 0.25)
+        params.basket?.append(tshirtBasket)
+        params.basket?.append(footballBasket)
+        
+        let createPaymentRequest = QPCreatePaymentRequest(parameters: params)
+
+        createPaymentRequest.sendRequest(success: { (payment) in
+            let createSessionRequestParameters = CreatePaymenSessionParameters(amount: 100)
+            let createSessionRequestRequest = CreatePaymenSessionRequest(id: payment.id, parameters: createSessionRequestParameters)
+            
+            createSessionRequestRequest.sendRequest(success: { (payment) in
+                
+                if let operations = payment.operations {
+                    let mpToken = operations[0].data?["session_token"] ?? "NO TOKEN"
+
+                    let mobilePayUrl = URL(string: "mobilepayonline://\(mpToken)")!
+
+                    print("MP URL: \(mobilePayUrl)")
+                    
+                    OperationQueue.main.addOperation {
+                        if UIApplication.shared.canOpenURL(mobilePayUrl) {
+                            UIApplication.shared.open(mobilePayUrl)
+                        }
+                        else {
+                            print("CANNOT OPEN MOBILE PAY")
+                        }
+                    }
+                }
+                else {
+                    print("NO OPERATIONS")
+                }
+                
+            }, failure: { (data, response, error) in
+                if let data = data {
+                    print(String(data: data, encoding: String.Encoding.utf8)!)
+                }
+                
+                if let error = error {
+                    print(error)
+                }
+                
+                if let response = response {
+                    print(response)
+                }
+            })
+        }, failure: nil)
+    }
     
     // MARK: - Lifecycle
     
@@ -215,7 +275,7 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
                 completion(PKPaymentAuthorizationResult.init(status: .success, errors: nil))
             }, failure: { (data, response, error) in
                 if let data = data {
-                    print(data)
+                    print(String(data: data, encoding: String.Encoding.utf8)!)
                 }
                 
                 if let error = error {

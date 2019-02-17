@@ -196,6 +196,14 @@
                                                     <action selector="buySubscription:" destination="Zf5-5J-BfZ" eventType="touchUpInside" id="v04-rQ-njR"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1su-96-qm4">
+                                                <rect key="frame" x="152" y="577" width="71" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="MobilePay"/>
+                                                <connections>
+                                                    <action selector="buyMobilePay:" destination="Zf5-5J-BfZ" eventType="touchUpInside" id="3RP-sc-60a"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="nAx-ng-bf9" firstAttribute="leading" secondItem="Qqp-yW-qsk" secondAttribute="leadingMargin" id="1O4-EK-gEN"/>

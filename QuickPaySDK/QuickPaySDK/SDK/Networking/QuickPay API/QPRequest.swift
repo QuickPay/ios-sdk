@@ -23,6 +23,19 @@ public class QPRequest {
     // MARK: - URL Request
     
     internal func sendRequest<T: Decodable>(request: URLRequest, success: @escaping (_ result: T) -> Void, failure: ((_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void)?) {
+        #if DEBUG
+        print("  ")
+        print("Requesting URL: \(request.url!)")
+
+        print("Headers")
+        print(request.allHTTPHeaderFields!)
+        
+        if let postBody = request.httpBody, let json = String(data: postBody, encoding: String.Encoding.utf8) {
+            print("Body")
+            print(json)
+        }
+        #endif
+        
         // Create a memory-only session.
         let config = URLSessionConfiguration.ephemeral
         let session = URLSession(configuration: config)

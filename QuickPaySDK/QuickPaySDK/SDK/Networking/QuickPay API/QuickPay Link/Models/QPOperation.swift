@@ -20,7 +20,7 @@ public class QPOperation : Codable {
     public var qp_status_msg: String?
     public var aq_status_msg: String?
     public var aqStatusMsg: String?
-//    public var data: Dictionary<String, Any>?
+    public var data: Dictionary<String, String>?
     public var callback_url: String?
     public var callback_success: Bool?
     public var callback_response_code: Int?
@@ -28,5 +28,5 @@ public class QPOperation : Codable {
     public var acquirer: String?
     public var callback_at: String?
     public var created_at: String?
-
+    
 }
