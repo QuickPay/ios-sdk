@@ -17,11 +17,12 @@
 # Variables
 ############
 # Paths
-ENV["DERIVED_DATA_PATH"] = "#{ENV['PWD']}/DerivedData"
+ENV["DERIVED_DATA_PATH"] =        "#{ENV['PWD']}/DerivedData"
 ENV["IOS_FRAMEWORK_PATH"] =       "#{ENV['DERIVED_DATA_PATH']}/Build/Products/Release-iphoneos/QuickPaySDK.framework"
 ENV["SIMULATOR_FRAMEWORK_PATH"] = "#{ENV['DERIVED_DATA_PATH']}/Build/Products/Release-iphonesimulator/QuickPaySDK.framework"
-ENV["RELEASE_PATH"] = "#{ENV['PWD']}/../Release"
-ENV["README_FILE"] = "#{ENV['PWD']}/../README.md"
+ENV["RELEASE_PATH"] =             "#{ENV['PWD']}/../Release"
+ENV["README_FILE"] =              "#{ENV['PWD']}/../README.md"
+
 
 default_platform(:ios)
 
@@ -49,7 +50,6 @@ platform :ios do
     )
   end
 
-
   # Build the SDK and bundle the nessesary resources into a Release folder ready to push to CocoaPods
   # TODO: Push to CocoaPods
   desc "Release the SDK"
@@ -63,14 +63,13 @@ platform :ios do
     # Build the SDK
     build
 
-    # Create the folder structure
-    Dir.mkdir "#{ENV["RELEASE_PATH"]}/iphoneos"
-    Dir.mkdir "#{ENV["RELEASE_PATH"]}/iphonesimulator"
-
     # Copy the frameworks and the README.md into the release folder
     FileUtils.cp("#{ENV['README_FILE']}", "#{ENV["RELEASE_PATH"]}")
-    FileUtils.cp_r("#{ENV['IOS_FRAMEWORK_PATH']}", "#{ENV["RELEASE_PATH"]}/iphoneos/QuickPaySDK.framework")
-    FileUtils.cp_r("#{ENV['SIMULATOR_FRAMEWORK_PATH']}", "#{ENV["RELEASE_PATH"]}/iphonesimulator/QuickPaySDK.framework")
+
+    # Build a Fat library in the Release folder
+    FileUtils.cp_r("#{ENV['IOS_FRAMEWORK_PATH']}", "#{ENV["RELEASE_PATH"]}/QuickPaySDK.framework")
+    FileUtils.cp_r("#{ENV['SIMULATOR_FRAMEWORK_PATH']}/Modules/QuickPaySDK.swiftmodule/.", "#{ENV["RELEASE_PATH"]}/QuickPaySDK.framework/Modules/QuickPaySDK.swiftmodule/")    
+    sh "lipo -create #{ENV["IOS_FRAMEWORK_PATH"]}/QuickPaySDK #{ENV["SIMULATOR_FRAMEWORK_PATH"]}/QuickPaySDK -output #{ENV["RELEASE_PATH"]}/QuickPaySDK.framework/QuickPaySDK"
   end
 
 end

@@ -13,20 +13,19 @@
 		E16313232192261A00A75B73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E16313222192261A00A75B73 /* Assets.xcassets */; };
 		E16313262192261A00A75B73 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E16313242192261A00A75B73 /* LaunchScreen.storyboard */; };
 		E163132E21922B6F00A75B73 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E163132D21922B6F00A75B73 /* BaseViewController.swift */; };
-		E1897CBB219C6BBA002CE64A /* QuickPaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1897CBA219C6BBA002CE64A /* QuickPaySDK.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		E1897CBC219C6BBA002CE64A /* QuickPaySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E1897CBA219C6BBA002CE64A /* QuickPaySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E1BCECAF21F6527200F8A775 /* NumberExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BCECAE21F6527200F8A775 /* NumberExtensions.swift */; };
-		E4786AC6231F35CB0C5B9C65 /* libPods-QuickPayExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D74C457FC7337A560CA8D526 /* libPods-QuickPayExample.a */; };
+		E1EDD0D6221B1B450057581D /* QuickPaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1EDD0D5221B1B450057581D /* QuickPaySDK.framework */; };
+		E1EDD0D8221BF5BC0057581D /* QuickPaySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E1EDD0D5221B1B450057581D /* QuickPaySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		E1897CBD219C6BBA002CE64A /* Embed Frameworks */ = {
+		E1EDD0D1221B1A930057581D /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E1897CBC219C6BBA002CE64A /* QuickPaySDK.framework in Embed Frameworks */,
+				E1EDD0D8221BF5BC0057581D /* QuickPaySDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -36,7 +35,6 @@
 /* Begin PBXFileReference section */
 		0DE127B8E1ECD683B7ED4699 /* Pods-QuickPayExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickPayExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-QuickPayExample/Pods-QuickPayExample.release.xcconfig"; sourceTree = "<group>"; };
 		314C44D0CDA91E976685F897 /* Pods-QuickPayExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickPayExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QuickPayExample/Pods-QuickPayExample.debug.xcconfig"; sourceTree = "<group>"; };
-		D74C457FC7337A560CA8D526 /* libPods-QuickPayExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-QuickPayExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E11814E021E2B07D00BC5558 /* QuickPayExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickPayExample.entitlements; sourceTree = "<group>"; };
 		E13DFC4621ED10AA000DE6B2 /* ShopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopViewController.swift; sourceTree = "<group>"; };
 		E16313182192261900A75B73 /* QuickPayExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickPayExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,8 +45,8 @@
 		E16313272192261A00A75B73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E163132D21922B6F00A75B73 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		E1786E0B219A457900ACEA6E /* QuickPayExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuickPayExample-Bridging-Header.h"; sourceTree = "<group>"; };
-		E1897CBA219C6BBA002CE64A /* QuickPaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QuickPaySDK.framework; sourceTree = "<group>"; };
 		E1BCECAE21F6527200F8A775 /* NumberExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberExtensions.swift; sourceTree = "<group>"; };
+		E1EDD0D5221B1B450057581D /* QuickPaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QuickPaySDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,8 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1897CBB219C6BBA002CE64A /* QuickPaySDK.framework in Frameworks */,
-				E4786AC6231F35CB0C5B9C65 /* libPods-QuickPayExample.a in Frameworks */,
+				E1EDD0D6221B1B450057581D /* QuickPaySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,8 +73,7 @@
 		E106A7A4219A403400F85538 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E1897CBA219C6BBA002CE64A /* QuickPaySDK.framework */,
-				D74C457FC7337A560CA8D526 /* libPods-QuickPayExample.a */,
+				E1EDD0D5221B1B450057581D /* QuickPaySDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -136,7 +132,7 @@
 				E16313142192261900A75B73 /* Sources */,
 				E16313152192261900A75B73 /* Frameworks */,
 				E16313162192261900A75B73 /* Resources */,
-				E1897CBD219C6BBA002CE64A /* Embed Frameworks */,
+				E1EDD0D1221B1A930057581D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -291,15 +287,12 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					STRIPE_ENABLE_APPLEPAY,
-					"DEBUG=1",
-					"$(inherited)",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -353,9 +346,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = STRIPE_ENABLE_APPLEPAY;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -380,13 +374,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = QuickPayExample/QuickPayExample.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2M4QKK575U;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = QuickPayExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -395,6 +388,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.codebaseivs.quickpayexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "QuickPayExample/QuickPayExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
@@ -410,13 +404,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = QuickPayExample/QuickPayExample.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2M4QKK575U;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = QuickPayExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -425,6 +418,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.codebaseivs.quickpayexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "QuickPayExample/QuickPayExample-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";

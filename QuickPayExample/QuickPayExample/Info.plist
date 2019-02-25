@@ -24,7 +24,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>mobilepayonline</string>
-				<string>quickpaytestshop</string>
+				<string>quickpayexampleshop</string>
 			</array>
 		</dict>
 	</array>

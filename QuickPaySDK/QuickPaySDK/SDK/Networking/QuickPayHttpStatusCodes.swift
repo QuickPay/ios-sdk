@@ -31,7 +31,11 @@ public enum QuickPayHttpStatusCodes: Int {
     
     
     // Utils
-    public static func isSuccessState(statusCode: Int) -> Bool {
+    
+    /**
+     Test if an Integer HTTP Status code is in the Success range defined in the QuickPay API
+     */
+    public static func isSuccessCode(statusCode: Int) -> Bool {
         if let quickPayStatus = QuickPayHttpStatusCodes(rawValue: statusCode) {
             return successStatusCodes.contains(quickPayStatus)
         }

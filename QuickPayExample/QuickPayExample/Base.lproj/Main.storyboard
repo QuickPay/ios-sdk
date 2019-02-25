@@ -175,8 +175,8 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Rv-fk-U1d">
-                                                <rect key="frame" x="119.5" y="374.5" width="136" height="30"/>
-                                                <state key="normal" title="Pay with credit card"/>
+                                                <rect key="frame" x="129.5" y="374.5" width="116" height="30"/>
+                                                <state key="normal" title="Payment window"/>
                                                 <connections>
                                                     <action selector="payWithCreditCard:" destination="Zf5-5J-BfZ" eventType="touchUpInside" id="utf-N9-AD4"/>
                                                 </connections>
@@ -190,16 +190,19 @@
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rTH-wE-cc5">
-                                                <rect key="frame" x="153" y="494.5" width="69" height="30"/>
-                                                <state key="normal" title="Subscripe"/>
+                                                <rect key="frame" x="85" y="494.5" width="205" height="30"/>
+                                                <state key="normal" title="Subscripe in payment window"/>
                                                 <connections>
                                                     <action selector="buySubscription:" destination="Zf5-5J-BfZ" eventType="touchUpInside" id="v04-rQ-njR"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1su-96-qm4">
-                                                <rect key="frame" x="152" y="577" width="71" height="30"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="MobilePay"/>
+                                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1su-96-qm4" userLabel="MobilePay Button">
+                                                <rect key="frame" x="127.5" y="544.5" width="120" height="90"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="90" id="1H0-Wj-WlF"/>
+                                                    <constraint firstAttribute="width" constant="120" id="yu9-8P-Yym"/>
+                                                </constraints>
+                                                <state key="normal" backgroundImage="MobilePay"/>
                                                 <connections>
                                                     <action selector="buyMobilePay:" destination="Zf5-5J-BfZ" eventType="touchUpInside" id="3RP-sc-60a"/>
                                                 </connections>
@@ -208,6 +211,7 @@
                                         <constraints>
                                             <constraint firstItem="nAx-ng-bf9" firstAttribute="leading" secondItem="Qqp-yW-qsk" secondAttribute="leadingMargin" id="1O4-EK-gEN"/>
                                             <constraint firstItem="z4l-C3-20U" firstAttribute="leading" secondItem="Qqp-yW-qsk" secondAttribute="leading" id="2e0-eF-mGn"/>
+                                            <constraint firstItem="1su-96-qm4" firstAttribute="top" secondItem="rTH-wE-cc5" secondAttribute="bottom" constant="20" id="66r-V2-Qw4"/>
                                             <constraint firstItem="rTH-wE-cc5" firstAttribute="centerX" secondItem="Qqp-yW-qsk" secondAttribute="centerX" id="AKx-kx-Dyb"/>
                                             <constraint firstItem="P4t-dP-HD1" firstAttribute="top" secondItem="8Rv-fk-U1d" secondAttribute="bottom" constant="20" id="CFX-PJ-V6v"/>
                                             <constraint firstItem="8Rv-fk-U1d" firstAttribute="top" secondItem="T8y-Mx-rTJ" secondAttribute="bottom" constant="20" id="FRA-dZ-yfl"/>
@@ -216,6 +220,7 @@
                                             <constraint firstItem="P4t-dP-HD1" firstAttribute="leading" secondItem="Qqp-yW-qsk" secondAttribute="leadingMargin" id="HRh-zJ-SVM"/>
                                             <constraint firstItem="nAx-ng-bf9" firstAttribute="top" secondItem="npd-Gv-H4Q" secondAttribute="bottom" constant="10" id="I6M-q0-wq4"/>
                                             <constraint firstItem="jhH-9f-LrJ" firstAttribute="leading" secondItem="Qqp-yW-qsk" secondAttribute="leading" id="IZF-Ee-vK6"/>
+                                            <constraint firstItem="1su-96-qm4" firstAttribute="centerX" secondItem="Qqp-yW-qsk" secondAttribute="centerX" id="JCd-bf-dV0"/>
                                             <constraint firstItem="iaR-UC-NSE" firstAttribute="leading" secondItem="Qqp-yW-qsk" secondAttribute="leadingMargin" id="Ltt-Rw-UIV"/>
                                             <constraint firstItem="T8y-Mx-rTJ" firstAttribute="top" secondItem="hTm-qc-CYp" secondAttribute="bottom" constant="40" id="P9f-7i-oHW"/>
                                             <constraint firstItem="npd-Gv-H4Q" firstAttribute="leading" secondItem="Qqp-yW-qsk" secondAttribute="leadingMargin" id="Qex-CP-4Ib"/>
@@ -345,6 +350,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="MobilePay" width="1335" height="1230"/>
         <image name="soccer ball" width="50" height="50"/>
         <image name="tshirt" width="50" height="50"/>
     </resources>

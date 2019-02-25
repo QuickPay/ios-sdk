@@ -55,7 +55,7 @@ public class QPAuthorizePaymentParams: Codable {
     public var vat_rate: Double?
     public var mobile_number: String?
     public var auto_capture: Bool?
-    public var acquirer: String? // TODO: Convert to enum (bambora, clearhaus, coinify, elavon, handelsbanken, klarna, mobilepay, nets, paypal, paysafecard, sofort, swedbank, swish, teller, trustly, viabill, vipps)
+    public var acquirer: String?
     public var autofee: Bool?
     public var customer_ip: String?
 //    public var extras: Any?

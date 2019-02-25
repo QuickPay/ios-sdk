@@ -56,9 +56,12 @@ class QPViewController: UIViewController {
             self.onCancel?()
         })
     }
-    
+
+    /**
+     Debug function used to dump the HTML content of the WebView
+     */
     @objc func printHTML() {
-        webView!.evaluateJavaScript("document.documentElement.outerHTML.toString()",
+        webView?.evaluateJavaScript("document.documentElement.outerHTML.toString()",
                                    completionHandler: { (html: Any?, error: Error?) in
                                     print(html ?? "HTML IS NULL")
         })
@@ -102,10 +105,10 @@ extension QPViewController: WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        print("An error occured in QPLViewController, didFailNavigation: \n\(error.localizedDescription)")
+        QuickPay.logger?.log("An error occured in QPLViewController, didFailNavigation: \n\(error.localizedDescription)")
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        print("An error occured in QPLViewController, didFailProvisionalNavigation: \n\(error.localizedDescription)")
+        QuickPay.logger?.log("An error occured in QPLViewController, didFailProvisionalNavigation: \n\(error.localizedDescription)")
     }
 }

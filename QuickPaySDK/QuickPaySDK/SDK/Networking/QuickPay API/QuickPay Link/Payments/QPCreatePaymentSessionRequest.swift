@@ -14,15 +14,13 @@ public class CreatePaymenSessionRequest: QPRequest {
     
     var id: Int
     var parameters: CreatePaymenSessionParameters
+
     
     // MARK: Init
     
     public init(id: Int, parameters: CreatePaymenSessionParameters) {
         self.id = id;
         self.parameters = parameters
-        
-        // Force the mobilepay session stuff - TODO: REMOVE THIS
-        self.parameters.acquirer = "mobilepay"
     }
     
     
@@ -46,7 +44,7 @@ public class CreatePaymenSessionRequest: QPRequest {
     }
 }
 
-public class CreatePaymenSessionParameters: Codable {
+public class CreatePaymenSessionParameters: Encodable {
     
     // MARK: - Properties
     
@@ -57,76 +55,55 @@ public class CreatePaymenSessionParameters: Codable {
     public var autofee: Bool?
     public var customer_ip: String?
     public var person: QPPerson?
-    public var extras: QPMobilePayExtras
-    
+    public var extras: Dictionary<String,EncodableValue>?
+
     
     // MARK: Init
     
     public init(amount: Int) {
         self.amount = amount
-        self.extras = QPMobilePayExtras()
     }
     
+    public convenience init(amount: Int, mobilePay: MobilePayExtras) {
+        self.init(amount: amount)
+        
+        self.acquirer = Acquires.mobilepay.rawValue
+        
+        self.extras = Dictionary<String,EncodableValue>()
+        self.extras?[Acquires.mobilepay.rawValue] = EncodableValue(value: mobilePay.toEncodableDictionary())
+    }
 }
 
-public class QPMobilePayExtras: Codable {
-    let mobilepay = QPMobilePayParams()
+public struct MobilePayExtras: Encodable {
+
+    // MARK: - Properties
+    
+    public var return_url: String
+    public var language: String?
+    public var shop_logo_url: String?
+
+    
+    // MARK: Init
+    
+    public init(returnUrl: String, language: String? = "dk", shopLogoUrl: String? = nil) {
+        self.return_url = returnUrl
+        self.language = language
+        self.shop_logo_url = shopLogoUrl
+    }
+    
+    
+    // MARK: Convertion
+    
+    func toEncodableDictionary() -> Dictionary<String,EncodableValue> {
+        var mobilePayDict = Dictionary<String,EncodableValue>()
+        
+        mobilePayDict["return_url"] = EncodableValue(value: self.return_url)
+        mobilePayDict["language"] = EncodableValue(value: self.language ?? "da")
+        
+        if let logoUrl = self.shop_logo_url {
+            mobilePayDict["shop_logo_url"] = EncodableValue(value: logoUrl)
+        }
+
+        return mobilePayDict
+    }
 }
-
-public class QPMobilePayParams: Codable {
-    let return_url = "quickpaytestshop://"
-    let language = "da"
-    let shop_logo_url = "https://developer.mobilepay.dk/sites/developer.mobilepay.dk/files/siteImages/logo_icon.png"//https://quickpay.net/gfx/layout/logo-inverse.svg"
-}
-
-
-/*
- extras: {
- mobilepay: {
- return_url: "zliide://app.zliide.com/",
- language: "da",
- shop_logo_url: "http://zliide/logo.png"
- }
-
- 
- 
- 
- 
- res = client.post(
- "/payments/6/session?synchronized",
- body: {
- amount: 100,
- acquirer: "mobilepay",
- }
- }.to_json,
- headers: {
- "Content-Type" => "application/json"
- }
- )
- 
- pp o["operations"].last # =>
- {
- "id"=>6,
- "type"=>"session",
- "amount"=>100,
- "pending"=>false,
- "qp_status_code"=>"20000",
- "qp_status_msg"=>"Approved",
- "aq_status_code"=>"0",
- "aq_status_msg"=>"Approved",
- "data"=>{
- "session_token"=>"2019-02-14T16:46:19+00:00.84d0bc0",
- "valid_until"=>"2019-02-14T16:51:19+00:00"
- },
- "callback_url"=>nil,
- "callback_success"=>nil,
- "callback_response_code"=>nil,
- "callback_duration"=>nil,
- "acquirer"=>"mobilepay",
- "3d_secure_status"=>nil,
- "callback_at"=>nil,
- "created_at"=>"2019-02-14T16:46:18Z"
- }
-
- 
- */

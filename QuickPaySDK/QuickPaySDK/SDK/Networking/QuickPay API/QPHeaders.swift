@@ -17,9 +17,9 @@ class QPHeaders {
             return "v10"
         }
     }
-    var authorization: String {
+    var apiKey: String {
         get {
-            return QuickPay.authorization ?? ""
+            return QuickPay.apiKey ?? ""
         }
     }
 
@@ -27,7 +27,7 @@ class QPHeaders {
     // MARK: Auth
     
     func encodedAuthorization() -> String {
-        let loginString = String(format: "%@:%@", "", authorization)
+        let loginString = String(format: "%@:%@", "", apiKey)
         let loginData = loginString.data(using: String.Encoding.ascii)!
         let base64LoginString = loginData.base64EncodedString(options: .endLineWithLineFeed)
 

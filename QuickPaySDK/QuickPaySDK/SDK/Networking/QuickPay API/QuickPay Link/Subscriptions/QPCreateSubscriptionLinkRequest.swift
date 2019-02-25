@@ -29,14 +29,14 @@ public class QPCreateSubscriptionLinkRequest : QPRequest {
             parameters.cancel_url = "https://qp.payment.failure"
         }
         else {
-            print("Warning: You have set cancelUrl manually. QPViewController will not be able to detect unsuccessfull input of payment details")
+            QuickPay.logger?.log("Warning: You have set cancelUrl manually. QPViewController will not be able to detect unsuccessfull input of payment details")
         }
         
         if parameters.continue_url == nil {
             parameters.continue_url = "https://qp.payment.success"
         }
         else {
-            print("Warning: You have set continueUrl manually. QPViewController will not be able to detect successfull input of payment details");
+            QuickPay.logger?.log("Warning: You have set continueUrl manually. QPViewController will not be able to detect successfull input of payment details");
         }
         
         guard let url = URL(string: "\(quickPayAPIBaseUrl)/subscriptions/\(parameters.id)/link"), let putData = try? JSONEncoder().encode(parameters) else {
