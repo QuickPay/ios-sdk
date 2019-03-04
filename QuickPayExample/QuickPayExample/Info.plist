@@ -23,7 +23,6 @@
 			<string>net.quickpay.testshop</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>mobilepayonline</string>
 				<string>quickpayexampleshop</string>
 			</array>
 		</dict>
@@ -32,7 +31,7 @@
 	<string>1</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>mobilepay</string>
+		<string>mobilepayonline</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

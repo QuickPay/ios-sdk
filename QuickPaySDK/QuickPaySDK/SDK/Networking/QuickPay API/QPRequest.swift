@@ -26,21 +26,21 @@ public class QPRequest {
         // Logging
         // -------
         if let requestUrl = request.url {
-            QuickPay.logger?.log("Requesting URL: \(requestUrl)")
+            QuickPay.logDelegate?.log("Requesting URL: \(requestUrl)")
         }
         else {
-            QuickPay.logger?.log("Requesting unknown URL")
+            QuickPay.logDelegate?.log("Requesting unknown URL")
         }
 
         if let headers = request.allHTTPHeaderFields {
-            QuickPay.logger?.log("Headers: \(headers)")
+            QuickPay.logDelegate?.log("Headers: \(headers)")
         }
         
         if let postBody = request.httpBody, let json = String(data: postBody, encoding: String.Encoding.utf8) {
-            QuickPay.logger?.log("Body: \(json)")
+            QuickPay.logDelegate?.log("Body: \(json)")
         }
         
-        QuickPay.logger?.log("\n\n")
+        QuickPay.logDelegate?.log("\n\n")
         // -------
         
         // Create a memory-only session.
@@ -55,7 +55,7 @@ public class QPRequest {
             }
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                QuickPay.logger?.log("Response is not of type HTTPURLResponse")
+                QuickPay.logDelegate?.log("Response is not of type HTTPURLResponse")
                 failure?(data, response, error)
                 return
             }
@@ -67,12 +67,12 @@ public class QPRequest {
                     success(result)
                 }
                 catch {
-                    QuickPay.logger?.log("Could not parse JSON response into type (\(T.self)): \(error)")
+                    QuickPay.logDelegate?.log("Could not parse JSON response into type (\(T.self)): \(error)")
                     failure?(data, response, error)
                 }
             }
             else {
-                QuickPay.logger?.log("HTTP response code is not in the success range (200-299(: \(httpResponse.statusCode)")
+                QuickPay.logDelegate?.log("HTTP response code is not in the success range (200-299(: \(httpResponse.statusCode)")
                 failure?(data, response, error)
             }
         }

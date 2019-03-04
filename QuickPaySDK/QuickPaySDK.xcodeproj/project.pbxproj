@@ -39,7 +39,7 @@
 		E1897CAE219C6B00002CE64A /* QPCreatePaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CA4219C6AFF002CE64A /* QPCreatePaymentRequest.swift */; };
 		E1897CAF219C6B00002CE64A /* QPCreatePaymentLinkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CA5219C6B00002CE64A /* QPCreatePaymentLinkRequest.swift */; };
 		E1897CB3219C6B00002CE64A /* QPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CA9219C6B00002CE64A /* QPAddress.swift */; };
-		E1897CB4219C6B00002CE64A /* QPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CAA219C6B00002CE64A /* QPViewController.swift */; };
+		E1897CB4219C6B00002CE64A /* QPPaymentWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CAA219C6B00002CE64A /* QPPaymentWindowController.swift */; };
 		E1897CB7219C6B20002CE64A /* QuickPayHttpStatusCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CB6219C6B20002CE64A /* QuickPayHttpStatusCodes.swift */; };
 		E1897CB9219C6B74002CE64A /* QuickPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1897CB8219C6B74002CE64A /* QuickPay.swift */; };
 		E1C3984A21A432D600086C9D /* QPMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C3984921A432D600086C9D /* QPMetadata.swift */; };
@@ -97,7 +97,7 @@
 		E1897CA4219C6AFF002CE64A /* QPCreatePaymentRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPCreatePaymentRequest.swift; sourceTree = "<group>"; };
 		E1897CA5219C6B00002CE64A /* QPCreatePaymentLinkRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPCreatePaymentLinkRequest.swift; sourceTree = "<group>"; };
 		E1897CA9219C6B00002CE64A /* QPAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPAddress.swift; sourceTree = "<group>"; };
-		E1897CAA219C6B00002CE64A /* QPViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPViewController.swift; sourceTree = "<group>"; };
+		E1897CAA219C6B00002CE64A /* QPPaymentWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QPPaymentWindowController.swift; sourceTree = "<group>"; };
 		E1897CB6219C6B20002CE64A /* QuickPayHttpStatusCodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickPayHttpStatusCodes.swift; sourceTree = "<group>"; };
 		E1897CB8219C6B74002CE64A /* QuickPay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickPay.swift; sourceTree = "<group>"; };
 		E1C3984921A432D600086C9D /* QPMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPMetadata.swift; sourceTree = "<group>"; };
@@ -251,7 +251,7 @@
 				E12A00822200C5AF005D05FB /* Subscriptions */,
 				E12A00812200C599005D05FB /* Payments */,
 				E1897CBE219CC1CC002CE64A /* Models */,
-				E1897CAA219C6B00002CE64A /* QPViewController.swift */,
+				E1897CAA219C6B00002CE64A /* QPPaymentWindowController.swift */,
 			);
 			path = "QuickPay Link";
 			sourceTree = "<group>";
@@ -437,7 +437,7 @@
 				E1897CAE219C6B00002CE64A /* QPCreatePaymentRequest.swift in Sources */,
 				E1897CB7219C6B20002CE64A /* QuickPayHttpStatusCodes.swift in Sources */,
 				E1C3984C21A4342100086C9D /* QPPaymentLink.swift in Sources */,
-				E1897CB4219C6B00002CE64A /* QPViewController.swift in Sources */,
+				E1897CB4219C6B00002CE64A /* QPPaymentWindowController.swift in Sources */,
 				E1897CB9219C6B74002CE64A /* QuickPay.swift in Sources */,
 				E12A008A2200CD07005D05FB /* QPSubscription.swift in Sources */,
 				E1708A132205DBE60060AB1C /* QPGetSubscriptionRequest.swift in Sources */,
@@ -611,7 +611,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = QuickPaySDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -638,7 +638,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = QuickPaySDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

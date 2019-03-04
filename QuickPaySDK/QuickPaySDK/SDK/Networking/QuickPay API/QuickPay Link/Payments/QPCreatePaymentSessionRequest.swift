@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class CreatePaymenSessionRequest: QPRequest {
+public class QPCreatePaymenSessionRequest: QPRequest {
     
     // MARK: - Properties
     
@@ -64,7 +64,7 @@ public class CreatePaymenSessionParameters: Encodable {
         self.amount = amount
     }
     
-    public convenience init(amount: Int, mobilePay: MobilePayExtras) {
+    public convenience init(amount: Int, mobilePay: MobilePayParameters) {
         self.init(amount: amount)
         
         self.acquirer = Acquires.mobilepay.rawValue
@@ -74,7 +74,7 @@ public class CreatePaymenSessionParameters: Encodable {
     }
 }
 
-public struct MobilePayExtras: Encodable {
+public struct MobilePayParameters: Encodable {
 
     // MARK: - Properties
     

@@ -8,9 +8,9 @@
 
 import Foundation
 import UIKit
-import  WebKit
+import WebKit
 
-class QPViewController: UIViewController {
+class QPPaymentWindowController: UIViewController {
 
     // MARK: - Enums
     
@@ -39,10 +39,10 @@ class QPViewController: UIViewController {
         
         let containerView = UIView(frame: UIScreen.main.bounds)
         
-        let webViewConfig = WKWebViewConfiguration()
-        webView = WKWebView(frame: containerView.bounds, configuration: webViewConfig)
+        webView = WKWebView(frame: containerView.bounds, configuration: WKWebViewConfiguration())
 
         webView!.navigationDelegate = self
+        
         self.view = containerView
         containerView.addSubview(webView!)
 
@@ -54,16 +54,6 @@ class QPViewController: UIViewController {
     @objc func cancel() {
         dismiss(animated: true, completion: {
             self.onCancel?()
-        })
-    }
-
-    /**
-     Debug function used to dump the HTML content of the WebView
-     */
-    @objc func printHTML() {
-        webView?.evaluateJavaScript("document.documentElement.outerHTML.toString()",
-                                   completionHandler: { (html: Any?, error: Error?) in
-                                    print(html ?? "HTML IS NULL")
         })
     }
 
@@ -79,14 +69,14 @@ class QPViewController: UIViewController {
     }
 }
 
-extension QPViewController: WKNavigationDelegate {
+extension QPPaymentWindowController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let urlString = navigationAction.request.url?.absoluteString else {
             decisionHandler(.allow)
             return
         }
-        
+
         if urlString.contains(StateToken.success.rawValue) {
             onWebViewRedirectToToken(token: .success)
             decisionHandler(.cancel);
@@ -101,14 +91,14 @@ extension QPViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        decisionHandler(.allow)
-    }
+        decisionHandler(.allow)    }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        QuickPay.logger?.log("An error occured in QPLViewController, didFailNavigation: \n\(error.localizedDescription)")
+        QuickPay.logDelegate?.log("An error occured in QPPaymentWindowController, didFailNavigation: \nError: \(error.localizedDescription)")
     }
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        QuickPay.logger?.log("An error occured in QPLViewController, didFailProvisionalNavigation: \n\(error.localizedDescription)")
+        QuickPay.logDelegate?.log("An error occured in QPPaymentWindowController, didFailProvisionalNavigation: \nError: \(error.localizedDescription)")
     }
+    
 }

@@ -2,370 +2,207 @@
 //  ShowViewController.swift
 //  QuickPayExample
 //
-//  Created by Steffen Lund Andersen on 14/01/2019.
+//  Created on 14/01/2019.
 //  Copyright © 2019 QuickPay. All rights reserved.
 //
 
-// Used for Apple Pay
-import PassKit
 import QuickPaySDK
-import SafariServices
 
-
-class ShopViewController: BaseViewController {
+class ShopViewController: UIViewController {
     
     // MARK: - Properties
     
     // Basket
-    let tshirtPrice = 0.25
+    let tshirtPrice = 0.5
     let footballPrice = 1.0
     
-    var tshirtsInBasket: Int = 0
-    var footballsInBasket: Int = 0
+    var tshirtCount = 0
+    var footballCount = 0
     
     @IBOutlet weak var basketThshirtLabel: UILabel!
     @IBOutlet weak var basketTshirtTotalLabel: UILabel!
     @IBOutlet weak var basketTshirtSection: UIStackView!
-    @IBOutlet weak var tshirtStepper: UIStepper!
     
     @IBOutlet weak var basketFootballLabel: UILabel!
     @IBOutlet weak var basketFootballTotalLabel: UILabel!
     @IBOutlet weak var basketFootballSection: UIStackView!
-    @IBOutlet weak var footballStepper: UIStepper!
     
     @IBOutlet weak var basketTotalLabel: UILabel!
     
-    // Payment
-    let applePayPaymentNetworks = [PKPaymentNetwork.masterCard, PKPaymentNetwork.visa]
+    @IBOutlet weak var creditCardView: SelectableView!
+    @IBOutlet weak var mobilePayView: SelectableView!
     
-    @IBOutlet weak var applePayButtonContainer: UIView!
+    @IBOutlet weak var paymentButton: UIButton!
     
     
     // MARK: - IBActions
     
-    @IBAction func tshirtCounterChanged(_ sender: Any) {
-        if let stepper = sender as? UIStepper {
-            tshirtsInBasket = Int(stepper.value)
-            updateBasket()
-        }
+    @IBAction func tshirtCountChanged(_ sender: UIStepper) {
+        tshirtCount = Int(sender.value)
+        updateBasket()
     }
     
-    @IBAction func footballCounterChanged(_ sender: Any) {
-        if let stepper = sender as? UIStepper {
-            footballsInBasket = Int(stepper.value)
-            updateBasket()
-        }
+    @IBAction func footballCountChanged(_ sender: UIStepper) {
+        footballCount = Int(sender.value)
+        updateBasket()
     }
-    
-    @IBAction func payWithCreditCard(_ sender: Any) {
-        if validateBasket() {
-            doCreditCardPayment()
-        }
-    }
-    
-    @IBAction func buySubscription(_ sender: Any) {
-        if validateBasket() {
-            doBuySubscription()
-        }
-    }
-    
-    @IBAction func buyMobilePay(_ sender: Any) {
-        // Create the params needed for creating a payment
-        let params = QPCreatePaymentParameters(currency: "DKK", order_id: generateRandomOrderId())
-        params.text_on_statement = "QuickPay Example Shop"
-        
-        let invoiceAddress = QPAddress()
-        invoiceAddress.name = "CV"
-        invoiceAddress.city = "Aarhus"
-        invoiceAddress.country_code = "DNK"
-        params.invoice_address = invoiceAddress
-        
-        // Fill the basket with the customers cosen items
-        let tshirtBasket =   QPBasket(qty: tshirtsInBasket, item_no: "123", item_name: "T-Shirt", item_price: 0.5, vat_rate: 0.25)
-        let footballBasket = QPBasket(qty: footballsInBasket, item_no: "321", item_name: "Football", item_price: 0.5, vat_rate: 0.25)
-        params.basket?.append(tshirtBasket)
-        params.basket?.append(footballBasket)
-        
-        let createPaymentRequest = QPCreatePaymentRequest(parameters: params)
-        
-        createPaymentRequest.sendRequest(success: { (payment) in
-            let mpe = MobilePayExtras(returnUrl: "quickpayexampleshop://", language: "dk", shopLogoUrl: "https://quickpay.net/images/payment-methods/payment-methods.png")
-            let createSessionRequestParameters = CreatePaymenSessionParameters(amount: 100, mobilePay: mpe)
 
-            let createSessionRequestRequest = CreatePaymenSessionRequest(id: payment.id, parameters: createSessionRequestParameters)
-            
-            createSessionRequestRequest.sendRequest(success: { (payment) in
-                
-                QuickPay.authorizeWithMobilePay(payment: payment, completion: { (accepted) in
-                    print("Accepted: \(accepted)")
-                })
-            }, failure: { (data, response, error) in
-                if let data = data {
-                    print(String(data: data, encoding: String.Encoding.utf8)!)
-                }
-                
-                if let error = error {
-                    print(error)
-                }
-                
-                if let response = response {
-                    print(response)
-                }
-            })
-        }, failure: nil)
+    @IBAction func handlePayment(_ sender: Any) {
+        guard !basketEmpty() else {
+            displayOkAlert(title: "Basket is empty", message: "Your basket is empty. Please add some items before paying.")
+            return
+        }
+        
+        if creditCardView.isSelected {
+            handleCreditCardPayment()
+        }
+        else if mobilePayView.isSelected {
+            if !QuickPay.mobilePayAvailable() {
+                displayOkAlert(title: "MobilePay Error", message: "MobilePay is not installed on this device.")
+            }
+            else {
+                handleMobilePayPayment()
+            }
+        }
     }
+    
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupApplePayButton()
+        let navigationBarImage = UIImageView(image: UIImage(named: "Logo Inverse"))
+        navigationBarImage.contentMode = .scaleAspectFit
+        navigationItem.titleView = navigationBarImage
+
+        paymentButton.isEnabled = false
+        creditCardView.selectionDelegate = self
+        mobilePayView.selectionDelegate = self
         
-        tshirtStepper.value = Double(tshirtsInBasket)
         updateBasket()
     }
     
-    
-    // MARK: UI
-    
-    private func setupApplePayButton() {
-        applePayButtonContainer?.backgroundColor = UIColor.clear
-        
-        var applePayButton = PKPaymentButton(paymentButtonType: .buy, paymentButtonStyle: .black)
-        
-        if !PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: applePayPaymentNetworks) {
-            applePayButton = PKPaymentButton(paymentButtonType: .setUp, paymentButtonStyle: .black)
-        }
-        applePayButton.translatesAutoresizingMaskIntoConstraints = false
-        applePayButton.addTarget(self, action: #selector(doApplePayPayment), for: .touchUpInside)
-        
-        applePayButtonContainer?.addSubview(applePayButton)
-        
-        applePayButtonContainer?.addConstraint(NSLayoutConstraint(item: applePayButton, attribute: .centerX, relatedBy: .equal, toItem: applePayButtonContainer, attribute: .centerX, multiplier: 1, constant: 0))
-        applePayButtonContainer?.addConstraint(NSLayoutConstraint(item: applePayButton, attribute: .centerY, relatedBy: .equal, toItem: applePayButtonContainer, attribute: .centerY, multiplier: 1, constant: 0))
-    }
+
+    // MARK: - UI
     
     private func updateBasket() {
         // Update the TShirt section
-        basketThshirtLabel.text = "T-Shirt  x \(tshirtsInBasket)"
-        basketTshirtTotalLabel.text = "\(Double(tshirtsInBasket) * tshirtPrice) DDK"
+        basketThshirtLabel.text = "T-Shirt  x \(tshirtCount)"
+        basketTshirtTotalLabel.text = "\(Double(tshirtCount) * tshirtPrice) DDK"
         
         // Update the football sections
-        basketFootballLabel.text = "Football x \(footballsInBasket)"
-        basketFootballTotalLabel.text = "\(Double(footballsInBasket) * footballPrice) DDK"
+        basketFootballLabel.text = "Football x \(footballCount)"
+        basketFootballTotalLabel.text = "\(Double(footballCount) * footballPrice) DDK"
         
         // Update the total section
         basketTotalLabel.text = "\(totalBasketValue()) DDK"
     }
     
     private func totalBasketValue() -> Double {
-        return Double(tshirtsInBasket) * tshirtPrice + Double(footballsInBasket) * footballPrice
+        return Double(tshirtCount) * tshirtPrice + Double(footballCount) * footballPrice
     }
     
-    private func validateBasket() -> Bool {
-        if tshirtsInBasket == 0 && footballsInBasket == 0 {
-            let alert = UIAlertController(title: "Empty basket", message: "Your basket is empty. Please add some items before paying", preferredStyle: .alert)
-            
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-            
-            self.present(alert, animated: true)
-            
-            return false;
-        }
-        else {
+    private func basketEmpty() -> Bool {
+        if tshirtCount == 0 && footballCount == 0 {
             return true;
         }
-    }
-    
-    
-    // MARK: Util
-    
-    private func generateRandomOrderId() -> String {
-        let randomString = UUID().uuidString.replacingOccurrences(of: "-", with: "")
-        return String(randomString.prefix(20))
-    }
-}
-
-// MARK: - Apple Pay Code
-extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
-    @objc func doApplePayPayment() {
-        let request = PKPaymentRequest()
-        
-        // This merchantIdentifier should have been created for you in Xcode when you set up the ApplePay capabilities.
-        request.merchantIdentifier = "merchant.quickpayexample"
-        request.countryCode = "DK" // Standard ISO country code. The country in which you make the charge.
-        request.currencyCode = "DKK" // Standard ISO currency code. Any currency you like.
-        request.supportedNetworks = applePayPaymentNetworks
-        request.merchantCapabilities = .capability3DS // 3DS or EMV. Check with your payment platform or processor.
-        
-        // Set the items that you are charging for. The last item is the total amount you want to charge.
-        let tshirt =   PKPaymentSummaryItem(label: "T-Shirt  x \(tshirtsInBasket)", amount: NSDecimalNumber(floatLiteral: Double(tshirtsInBasket) * tshirtPrice), type: .final)
-        let football = PKPaymentSummaryItem(label: "Football x \(footballsInBasket)", amount: NSDecimalNumber(floatLiteral: Double(footballsInBasket) * footballPrice), type: .final)
-        let total =    PKPaymentSummaryItem(label: "Total", amount: NSDecimalNumber(floatLiteral: totalBasketValue()), type: .final)
-        
-        request.paymentSummaryItems = [tshirt, football, total]
-        
-        // Create a PKPaymentAuthorizationViewController from the request
-        if let authorizationViewController = PKPaymentAuthorizationViewController(paymentRequest: request) {
-            authorizationViewController.delegate = self
-            present(authorizationViewController, animated: true, completion: nil)
-        }
         else {
-            print("Nope not now")
+            return false;
         }
     }
     
-    // MARK: PKPaymentAuthorizationViewControllerDelegate Implementation
-    func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
-        self.dismiss(animated: true, completion: nil)
-    }
     
-    func paymentAuthorizationViewControllerWillAuthorizePayment(_ controller: PKPaymentAuthorizationViewController) {
-        
-    }
+    // MARK: - Utils
     
-    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
+    private func createPaymentParametersFromBasket() -> QPCreatePaymentParameters {
         // Create the params needed for creating a payment
-        let params = QPCreatePaymentParameters(currency: "DKK", order_id: generateRandomOrderId())
+        let params = QPCreatePaymentParameters(currency: "DKK", order_id: String.randomString(len: 20))
         params.text_on_statement = "QuickPay Example Shop"
         
         let invoiceAddress = QPAddress()
-        invoiceAddress.name = "CV"
+        invoiceAddress.name = "Some Street"
         invoiceAddress.city = "Aarhus"
         invoiceAddress.country_code = "DNK"
         params.invoice_address = invoiceAddress
         
-        // Fill the basket with the customers cosen items
-        let tshirtBasket =   QPBasket(qty: tshirtsInBasket, item_no: "123", item_name: "T-Shirt", item_price: 0.5, vat_rate: 0.25)
-        let footballBasket = QPBasket(qty: footballsInBasket, item_no: "321", item_name: "Football", item_price: 0.5, vat_rate: 0.25)
+        // Fill the basket with the tshirts and footballs
+        let tshirtBasket =   QPBasket(qty: tshirtCount, item_no: "1", item_name: "T-Shirt", item_price: tshirtPrice, vat_rate: 0.25)
+        let footballBasket = QPBasket(qty: footballCount, item_no: "2", item_name: "Football", item_price: footballPrice, vat_rate: 0.25)
         params.basket?.append(tshirtBasket)
         params.basket?.append(footballBasket)
-        
-        let createPaymentRequest = QPCreatePaymentRequest(parameters: params)
-        
-        createPaymentRequest.sendRequest(success: { (qpPayment) in
-            print("PAYMENT ID: \(qpPayment.id)")
-            
-            let authParams = QPAuthorizePaymentParams(id: qpPayment.id, amount: 100)
-            let card = QPCard()
-            card.apple_pay_token = QPApplePayToken(pkPaymentToken: payment.token)
-            authParams.card = card
-            
-            
-            let authRequest = QPAuthorizePaymentRequest(parameters: authParams)
-            authRequest.sendRequest(success: { (payment) in
-                completion(PKPaymentAuthorizationResult.init(status: .success, errors: nil))
-            }, failure: { (data, response, error) in
-                if let data = data {
-                    print(String(data: data, encoding: String.Encoding.utf8)!)
-                }
-                
-                if let error = error {
-                    print(error)
-                }
-                
-                if let response = response {
-                    print(response)
-                }
-                
-                completion(PKPaymentAuthorizationResult.init(status: .failure, errors: nil))
-            })
-            
-        }, failure: nil)
+
+        return params
     }
 }
 
-
-// MARK: - Subscription Code
+// MARK: - MobilePay
 extension ShopViewController {
-    func doBuySubscription() {
-        // Step 1: Create Subscription
+
+    func handleMobilePayPayment() {
+        // Fire up a progress indicator
+        showSpinner(onView: self.view)
         
-        // Create the params needed for creating a subscription
-        let params = QPCreateSubscriptionParameters(currency: "DKK", order_id: generateRandomOrderId(), description: "QuickPay Example Shop Subscription")
-        params.text_on_statement = "QuickPay Example Shop"
-        
-        let invoiceAddress = QPAddress()
-        invoiceAddress.name = "CV"
-        invoiceAddress.city = "Aarhus"
-        invoiceAddress.country_code = "DNK"
-        params.invoice_address = invoiceAddress
-        
-        // Fill the basket with the customers cosen items
-        let tshirtBasket =   QPBasket(qty: tshirtsInBasket, item_no: "123", item_name: "T-Shirt", item_price: tshirtPrice, vat_rate: 0.25)
-        let footballBasket = QPBasket(qty: footballsInBasket, item_no: "321", item_name: "Football", item_price: footballPrice, vat_rate: 0.25)
-        params.basket?.append(tshirtBasket)
-        params.basket?.append(footballBasket)
-        
-        // Create the subscription request and set the error delegate
-        QPCreateSubscriptionRequest(parameters: params).sendRequest(success: { (subscription) in
-            // Step 2: Generate URL
-            QPCreateSubscriptionLinkRequest(parameters: QPCreateSubscriptionLinkParameters(id: subscription.id, amount: 30000)).sendRequest(success: { (subscriptionLink) in
-                // Step 3: Open the URL and authorize the payment
-                QuickPay.openLink(subscriptionLink: subscriptionLink, cancelHandler: {
-                    // CANCEL
-                }, responseHandler: { (success) in
-                    // WEE
+        // Step 1: Create a payment
+        QPCreatePaymentRequest(parameters: createPaymentParametersFromBasket()).sendRequest(success: { (payment) in
+
+            // Step 2: Create a payment session with a return URL
+            let mpp = MobilePayParameters(returnUrl: "quickpayexampleshop://", language: "dk", shopLogoUrl: "https://quickpay.net/images/payment-methods/payment-methods.png")
+            let createSessionRequestParameters = CreatePaymenSessionParameters(amount: Int(self.totalBasketValue() * 100), mobilePay: mpp)
+            QPCreatePaymenSessionRequest(id: payment.id, parameters: createSessionRequestParameters).sendRequest(success: { (payment) in
+                
+                // Step 3: Authorize through MobilePay
+                QuickPay.authorizeWithMobilePay(payment: payment, completion: { (payment) in
+                    
+                    // Step 4: Request the payment to get the status
+                    QPGetPaymentRequest(id: payment.id).sendRequest(success: { (payment) in
+                        self.removeSpinner()
+
+                        if payment.accepted {
+                            self.displayOkAlert(title: "Payment Accepted", message: "The payment was accepted and the acquirer is \(payment.acquirer ?? "unknown")")
+                        }
+                        else {
+                            self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
+                        }
+                    }, failure: self.handleQuickPayNetworkErrors)
+                }, failure: {
+                    self.displayOkAlert(title: "MobilePay Failed", message: "Could not authorize with MobilePay")
                 })
+
             }, failure: self.handleQuickPayNetworkErrors)
         }, failure: self.handleQuickPayNetworkErrors)
     }
-    
-    internal func handleQuickPayNetworkErrors(data: Data?, response: URLResponse?, error: Error?) {
-        OperationQueue.main.addOperation {
-            let message = error != nil ? error!.localizedDescription : "Unknown error"
-            let alert = UIAlertController(title: "Request failed", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
 }
 
 
-// MARK: - Credit Card Code
+// MARK: - Payment Window
 extension ShopViewController {
-    func doCreditCardPayment() {
-        // Step 1: Create a payment
-        
-        // Create the params needed for creating a payment
-        let params = QPCreatePaymentParameters(currency: "DKK", order_id: generateRandomOrderId())
-        params.text_on_statement = "QuickPay Example Shop"
-        
-        let invoiceAddress = QPAddress()
-        invoiceAddress.name = "CV"
-        invoiceAddress.city = "Aarhus"
-        invoiceAddress.country_code = "DNK"
-        params.invoice_address = invoiceAddress
-        
-        // Fill the basket with the customers cosen items
-        let tshirtBasket =   QPBasket(qty: tshirtsInBasket, item_no: "123", item_name: "T-Shirt", item_price: tshirtPrice, vat_rate: 0.25)
-        let footballBasket = QPBasket(qty: footballsInBasket, item_no: "321", item_name: "Football", item_price: footballPrice, vat_rate: 0.25)
-        params.basket?.append(tshirtBasket)
-        params.basket?.append(footballBasket)
+    
+    func handleCreditCardPayment() {
+        showSpinner(onView: self.view)
 
-        
-        // Create the payment request and set the error delegate
-        QPCreatePaymentRequest(parameters: params).sendRequest(success: { (payment) in
-            // Step 2: Now that we have the paymentId, we can have QuickPay generate a payment URL for us
-            
-            // Create the params needed
+        // Step 1: Create a payment
+        QPCreatePaymentRequest(parameters: createPaymentParametersFromBasket()).sendRequest(success: { (payment) in
+            // Step 2: Create the payment URL
             let linkParams = QPCreatePaymentLinkParameters(id: payment.id, amount: self.totalBasketValue() * 100.0)
             
             QPCreatePaymentLinkRequest(parameters: linkParams).sendRequest(success: { (paymentLink) in
                 // Step 3: Open the payment URL
-                QuickPay.openLink(paymentLink: paymentLink, cancelHandler: {
-                    self.displayOkAlert(title: "Payment Cancelled", message: "The payment flow was cancelled")
-                }, responseHandler: { (success) in
+                QuickPay.openLink(paymentLink: paymentLink, onCancel: {
+                    self.removeSpinner()
+                    self.displayOkAlert(title: "Payment Cancelled", message: "The payment was cancelled")
+                }, onResponse: { (success) in
                     if success == false {
+                        self.removeSpinner()
                         self.displayOkAlert(title: "Payment Failed", message: "The payment failed")
                         return
                     }
                     
-                    // Step 4: We can now request the payment to check the status
+                    // Step 4: Request the payment to get the status
                     QPGetPaymentRequest(id: payment.id).sendRequest(success: { (payment) in
+                        self.removeSpinner()
                         if payment.accepted {
-                            self.displayOkAlert(title: "Payment Accepted", message: "The payment was a success and the acquirer is \(payment.acquirer ?? "Ukendt")")
+                            self.displayOkAlert(title: "Payment Accepted", message: "The payment was accepted and the acquirer is \(payment.acquirer ?? "unknown")")
                         }
                         else {
                             self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
@@ -375,11 +212,46 @@ extension ShopViewController {
             }, failure: self.handleQuickPayNetworkErrors)
         }, failure: self.handleQuickPayNetworkErrors)
     }
+    
+}
+
+extension ShopViewController: SelectionDelegate {
+    
+    func selectionChanged(selectableView: SelectableView) {
+        if selectableView.isSelected {
+            if selectableView != mobilePayView {
+                mobilePayView.isSelected = false
+            }
+            
+            if selectableView != creditCardView {
+                creditCardView.isSelected = false
+            }
+        }
+        
+        paymentButton.isEnabled = creditCardView.isSelected || mobilePayView.isSelected
+    }
+    
 }
 
 extension ShopViewController {
     
-    func displayOkAlert(title: String, message: String) {
+    internal func handleQuickPayNetworkErrors(data: Data?, response: URLResponse?, error: Error?) {
+        if let data = data {
+            print(String(data: data, encoding: String.Encoding.utf8)!)
+        }
+        
+        if let error = error {
+            print(error)
+        }
+        
+        if let response = response {
+            print(response)
+        }
+        
+        displayOkAlert(title: "Request failed", message: error?.localizedDescription ?? "Unknown error")
+    }
+    
+    internal func displayOkAlert(title: String, message: String) {
         OperationQueue.main.addOperation {
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
