@@ -6,6 +6,7 @@
 //  Copyright © 2018 QuickPay. All rights reserved.
 //
 
+import PassKit
 import Foundation
 import UIKit
 
@@ -184,8 +185,18 @@ public extension QuickPay {
         mobilePayPayment = nil
     }
     
-    public static func mobilePayAvailable() -> Bool {
+    public static func isMobilePayAvailable() -> Bool {
         return canOpenUrl(url: mobilePayOnlineScheme)
+    }
+    
+}
+
+// MARK: - Apple Pay
+extension QuickPay {
+    
+    // TODO: Should this be handled by the developers instead of making a 1-1 API to test it
+    static func applePayAvailable() -> Bool {
+        return PKPaymentAuthorizationController.canMakePayments()
     }
     
 }

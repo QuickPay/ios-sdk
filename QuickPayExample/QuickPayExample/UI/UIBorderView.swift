@@ -8,36 +8,32 @@
 
 import Foundation
 
-@IBDesignable class UIBorderView: UIView {}
+open class UIBorderView: UIView {
 
-extension UIBorderView {
-    
-    @IBInspectable var cornerRadius: CGFloat {
+    @IBInspectable var cornerRadius: Double {
         get {
-            return layer.cornerRadius
+            return Double(self.layer.cornerRadius)
+        }set {
+            self.layer.cornerRadius = CGFloat(newValue)
+        }
+    }
+
+    @IBInspectable var borderWidth: Double {
+        get {
+            return Double(self.layer.borderWidth)
         }
         set {
-            layer.cornerRadius = newValue
-            layer.masksToBounds = newValue > 0
+            self.layer.borderWidth = CGFloat(newValue)
+        }
+    }
+
+    @IBInspectable var borderColor: UIColor? {
+        get {
+            return UIColor(cgColor: self.layer.borderColor!)
+        }
+        set {
+            self.layer.borderColor = newValue?.cgColor
         }
     }
     
-    @IBInspectable var borderWidth: CGFloat {
-        get {
-            return layer.borderWidth
-        }
-        set {
-            layer.borderWidth = newValue
-            layer.masksToBounds = newValue > 0
-        }
-    }
-    
-    @IBInspectable var borderColor: UIColor {
-        get {
-            return UIColor.init(cgColor: layer.borderColor!)
-        }
-        set {
-            layer.borderColor = newValue.cgColor
-        }
-    }
 }

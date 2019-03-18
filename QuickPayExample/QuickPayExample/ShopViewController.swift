@@ -29,10 +29,8 @@ class ShopViewController: UIViewController {
     
     @IBOutlet weak var basketTotalLabel: UILabel!
     
-    @IBOutlet weak var creditCardView: SelectableView!
-    @IBOutlet weak var mobilePayView: SelectableView!
-    
     @IBOutlet weak var paymentButton: UIButton!
+    @IBOutlet weak var paymentView: PaymentView!
     
     
     // MARK: - IBActions
@@ -53,15 +51,17 @@ class ShopViewController: UIViewController {
             return
         }
         
-        if creditCardView.isSelected {
-            handleCreditCardPayment()
-        }
-        else if mobilePayView.isSelected {
-            if !QuickPay.mobilePayAvailable() {
-                displayOkAlert(title: "MobilePay Error", message: "MobilePay is not installed on this device.")
+        if let paymentOption = paymentView.getSelectedPaymentOption() {
+            if paymentOption == .mobilePay {
+                if !QuickPay.isMobilePayAvailable() {
+                    displayOkAlert(title: "MobilePay Error", message: "MobilePay is not installed on this device.")
+                }
+                else {
+                    handleMobilePayPayment()
+                }
             }
-            else {
-                handleMobilePayPayment()
+            else if paymentOption == .creditCard {
+                handleCreditCardPayment()
             }
         }
     }
@@ -76,9 +76,8 @@ class ShopViewController: UIViewController {
         navigationBarImage.contentMode = .scaleAspectFit
         navigationItem.titleView = navigationBarImage
 
+        paymentView.delegate = self
         paymentButton.isEnabled = false
-        creditCardView.selectionDelegate = self
-        mobilePayView.selectionDelegate = self
         
         updateBasket()
     }
@@ -215,24 +214,6 @@ extension ShopViewController {
     
 }
 
-extension ShopViewController: SelectionDelegate {
-    
-    func selectionChanged(selectableView: SelectableView) {
-        if selectableView.isSelected {
-            if selectableView != mobilePayView {
-                mobilePayView.isSelected = false
-            }
-            
-            if selectableView != creditCardView {
-                creditCardView.isSelected = false
-            }
-        }
-        
-        paymentButton.isEnabled = creditCardView.isSelected || mobilePayView.isSelected
-    }
-    
-}
-
 extension ShopViewController {
     
     internal func handleQuickPayNetworkErrors(data: Data?, response: URLResponse?, error: Error?) {
@@ -257,6 +238,18 @@ extension ShopViewController {
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+}
+
+extension ShopViewController: PaymentViewDelegate {
+    
+    func paymentOptions() -> [PaymentView.PaymentMethod] {
+        return [PaymentView.PaymentMethod.applePay, PaymentView.PaymentMethod.mobilePay, PaymentView.PaymentMethod.creditCard]
+    }
+    
+    func didSelectPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) {
+        paymentButton.isEnabled = true
     }
     
 }

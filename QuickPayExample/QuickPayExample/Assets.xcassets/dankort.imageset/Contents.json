@@ -6,16 +6,19 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "MPNoBorder.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "dankort.pdf",
       "scale" : "3x"
     }
   ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
   }
 }
