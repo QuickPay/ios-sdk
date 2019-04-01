@@ -7,10 +7,12 @@
 //
 
 import QuickPaySDK
+import PassKit
 
 class ShopViewController: UIViewController {
     
     // MARK: - Properties
+        var appleId: Int?
     
     // Basket
     let tshirtPrice = 0.5
@@ -52,16 +54,23 @@ class ShopViewController: UIViewController {
         }
         
         if let paymentOption = paymentView.getSelectedPaymentOption() {
-            if paymentOption == .mobilePay {
+            switch paymentOption {
+            case .mobilePay:
                 if !QuickPay.isMobilePayAvailable() {
                     displayOkAlert(title: "MobilePay Error", message: "MobilePay is not installed on this device.")
                 }
                 else {
                     handleMobilePayPayment()
                 }
-            }
-            else if paymentOption == .creditCard {
+                break
+
+            case .creditCard:
                 handleCreditCardPayment()
+                break
+                
+            case .applePay:
+                handleApplePayPayment()
+                break
             }
         }
     }
@@ -114,7 +123,7 @@ class ShopViewController: UIViewController {
     
     // MARK: - Utils
     
-    private func createPaymentParametersFromBasket() -> QPCreatePaymentParameters {
+    internal func createPaymentParametersFromBasket() -> QPCreatePaymentParameters {
         // Create the params needed for creating a payment
         let params = QPCreatePaymentParameters(currency: "DKK", order_id: String.randomString(len: 20))
         params.text_on_statement = "QuickPay Example Shop"
@@ -133,6 +142,23 @@ class ShopViewController: UIViewController {
 
         return params
     }
+    
+    internal func handleQuickPayNetworkErrors(data: Data?, response: URLResponse?, error: Error?) {
+        if let data = data {
+            print(String(data: data, encoding: String.Encoding.utf8)!)
+        }
+        
+        if let error = error {
+            print(error)
+        }
+        
+        if let response = response {
+            print(response)
+        }
+        
+        displayOkAlert(title: "Request failed", message: error?.localizedDescription ?? "Unknown error")
+    }
+    
 }
 
 // MARK: - MobilePay
@@ -171,6 +197,114 @@ extension ShopViewController {
             }, failure: self.handleQuickPayNetworkErrors)
         }, failure: self.handleQuickPayNetworkErrors)
     }
+}
+
+// MARK: - Apple Pay
+extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
+    
+    func handleApplePayPayment() {
+        if !PKPaymentAuthorizationViewController.canMakePayments() {
+            PKPassLibrary().openPaymentSetup()
+            return;
+        }
+
+        let request = PKPaymentRequest()
+
+        // This merchantIdentifier should have been created for you in Xcode when you set up the ApplePay capabilities.
+        request.merchantIdentifier = "merchant.quickpayexample"
+        request.countryCode = "DK" // Standard ISO country code. The country in which you make the charge.
+        request.currencyCode = "DKK" // Standard ISO currency code. Any currency you like.
+        request.supportedNetworks = [PKPaymentNetwork.visa, PKPaymentNetwork.masterCard, PKPaymentNetwork.JCB]
+        request.merchantCapabilities = .capability3DS // 3DS or EMV. Check with your payment platform or processor.
+        
+        
+        request.paymentSummaryItems = []
+        
+        if tshirtCount > 0 {
+            request.paymentSummaryItems.append(PKPaymentSummaryItem(label: "\(tshirtCount) T-Shirts", amount: NSDecimalNumber(floatLiteral: Double(tshirtCount)*tshirtPrice)))
+        }
+        
+        if footballCount > 0 {
+            request.paymentSummaryItems.append(PKPaymentSummaryItem(label: "\(footballCount) Footballs", amount: NSDecimalNumber(floatLiteral: Double(footballCount)*footballPrice)))
+        }
+
+        request.paymentSummaryItems.append(PKPaymentSummaryItem(label: "Total", amount: NSDecimalNumber(floatLiteral: totalBasketValue())))
+        
+        if let viewController = PKPaymentAuthorizationViewController(paymentRequest: request) {
+            viewController.delegate = self
+            self.present(viewController, animated: true, completion: nil)
+        }
+        else {
+            print("STUFF WENT SOUTH")
+        }
+    }
+
+    func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
+        // Create the params needed for creating a payment
+        let params = QPCreatePaymentParameters(currency: "DKK", order_id: String.randomString(len: 20))
+        params.text_on_statement = "QuickPay Example Shop"
+        
+        let invoiceAddress = QPAddress()
+        invoiceAddress.name = "CV"
+        invoiceAddress.city = "Aarhus"
+        invoiceAddress.country_code = "DNK"
+        params.invoice_address = invoiceAddress
+        
+        // Fill the basket with the customers cosen items
+        let tshirtBasket =   QPBasket(qty: tshirtCount, item_no: "123", item_name: "T-Shirt", item_price: tshirtPrice, vat_rate: 0.25)
+        let footballBasket = QPBasket(qty: footballCount, item_no: "321", item_name: "Football", item_price: footballPrice, vat_rate: 0.25)
+        params.basket?.append(tshirtBasket)
+        params.basket?.append(footballBasket)
+        
+        let createPaymentRequest = QPCreatePaymentRequest(parameters: params)
+
+        createPaymentRequest.sendRequest(success: { (qpPayment) in
+            print("PAYMENT ID: \(qpPayment.id)")
+            self.appleId = qpPayment.id
+            
+            let authParams = QPAuthorizePaymentParams(id: qpPayment.id, amount: Int(self.totalBasketValue() * 100))
+            let card = QPCard()
+            card.apple_pay_token = QPApplePayToken(pkPaymentToken: payment.token)
+            authParams.card = card
+            
+            let authRequest = QPAuthorizePaymentRequest(parameters: authParams)
+            
+            authRequest.sendRequest(success: { (qpPayment) in
+                completion(PKPaymentAuthorizationResult.init(status: .success, errors: nil))
+            }, failure: { (data, response, error) in
+                self.handleQuickPayNetworkErrors(data: data, response: response, error: error)
+                completion(PKPaymentAuthorizationResult.init(status: .failure, errors: nil))
+            })
+        }) { (data, response, error) in
+            self.handleQuickPayNetworkErrors(data: data, response: response, error: error)
+            completion(PKPaymentAuthorizationResult.init(status: .failure, errors: nil))
+        }
+    }
+
+    func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
+        if let paymentId = appleId {
+            self.appleId = nil
+            
+            QPGetPaymentRequest(id: paymentId).sendRequest(success: { (qpPayment) in
+                self.dismiss(animated: true, completion: nil)
+
+                if qpPayment.accepted {
+                    self.displayOkAlert(title: "Payment Accepted", message: "The payment was accepted and the acquirer is \(qpPayment.acquirer ?? "unknown")")
+                }
+                else {
+                    self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
+                }
+            }) { (data, response, error) in
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+        else {
+            self.dismiss(animated: true, completion: nil)
+            self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
+        }
+    }
+
+    
 }
 
 
@@ -214,38 +348,10 @@ extension ShopViewController {
     
 }
 
-extension ShopViewController {
-    
-    internal func handleQuickPayNetworkErrors(data: Data?, response: URLResponse?, error: Error?) {
-        if let data = data {
-            print(String(data: data, encoding: String.Encoding.utf8)!)
-        }
-        
-        if let error = error {
-            print(error)
-        }
-        
-        if let response = response {
-            print(response)
-        }
-        
-        displayOkAlert(title: "Request failed", message: error?.localizedDescription ?? "Unknown error")
-    }
-    
-    internal func displayOkAlert(title: String, message: String) {
-        OperationQueue.main.addOperation {
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
-    
-}
-
 extension ShopViewController: PaymentViewDelegate {
     
-    func paymentOptions() -> [PaymentView.PaymentMethod] {
-        return [PaymentView.PaymentMethod.applePay, PaymentView.PaymentMethod.mobilePay, PaymentView.PaymentMethod.creditCard]
+    func titleForPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) -> String? {
+        return nil
     }
     
     func didSelectPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) {

@@ -18,7 +18,7 @@ class QuickPaySDKSubscriptionTests: QuickPaySDKTestCase {
         SDKUtils.createSubscriptionRequest().sendRequest(success: { (subscription) in
             subscriptionResponse = subscription
             subscriptionExpectation.fulfill()
-        }, failure: nil)
+        }, failure: super.onError)
         
         waitForExpectations(timeout: QuickPaySDKTestCase.globalTimeout) { (error) in
             XCTAssertNotNil(subscriptionResponse)
@@ -33,8 +33,8 @@ class QuickPaySDKSubscriptionTests: QuickPaySDKTestCase {
             SDKUtils.createSubscriptionLinkRequest(id: subscription.id).sendRequest(success: { (subscriptionLink) in
                 subscriptionLinkResponse = subscriptionLink
                 subscriptionLinkExpectation.fulfill()
-            }, failure: nil)
-        }, failure: nil)
+            }, failure: super.onError)
+        }, failure: super.onError)
         
         waitForExpectations(timeout: QuickPaySDKTestCase.globalTimeout) { (error) in
             XCTAssertNotNil(subscriptionLinkResponse)
@@ -49,8 +49,8 @@ class QuickPaySDKSubscriptionTests: QuickPaySDKTestCase {
             QPGetSubscriptionRequest(id: subscription.id).sendRequest(success: { (subscription) in
                 subscriptionResponse = subscription
                 subscriptionExpectation.fulfill()
-            }, failure: nil)
-        }, failure: nil)
+            }, failure: super.onError)
+        }, failure: super.onError)
         
         waitForExpectations(timeout: QuickPaySDKTestCase.globalTimeout) { (error) in
             XCTAssertNotNil(subscriptionResponse)

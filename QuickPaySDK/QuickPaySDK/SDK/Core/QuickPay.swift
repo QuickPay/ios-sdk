@@ -13,6 +13,9 @@ import UIKit
 public class QuickPay: NSObject {
     
     // MARK: Properties
+
+    static private(set) var isMobilePayActive: Bool = false
+    static private(set) var isApplePayActive: Bool = false
     
     private static var _apiKey: String?
     static private(set) var apiKey: String? {
@@ -36,8 +39,23 @@ public class QuickPay: NSObject {
     
     public static func initWith(apiKey: String) {
         self.apiKey = apiKey
+        fetchAquires()
     }
-
+    
+    public static func fetchAquires() {
+        QPGetAcquireSettingsMobilePayRequest().sendRequest(success: { (settings) in
+            isMobilePayActive = settings.active
+        }) { (data, response, error) in
+            isMobilePayActive = false
+        }
+        
+        QPGetAcquireSettingsClearhausRequest().sendRequest(success: { (settings) in
+            isApplePayActive = settings.active && settings.apple_pay
+        }) { (data, response, error) in
+            isApplePayActive = false
+        }
+    }
+    
     
     // MARK: API
     
@@ -107,14 +125,14 @@ public class QuickPay: NSObject {
                                                object: nil)
     }
     
-    static func stopObserveringLifecycle() {
+    static func stopObservingLifecycle() {
         NotificationCenter.default.removeObserver(self,
                                                   name: UIApplication.didBecomeActiveNotification,
                                                   object: nil)
     }
     
     @objc static func applicationDidBecomeActive() {
-        startObservingLifecycle()
+        stopObservingLifecycle()
         onCallbackFromMobilePay()
     }
 

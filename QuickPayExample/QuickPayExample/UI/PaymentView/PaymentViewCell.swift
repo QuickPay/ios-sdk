@@ -2,7 +2,7 @@
 //  PaymentViewCell.swift
 //  QuickPayExample
 //
-//  Created by Steffen Lund Andersen on 15/03/2019.
+//  Created on 15/03/2019.
 //  Copyright © 2019 QuickPay. All rights reserved.
 //
 
@@ -18,11 +18,14 @@ protocol PaymentViewCellDelegate {
 class PaymentViewCell: UITableViewCell {
     
     // MARK: - Properties and Outlets
+    
     @IBOutlet weak var borderView: UIBorderView!
+    @IBOutlet weak var titleLabel: UILabel!
     var delegate: PaymentViewCellDelegate?
     
 
     // MARK: - Init
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .none
@@ -30,6 +33,7 @@ class PaymentViewCell: UITableViewCell {
 
     
     // MARK: - Lifecycle
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         borderView.backgroundColor = delegate?.cellBackgroundColor(selected)

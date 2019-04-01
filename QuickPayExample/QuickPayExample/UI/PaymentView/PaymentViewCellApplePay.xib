@@ -67,6 +67,7 @@
             <viewLayoutGuide key="safeArea" id="peP-Nj-SMJ"/>
             <connections>
                 <outlet property="borderView" destination="had-Gt-gDb" id="7Rz-In-kLa"/>
+                <outlet property="titleLabel" destination="CRs-UZ-Awi" id="P6h-Oj-NWo"/>
             </connections>
             <point key="canvasLocation" x="-130" y="-9"/>
         </tableViewCell>

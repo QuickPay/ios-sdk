@@ -7,23 +7,39 @@
 //
 
 import Foundation
+import PassKit
+import QuickPaySDK
 
 protocol PaymentViewDelegate {
 
-    func paymentOptions() -> [PaymentView.PaymentMethod]
+    /// This function is called whenever a payment method is selected
     func didSelectPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod)
+    
+    /// Return the string used by the cell representing a payment method
+    /// Return nil to fallback to default titles
+    func titleForPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) -> String?
     
 }
 
-@IBDesignable
 class PaymentView: UIView {
 
     // MARK: - Enums
     
     enum PaymentMethod: String {
-        case creditCard = "PaymentCreditCard"
-        case mobilePay = "PaymentMobilePay"
         case applePay = "PaymentApplePay"
+        case mobilePay = "PaymentMobilePay"
+        case creditCard = "PaymentCreditCard"
+        
+        func defaultTitle() -> String {
+            switch self {
+            case .applePay:
+                return "Apple Pay"
+            case .mobilePay:
+                return "MobilePay"
+            case .creditCard:
+                return "Cards"
+            }
+        }
     }
     
     @IBInspectable var cellBackgroundColorSelected: UIColor = UIColor(red: 220, green: 230, blue: 255)
@@ -35,10 +51,12 @@ class PaymentView: UIView {
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var tableView: UITableView!
     
+    private var availablePaymentMethods: [PaymentMethod]?
     var delegate: PaymentViewDelegate?
     
     
     // MARK: - Init
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.commonInit()
@@ -49,7 +67,7 @@ class PaymentView: UIView {
         self.commonInit()
     }
     
-    func commonInit() {        
+    func commonInit() {
         Bundle.main.loadNibNamed("PaymentView", owner: self, options: nil)
         contentView.fixInView(self)
         
@@ -57,14 +75,30 @@ class PaymentView: UIView {
         self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: nil), forCellReuseIdentifier: PaymentMethod.creditCard.rawValue)
         self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: nil), forCellReuseIdentifier: PaymentMethod.mobilePay.rawValue)
         self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: nil), forCellReuseIdentifier: PaymentMethod.applePay.rawValue)
+        
+        // TODO: Figure out what cababilities the user has
+        availablePaymentMethods = [PaymentView.PaymentMethod.creditCard]
+        
+        if QuickPay.isMobilePayAvailable() {
+            availablePaymentMethods?.insert(PaymentMethod.mobilePay, at: 0)
+        }
+        
+        
+        if PKPaymentAuthorizationController.canMakePayments() {
+            availablePaymentMethods?.insert(PaymentMethod.applePay, at: 0)
+        }
     }
+    
+    // MARK: - Helper functions
+    
+    
     
     
     // MARK: API
     
     func getSelectedPaymentOption() -> PaymentView.PaymentMethod? {
-        if let indexPath = tableView.indexPathForSelectedRow, let delegate = delegate {
-            return delegate.paymentOptions()[indexPath.row]
+        if let indexPath = tableView.indexPathForSelectedRow, let paymentMethod = availablePaymentMethods?[indexPath.row] {
+            return paymentMethod
         }
         else {
             return nil
@@ -72,7 +106,13 @@ class PaymentView: UIView {
     }
     
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 375, height: Int(tableView.rowHeight) * (delegate?.paymentOptions().count ?? 0))
+        if let paymentMethods = availablePaymentMethods {
+            return CGSize(width: 375, height: Int(tableView.rowHeight) * paymentMethods.count)
+        }
+        else {
+            // TODO: Show a loading spinner?
+            return CGSize(width: 375, height: Int(100))
+        }
     }
     
 }
@@ -80,15 +120,22 @@ class PaymentView: UIView {
 extension PaymentView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return delegate?.paymentOptions().count ?? 0
+        return availablePaymentMethods?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let paymentOption = delegate?.paymentOptions()[indexPath.row],
-              let cell = tableView.dequeueReusableCell(withIdentifier: paymentOption.rawValue) as? PaymentViewCell else {
+        guard let paymentMethod = availablePaymentMethods?[indexPath.row],
+            let cell = tableView.dequeueReusableCell(withIdentifier: paymentMethod.rawValue) as? PaymentViewCell else {
                 let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "BAHH")
                 cell.detailTextLabel?.text = "NOOOO"
                 return cell
+        }
+        
+        if let delegateTitle = delegate?.titleForPaymentMethod(self, paymentMethod: paymentMethod) {
+            cell.titleLabel?.text = delegateTitle
+        }
+        else {
+            cell.titleLabel?.text = paymentMethod.defaultTitle()
         }
 
         cell.delegate = self
@@ -100,8 +147,8 @@ extension PaymentView: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let delegate = delegate {
-            delegate.didSelectPaymentMethod(self, paymentMethod: delegate.paymentOptions()[indexPath.row])
+        if let delegate = delegate, let paymentMethod = availablePaymentMethods?[indexPath.row] {
+            delegate.didSelectPaymentMethod(self, paymentMethod: paymentMethod)
         }
     }
     

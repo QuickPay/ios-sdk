@@ -19,7 +19,23 @@ class QuickPaySDKTestCase: XCTestCase {
     // MARK: Test lifecycle
     
     override func setUp() {
-        QuickPay.initWith(authorization: "e42538f4ca60b415f13d147aa3158d09c25c8f4f4111c5c0b8356518c2fb03a7")
+        QuickPay.initWith(apiKey: "f1a4b80189c73862655552d06f9419dd7574c65de916fef88cf9854f6907f1b4")
     }
+
     
+    // MARK: - Utils
+    
+    func onError(data: Data?, response: URLResponse?, error: Error?) {
+        if let response = response {
+            print(response)
+        }
+        
+        if let data = data {
+            print(data)
+        }
+        
+        if let error = error {
+            print(error)
+        }
+    }
 }

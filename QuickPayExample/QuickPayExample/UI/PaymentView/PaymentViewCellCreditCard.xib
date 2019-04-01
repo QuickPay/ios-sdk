@@ -81,6 +81,7 @@
             <viewLayoutGuide key="safeArea" id="ByO-De-U7k"/>
             <connections>
                 <outlet property="borderView" destination="4Ib-lK-cGr" id="t5V-qV-C45"/>
+                <outlet property="titleLabel" destination="RqF-3Z-Q3q" id="55h-hH-NJc"/>
             </connections>
             <point key="canvasLocation" x="60" y="-62.068965517241381"/>
         </tableViewCell>

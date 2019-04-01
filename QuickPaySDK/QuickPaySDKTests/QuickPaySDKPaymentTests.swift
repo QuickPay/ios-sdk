@@ -18,7 +18,7 @@ class QuickPaySDKPaymentTests: QuickPaySDKTestCase {
         SDKUtils.createPaymentRequest().sendRequest(success: { (payment) in
             paymentResponse = payment
             paymentExpectation.fulfill()
-        }, failure: nil)
+        }, failure: super.onError)
         
         waitForExpectations(timeout: QuickPaySDKTestCase.globalTimeout) { (error) in
             XCTAssertNotNil(paymentResponse)
@@ -33,8 +33,8 @@ class QuickPaySDKPaymentTests: QuickPaySDKTestCase {
             SDKUtils.createPaymentLinkRequest(id: payment.id).sendRequest(success: { (paymentLink) in
                 paymentLinkResponse = paymentLink
                 paymentLinkExpectation.fulfill()
-            }, failure: nil)
-        }, failure: nil)
+            }, failure: super.onError)
+        }, failure: super.onError)
         
         waitForExpectations(timeout: QuickPaySDKTestCase.globalTimeout) { (error) in
             XCTAssertNotNil(paymentLinkResponse)
@@ -49,8 +49,8 @@ class QuickPaySDKPaymentTests: QuickPaySDKTestCase {
             QPGetPaymentRequest(id: payment.id).sendRequest(success: { (payment) in
                 paymentResponse = payment
                 paymentExpectation.fulfill()
-            }, failure: nil)
-        }, failure: nil)
+            }, failure: super.onError)
+        }, failure: super.onError)
         
         waitForExpectations(timeout: QuickPaySDKTestCase.globalTimeout) { (error) in
             XCTAssertNotNil(paymentResponse)
