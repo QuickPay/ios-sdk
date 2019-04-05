@@ -16,8 +16,8 @@ protocol PaymentViewDelegate {
     func didSelectPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod)
     
     /// Return the string used by the cell representing a payment method
-    /// Return nil to fallback to default titles
-    func titleForPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) -> String?
+    /// You can access the default english title with ´paymentMethod.defaultTitle()´
+    func titleForPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) -> String
     
 }
 
@@ -76,22 +76,8 @@ class PaymentView: UIView {
         self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: nil), forCellReuseIdentifier: PaymentMethod.mobilePay.rawValue)
         self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: nil), forCellReuseIdentifier: PaymentMethod.applePay.rawValue)
         
-        // TODO: Figure out what cababilities the user has
-        availablePaymentMethods = [PaymentView.PaymentMethod.creditCard]
-        
-        if QuickPay.isMobilePayAvailable() {
-            availablePaymentMethods?.insert(PaymentMethod.mobilePay, at: 0)
-        }
-        
-        
-        if PKPaymentAuthorizationController.canMakePayments() {
-            availablePaymentMethods?.insert(PaymentMethod.applePay, at: 0)
-        }
+        fetchAvailablePaymentMethods()
     }
-    
-    // MARK: - Helper functions
-    
-    
     
     
     // MARK: API
@@ -104,13 +90,28 @@ class PaymentView: UIView {
             return nil
         }
     }
+
+    private func fetchAvailablePaymentMethods() {
+        availablePaymentMethods = [PaymentView.PaymentMethod.creditCard]
+        
+        if QuickPay.isMobilePayOnlineEnabled ?? false && QuickPay.isMobilePayAvailableOnDevice() {
+            availablePaymentMethods?.insert(PaymentMethod.mobilePay, at: 0)
+        }
+        
+        if QuickPay.isApplePayEnabled ?? false && QuickPay.isApplePayAvailableOnDevice() {
+            availablePaymentMethods?.insert(PaymentMethod.applePay, at: 0)
+        }
+    }
+
+    
+    // MARK: - Lifecycle
     
     override var intrinsicContentSize: CGSize {
         if let paymentMethods = availablePaymentMethods {
             return CGSize(width: 375, height: Int(tableView.rowHeight) * paymentMethods.count)
         }
         else {
-            // TODO: Show a loading spinner?
+            // This should not happen
             return CGSize(width: 375, height: Int(100))
         }
     }
@@ -162,6 +163,20 @@ extension PaymentView: PaymentViewCellDelegate {
     
     func cellBorderColor(_ selected: Bool) -> UIColor {
         return selected ? cellBorderColorSelected : cellBorderColorUnselected
+    }
+    
+}
+
+extension PaymentView: QuickPayFetechingDelegate {
+
+    func fetchingAquires() {
+        // NOP
+    }
+    
+    func fetchingCompleted() {
+        self.fetchAvailablePaymentMethods()
+        self.tableView.reloadData()
+        self.invalidateIntrinsicContentSize()
     }
     
 }

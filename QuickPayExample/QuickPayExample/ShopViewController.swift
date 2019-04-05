@@ -5,6 +5,11 @@
 //  Created on 14/01/2019.
 //  Copyright © 2019 QuickPay. All rights reserved.
 //
+//  This ViewController is ment to demonstrate how the different payment methods can be used.
+//  Please note that there are many more payment options than what is demonstrated here
+//  and you should read the technical documentation at the QuickPay website in order to get
+//  a better understanding of all the possibilities.
+//  https://learn.quickpay.net/tech-talk/
 
 import QuickPaySDK
 import PassKit
@@ -12,7 +17,8 @@ import PassKit
 class ShopViewController: UIViewController {
     
     // MARK: - Properties
-        var appleId: Int?
+    
+    var currentPaymentId: Int? // The id of the current payment that is being processed
     
     // Basket
     let tshirtPrice = 0.5
@@ -21,6 +27,7 @@ class ShopViewController: UIViewController {
     var tshirtCount = 0
     var footballCount = 0
     
+    // UI Outlets
     @IBOutlet weak var basketThshirtLabel: UILabel!
     @IBOutlet weak var basketTshirtTotalLabel: UILabel!
     @IBOutlet weak var basketTshirtSection: UIStackView!
@@ -56,7 +63,7 @@ class ShopViewController: UIViewController {
         if let paymentOption = paymentView.getSelectedPaymentOption() {
             switch paymentOption {
             case .mobilePay:
-                if !QuickPay.isMobilePayAvailable() {
+                if !QuickPay.isMobilePayAvailableOnDevice() {
                     displayOkAlert(title: "MobilePay Error", message: "MobilePay is not installed on this device.")
                 }
                 else {
@@ -69,6 +76,8 @@ class ShopViewController: UIViewController {
                 break
                 
             case .applePay:
+                
+                
                 handleApplePayPayment()
                 break
             }
@@ -81,11 +90,13 @@ class ShopViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Style the navigation bar
         let navigationBarImage = UIImageView(image: UIImage(named: "Logo Inverse"))
         navigationBarImage.contentMode = .scaleAspectFit
         navigationItem.titleView = navigationBarImage
 
         paymentView.delegate = self
+        QuickPay.fetchingDelegate = paymentView
         paymentButton.isEnabled = false
         
         updateBasket()
@@ -97,33 +108,20 @@ class ShopViewController: UIViewController {
     private func updateBasket() {
         // Update the TShirt section
         basketThshirtLabel.text = "T-Shirt  x \(tshirtCount)"
-        basketTshirtTotalLabel.text = "\(Double(tshirtCount) * tshirtPrice) DDK"
+        basketTshirtTotalLabel.text = "\(Double(tshirtCount) * tshirtPrice) DKK"
         
         // Update the football sections
         basketFootballLabel.text = "Football x \(footballCount)"
-        basketFootballTotalLabel.text = "\(Double(footballCount) * footballPrice) DDK"
+        basketFootballTotalLabel.text = "\(Double(footballCount) * footballPrice) DKK"
         
         // Update the total section
-        basketTotalLabel.text = "\(totalBasketValue()) DDK"
-    }
-    
-    private func totalBasketValue() -> Double {
-        return Double(tshirtCount) * tshirtPrice + Double(footballCount) * footballPrice
-    }
-    
-    private func basketEmpty() -> Bool {
-        if tshirtCount == 0 && footballCount == 0 {
-            return true;
-        }
-        else {
-            return false;
-        }
+        basketTotalLabel.text = "\(totalBasketValue()) DKK"
     }
     
     
     // MARK: - Utils
     
-    internal func createPaymentParametersFromBasket() -> QPCreatePaymentParameters {
+    private func createPaymentParametersFromBasket() -> QPCreatePaymentParameters {
         // Create the params needed for creating a payment
         let params = QPCreatePaymentParameters(currency: "DKK", order_id: String.randomString(len: 20))
         params.text_on_statement = "QuickPay Example Shop"
@@ -143,7 +141,7 @@ class ShopViewController: UIViewController {
         return params
     }
     
-    internal func handleQuickPayNetworkErrors(data: Data?, response: URLResponse?, error: Error?) {
+    private func handleQuickPayNetworkErrors(data: Data?, response: URLResponse?, error: Error?) {
         if let data = data {
             print(String(data: data, encoding: String.Encoding.utf8)!)
         }
@@ -159,32 +157,59 @@ class ShopViewController: UIViewController {
         displayOkAlert(title: "Request failed", message: error?.localizedDescription ?? "Unknown error")
     }
     
+    private func totalBasketValue() -> Double {
+        return Double(tshirtCount) * tshirtPrice + Double(footballCount) * footballPrice
+    }
+    
+    private func basketEmpty() -> Bool {
+        if tshirtCount == 0 && footballCount == 0 {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
 }
 
+
 // MARK: - MobilePay
+/**
+ Example code to demonstrate the use of MobilePay
+ 
+ The steps needed to use MobilePay is
+ 1) Create a payment
+ 2) Create a payment session
+ 3) Authorize the payment through MobilePay
+ 4) Validate that the authoprization went well
+ */
 extension ShopViewController {
 
     func handleMobilePayPayment() {
-        // Fire up a progress indicator
+        // Show a progress indicator
         showSpinner(onView: self.view)
         
-        // Step 1: Create a payment
+        // Step 1) Create a payment
         QPCreatePaymentRequest(parameters: createPaymentParametersFromBasket()).sendRequest(success: { (payment) in
 
-            // Step 2: Create a payment session with a return URL
+            // Step 2) Create a payment session
+            // You need to specify a return url that MobilePay can query to get back to your app
             let mpp = MobilePayParameters(returnUrl: "quickpayexampleshop://", language: "dk", shopLogoUrl: "https://quickpay.net/images/payment-methods/payment-methods.png")
             let createSessionRequestParameters = CreatePaymenSessionParameters(amount: Int(self.totalBasketValue() * 100), mobilePay: mpp)
             QPCreatePaymenSessionRequest(id: payment.id, parameters: createSessionRequestParameters).sendRequest(success: { (payment) in
                 
-                // Step 3: Authorize through MobilePay
+                // Step 3) Authorize the payment through MobilePay
+                // This step will query the MobilePay app and the completion handler will be invoked when your app is opened up again
                 QuickPay.authorizeWithMobilePay(payment: payment, completion: { (payment) in
                     
-                    // Step 4: Request the payment to get the status
+                    // Step 4) Validate that the authoprization went well
                     QPGetPaymentRequest(id: payment.id).sendRequest(success: { (payment) in
                         self.removeSpinner()
 
                         if payment.accepted {
                             self.displayOkAlert(title: "Payment Accepted", message: "The payment was accepted and the acquirer is \(payment.acquirer ?? "unknown")")
+                            // Congratulations, you have successfully authorized the payment.
+                            // You can now capture the payment when you have shipped the items.
                         }
                         else {
                             self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
@@ -193,83 +218,95 @@ extension ShopViewController {
                 }, failure: {
                     self.displayOkAlert(title: "MobilePay Failed", message: "Could not authorize with MobilePay")
                 })
-
             }, failure: self.handleQuickPayNetworkErrors)
         }, failure: self.handleQuickPayNetworkErrors)
     }
 }
 
+
 // MARK: - Apple Pay
+/**
+ Example code to demonstrate the use of Apple Pay
+ 
+ Apple Pay is a bit different since Apple handles most of the payment process.
+ We recommend you to read this article that descripes all the posibilities you have with Apple Pay.
+ https://www.weareintersect.com/news-and-insights/better-guide-setting-apple-pay/
+ 
+ The steps needed to use Apple Pay is
+ 1) Create a PKPaymentRequest that we can send to Apple
+ 2) Init the Apple Pay controller with the payment and display it
+ 3) Create a payment
+ 4) Authorize the payment with the token stored in the PKPayment
+ 5) Validate that the authoprization went well
+ 
+ NOTE: YOU WILL NOT BE ABLE TO COMPLETE A PAYMENT WITH APPLE PAY WITHOUT A VALID SIGNING CERTIFICATE!!
+ */
 extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
     
     func handleApplePayPayment() {
+        // Test if Apple Pay is available on the phone
         if !PKPaymentAuthorizationViewController.canMakePayments() {
+            displayOkAlert(title: "Error", message: "Sorry but Apple Pay is not supported on your iPhone")
+        }
+
+        // Define the type of payment cards that can be used
+        let networks = [PKPaymentNetwork.visa, PKPaymentNetwork.masterCard, PKPaymentNetwork.JCB]
+        let merchantCapabilities = PKMerchantCapability.capability3DS
+        
+        // Test if the users wallet has a compatible payment card
+        if !PKPaymentAuthorizationController.canMakePayments(usingNetworks: networks, capabilities: merchantCapabilities) {
             PKPassLibrary().openPaymentSetup()
             return;
         }
 
+        // Step 1) Create a PKPaymentRequest that we can send to Apple
         let request = PKPaymentRequest()
 
-        // This merchantIdentifier should have been created for you in Xcode when you set up the ApplePay capabilities.
+        // This merchantIdentifier should have been created for you in Xcode when you set up the Apple Pay capabilities.
         request.merchantIdentifier = "merchant.quickpayexample"
         request.countryCode = "DK" // Standard ISO country code. The country in which you make the charge.
         request.currencyCode = "DKK" // Standard ISO currency code. Any currency you like.
-        request.supportedNetworks = [PKPaymentNetwork.visa, PKPaymentNetwork.masterCard, PKPaymentNetwork.JCB]
-        request.merchantCapabilities = .capability3DS // 3DS or EMV. Check with your payment platform or processor.
+        request.supportedNetworks = networks
+        request.merchantCapabilities = merchantCapabilities
         
-        
+        // Add the items for the summary that will be displayed to the user
         request.paymentSummaryItems = []
         
         if tshirtCount > 0 {
-            request.paymentSummaryItems.append(PKPaymentSummaryItem(label: "\(tshirtCount) T-Shirts", amount: NSDecimalNumber(floatLiteral: Double(tshirtCount)*tshirtPrice)))
+            request.paymentSummaryItems.append(PKPaymentSummaryItem(label: "\(tshirtCount) T-Shirt\(tshirtCount > 1 ? "s" : "")", amount: NSDecimalNumber(floatLiteral: Double(tshirtCount)*tshirtPrice)))
         }
         
         if footballCount > 0 {
-            request.paymentSummaryItems.append(PKPaymentSummaryItem(label: "\(footballCount) Footballs", amount: NSDecimalNumber(floatLiteral: Double(footballCount)*footballPrice)))
+            request.paymentSummaryItems.append(PKPaymentSummaryItem(label: "\(footballCount) Football\(footballCount > 1 ? "s" : "")", amount: NSDecimalNumber(floatLiteral: Double(footballCount)*footballPrice)))
         }
 
         request.paymentSummaryItems.append(PKPaymentSummaryItem(label: "Total", amount: NSDecimalNumber(floatLiteral: totalBasketValue())))
         
+        // Step 2) Init the Apple Pay controller with the payment and display it
         if let viewController = PKPaymentAuthorizationViewController(paymentRequest: request) {
             viewController.delegate = self
             self.present(viewController, animated: true, completion: nil)
         }
         else {
-            print("STUFF WENT SOUTH")
+            displayOkAlert(title: "Error", message: "We could not display the Apple Pay window")
         }
     }
 
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
-        // Create the params needed for creating a payment
-        let params = QPCreatePaymentParameters(currency: "DKK", order_id: String.randomString(len: 20))
-        params.text_on_statement = "QuickPay Example Shop"
         
-        let invoiceAddress = QPAddress()
-        invoiceAddress.name = "CV"
-        invoiceAddress.city = "Aarhus"
-        invoiceAddress.country_code = "DNK"
-        params.invoice_address = invoiceAddress
-        
-        // Fill the basket with the customers cosen items
-        let tshirtBasket =   QPBasket(qty: tshirtCount, item_no: "123", item_name: "T-Shirt", item_price: tshirtPrice, vat_rate: 0.25)
-        let footballBasket = QPBasket(qty: footballCount, item_no: "321", item_name: "Football", item_price: footballPrice, vat_rate: 0.25)
-        params.basket?.append(tshirtBasket)
-        params.basket?.append(footballBasket)
-        
-        let createPaymentRequest = QPCreatePaymentRequest(parameters: params)
-
-        createPaymentRequest.sendRequest(success: { (qpPayment) in
-            print("PAYMENT ID: \(qpPayment.id)")
-            self.appleId = qpPayment.id
+        // Step 3) Create a payment
+        QPCreatePaymentRequest(parameters: createPaymentParametersFromBasket()).sendRequest(success: { (qpPayment) in
+            self.currentPaymentId = qpPayment.id
             
+            // Step 4) Authorize the payment with the token stored in the PKPayment
             let authParams = QPAuthorizePaymentParams(id: qpPayment.id, amount: Int(self.totalBasketValue() * 100))
-            let card = QPCard()
-            card.apple_pay_token = QPApplePayToken(pkPaymentToken: payment.token)
-            authParams.card = card
+            authParams.card = QPCard()
+            authParams.card?.apple_pay_token = QPApplePayToken(pkPaymentToken: payment.token)
             
             let authRequest = QPAuthorizePaymentRequest(parameters: authParams)
             
             authRequest.sendRequest(success: { (qpPayment) in
+                // When we are done with the authorization we need to manually invoke the completion handler to signal that we are done
                 completion(PKPaymentAuthorizationResult.init(status: .success, errors: nil))
             }, failure: { (data, response, error) in
                 self.handleQuickPayNetworkErrors(data: data, response: response, error: error)
@@ -282,17 +319,22 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
     }
 
     func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
-        if let paymentId = appleId {
-            self.appleId = nil
-            
-            QPGetPaymentRequest(id: paymentId).sendRequest(success: { (qpPayment) in
-                self.dismiss(animated: true, completion: nil)
+        if let paymentId = currentPaymentId {
+            self.currentPaymentId = nil
 
-                if qpPayment.accepted {
-                    self.displayOkAlert(title: "Payment Accepted", message: "The payment was accepted and the acquirer is \(qpPayment.acquirer ?? "unknown")")
-                }
-                else {
-                    self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
+            // Step 5) Validate that the authoprization went well
+            QPGetPaymentRequest(id: paymentId).sendRequest(success: { (qpPayment) in
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true, completion: nil)
+                    
+                    if qpPayment.accepted {
+                        self.displayOkAlert(title: "Payment Accepted", message: "The payment was accepted and the acquirer is \(qpPayment.acquirer ?? "unknown")")
+                        // Congratulations, you have successfully authorized the payment.
+                        // You can now capture the payment when you have shipped the items.
+                    }
+                    else {
+                        self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
+                    }
                 }
             }) { (data, response, error) in
                 self.dismiss(animated: true, completion: nil)
@@ -303,24 +345,33 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
             self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
         }
     }
-
     
 }
 
 
 // MARK: - Payment Window
+/**
+ Example code to demonstrate the use of the Payment Window
+ 
+ The steps needed to use the Payment Window is
+ 1) Create a payment
+ 2) Create a payment URL
+ 3) Open the payment URL in a WebView (the SDK handles this part for you)
+ 4) Validate that the authoprization went well
+ */
+
 extension ShopViewController {
     
     func handleCreditCardPayment() {
         showSpinner(onView: self.view)
 
-        // Step 1: Create a payment
+        // Step 1) Create a payment
         QPCreatePaymentRequest(parameters: createPaymentParametersFromBasket()).sendRequest(success: { (payment) in
-            // Step 2: Create the payment URL
+            // Step 2) Create a payment URL
             let linkParams = QPCreatePaymentLinkParameters(id: payment.id, amount: self.totalBasketValue() * 100.0)
             
             QPCreatePaymentLinkRequest(parameters: linkParams).sendRequest(success: { (paymentLink) in
-                // Step 3: Open the payment URL
+                // Step 3) Open the payment URL in a WebView
                 QuickPay.openLink(paymentLink: paymentLink, onCancel: {
                     self.removeSpinner()
                     self.displayOkAlert(title: "Payment Cancelled", message: "The payment was cancelled")
@@ -331,11 +382,13 @@ extension ShopViewController {
                         return
                     }
                     
-                    // Step 4: Request the payment to get the status
+                    // Step 4) Validate that the authoprization went well
                     QPGetPaymentRequest(id: payment.id).sendRequest(success: { (payment) in
                         self.removeSpinner()
                         if payment.accepted {
                             self.displayOkAlert(title: "Payment Accepted", message: "The payment was accepted and the acquirer is \(payment.acquirer ?? "unknown")")
+                            // Congratulations, you have successfully authorized the payment.
+                            // You can now capture the payment when you have shipped the items.
                         }
                         else {
                             self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
@@ -350,8 +403,8 @@ extension ShopViewController {
 
 extension ShopViewController: PaymentViewDelegate {
     
-    func titleForPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) -> String? {
-        return nil
+    func titleForPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) -> String {
+        return paymentMethod.defaultTitle()
     }
     
     func didSelectPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) {

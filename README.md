@@ -200,3 +200,8 @@ QuickPay.authorizeWithMobilePay(payment: payment, completion: { (payment) in {
 ```
 
 In the completion handler we need to check the status of the payment. This is done in the same way as with the payment window. Create a `QPGetPaymentRequest` with the payment id and check if the updated payment is accepted.
+
+### Apple Pay
+
+Recomended reading  
+https://www.weareintersect.com/news-and-insights/better-guide-setting-apple-pay/

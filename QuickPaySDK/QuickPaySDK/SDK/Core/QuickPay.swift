@@ -10,12 +10,20 @@ import PassKit
 import Foundation
 import UIKit
 
+public protocol QuickPayFetechingDelegate {
+    
+    func fetchingAquires()
+    func fetchingCompleted()
+    
+}
+
 public class QuickPay: NSObject {
     
     // MARK: Properties
 
-    static private(set) var isMobilePayActive: Bool = false
-    static private(set) var isApplePayActive: Bool = false
+    public static private(set) var isMobilePayOnlineEnabled: Bool?
+    public static private(set) var isApplePayEnabled: Bool?
+    public static private(set) var isFetching: Bool = true
     
     private static var _apiKey: String?
     static private(set) var apiKey: String? {
@@ -31,6 +39,7 @@ public class QuickPay: NSObject {
     }
     
     public static var logDelegate: LogDelegate?
+    public static var fetchingDelegate: QuickPayFetechingDelegate?
 
     
     // MARK: Init
@@ -43,17 +52,28 @@ public class QuickPay: NSObject {
     }
     
     public static func fetchAquires() {
-        QPGetAcquireSettingsMobilePayRequest().sendRequest(success: { (settings) in
-            isMobilePayActive = settings.active
-        }) { (data, response, error) in
-            isMobilePayActive = false
+        isFetching = true
+        fetchingDelegate?.fetchingAquires()
+
+        let dispatchGroup = DispatchGroup();
+
+        dispatchGroup.enter()
+        isMobilePayOnlineEnabled { (enabled) in
+            isMobilePayOnlineEnabled = enabled
+            dispatchGroup.leave()
         }
         
-        QPGetAcquireSettingsClearhausRequest().sendRequest(success: { (settings) in
-            isApplePayActive = settings.active && settings.apple_pay
-        }) { (data, response, error) in
-            isApplePayActive = false
+        dispatchGroup.enter()
+        isApplePayEnabled { (enabled) in
+            isApplePayEnabled = enabled
+            dispatchGroup.leave()
         }
+        
+        dispatchGroup.notify(queue: .main) {
+            isFetching = false
+            fetchingDelegate?.fetchingCompleted()
+        }
+        
     }
     
     
@@ -203,17 +223,32 @@ public extension QuickPay {
         mobilePayPayment = nil
     }
     
-    public static func isMobilePayAvailable() -> Bool {
-        return canOpenUrl(url: mobilePayOnlineScheme)
-    }
-    
 }
 
-// MARK: - Apple Pay
+// MARK: - Capabilities
 extension QuickPay {
     
-    // TODO: Should this be handled by the developers instead of making a 1-1 API to test it
-    static func applePayAvailable() -> Bool {
+    static func isMobilePayOnlineEnabled(completion: @escaping (_ enabled: Bool)->Void) {
+        QPGetAcquireSettingsMobilePayRequest().sendRequest(success: { (settings) in
+            completion(settings.active)
+        }) { (data, response, error) in
+            completion(false)
+        }
+    }
+    
+    public static func isMobilePayAvailableOnDevice() -> Bool {
+        return canOpenUrl(url: mobilePayOnlineScheme)
+    }
+
+    static func isApplePayEnabled(completion: @escaping (_ enabled: Bool)->Void) {
+        QPGetAcquireSettingsClearhausRequest().sendRequest(success: { (settings) in
+            completion(settings.active && settings.apple_pay)
+        }) { (data, response, error) in
+            completion(false)
+        }
+    }
+    
+    public static func isApplePayAvailableOnDevice() -> Bool {
         return PKPaymentAuthorizationController.canMakePayments()
     }
     
