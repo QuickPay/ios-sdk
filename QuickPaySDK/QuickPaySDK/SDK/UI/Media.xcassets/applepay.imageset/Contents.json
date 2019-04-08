@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "ApplePay.pdf",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "CardsSimple.png",
       "scale" : "2x"
     },
     {

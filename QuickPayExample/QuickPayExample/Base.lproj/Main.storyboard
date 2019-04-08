@@ -174,7 +174,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0vZ-rH-Ube" customClass="PaymentView" customModule="QuickPayExample" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0vZ-rH-Ube" customClass="PaymentView" customModule="QuickPaySDK">
                                                 <rect key="frame" x="0.0" y="340.5" width="375" height="200"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" priority="250" constant="200" id="XKD-fl-mTx"/>

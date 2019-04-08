@@ -96,7 +96,7 @@ class ShopViewController: UIViewController {
         navigationItem.titleView = navigationBarImage
 
         paymentView.delegate = self
-        QuickPay.fetchingDelegate = paymentView
+        QuickPay.initializeDelegate = paymentView
         paymentButton.isEnabled = false
         
         updateBasket()

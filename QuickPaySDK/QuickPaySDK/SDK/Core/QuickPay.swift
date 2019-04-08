@@ -10,10 +10,10 @@ import PassKit
 import Foundation
 import UIKit
 
-public protocol QuickPayFetechingDelegate {
+public protocol InitializeDelegate {
     
-    func fetchingAquires()
-    func fetchingCompleted()
+    func initializaationStarted()
+    func initializaationCompleted()
     
 }
 
@@ -23,8 +23,9 @@ public class QuickPay: NSObject {
 
     public static private(set) var isMobilePayOnlineEnabled: Bool?
     public static private(set) var isApplePayEnabled: Bool?
-    public static private(set) var isFetching: Bool = true
-    
+    public static private(set) var isInitializing: Bool = true
+
+    internal static let sdkBundleIdentifier = "net.quickpay.QuickPaySDK"
     private static var _apiKey: String?
     static private(set) var apiKey: String? {
         get {
@@ -39,7 +40,7 @@ public class QuickPay: NSObject {
     }
     
     public static var logDelegate: LogDelegate?
-    public static var fetchingDelegate: QuickPayFetechingDelegate?
+    public static var initializeDelegate: InitializeDelegate?
 
     
     // MARK: Init
@@ -52,8 +53,8 @@ public class QuickPay: NSObject {
     }
     
     public static func fetchAquires() {
-        isFetching = true
-        fetchingDelegate?.fetchingAquires()
+        isInitializing = true
+        initializeDelegate?.initializaationStarted()
 
         let dispatchGroup = DispatchGroup();
 
@@ -69,9 +70,9 @@ public class QuickPay: NSObject {
             dispatchGroup.leave()
         }
         
-        dispatchGroup.notify(queue: .main) {
-            isFetching = false
-            fetchingDelegate?.fetchingCompleted()
+        dispatchGroup.notify(queue: .global(qos: DispatchQoS.QoSClass.background)) {
+            isInitializing = false
+            initializeDelegate?.initializaationCompleted()
         }
         
     }

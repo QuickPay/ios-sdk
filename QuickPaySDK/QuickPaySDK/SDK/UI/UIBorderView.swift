@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class UIBorderView: UIView {
+class UIBorderView: UIView {
 
     @IBInspectable var cornerRadius: Double {
         get {

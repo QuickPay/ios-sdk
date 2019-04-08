@@ -8,6 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		E104B95F2208EE6D003F9410 /* QPApplePayToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E104B95E2208EE6D003F9410 /* QPApplePayToken.swift */; };
+		E11820FD225B33C900A3C8C7 /* UIBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11820FB225B33C900A3C8C7 /* UIBorderView.swift */; };
+		E1182106225B341300A3C8C7 /* PaymentViewCellMobilePay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1182100225B341300A3C8C7 /* PaymentViewCellMobilePay.xib */; };
+		E1182107225B341300A3C8C7 /* PaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1182101225B341300A3C8C7 /* PaymentView.swift */; };
+		E1182108225B341300A3C8C7 /* PaymentViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1182102225B341300A3C8C7 /* PaymentViewCell.swift */; };
+		E1182109225B341300A3C8C7 /* PaymentViewCellApplePay.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1182103225B341300A3C8C7 /* PaymentViewCellApplePay.xib */; };
+		E118210A225B341300A3C8C7 /* PaymentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1182104225B341300A3C8C7 /* PaymentView.xib */; };
+		E118210B225B341300A3C8C7 /* PaymentViewCellCreditCard.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1182105225B341300A3C8C7 /* PaymentViewCellCreditCard.xib */; };
+		E118210E225B378400A3C8C7 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E118210D225B378400A3C8C7 /* UIColorExtensions.swift */; };
+		E1182110225B37B400A3C8C7 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E118210F225B37B400A3C8C7 /* UIViewExtensions.swift */; };
+		E1182112225B3CF400A3C8C7 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1182111225B3CF400A3C8C7 /* Media.xcassets */; };
 		E12A0070220085B5005D05FB /* IDETemplateMacros.plist in Resources */ = {isa = PBXBuildFile; fileRef = E12A006F220085B5005D05FB /* IDETemplateMacros.plist */; };
 		E12A00842200C754005D05FB /* QPCreateSubscriptionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12A00832200C754005D05FB /* QPCreateSubscriptionRequest.swift */; };
 		E12A00862200C77F005D05FB /* QPCreateSubscriptionParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12A00852200C77F005D05FB /* QPCreateSubscriptionParameters.swift */; };
@@ -66,6 +76,16 @@
 
 /* Begin PBXFileReference section */
 		E104B95E2208EE6D003F9410 /* QPApplePayToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPApplePayToken.swift; sourceTree = "<group>"; };
+		E11820FB225B33C900A3C8C7 /* UIBorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIBorderView.swift; sourceTree = "<group>"; };
+		E1182100225B341300A3C8C7 /* PaymentViewCellMobilePay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentViewCellMobilePay.xib; sourceTree = "<group>"; };
+		E1182101225B341300A3C8C7 /* PaymentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentView.swift; sourceTree = "<group>"; };
+		E1182102225B341300A3C8C7 /* PaymentViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentViewCell.swift; sourceTree = "<group>"; };
+		E1182103225B341300A3C8C7 /* PaymentViewCellApplePay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentViewCellApplePay.xib; sourceTree = "<group>"; };
+		E1182104225B341300A3C8C7 /* PaymentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentView.xib; sourceTree = "<group>"; };
+		E1182105225B341300A3C8C7 /* PaymentViewCellCreditCard.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentViewCellCreditCard.xib; sourceTree = "<group>"; };
+		E118210D225B378400A3C8C7 /* UIColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
+		E118210F225B37B400A3C8C7 /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
+		E1182111225B3CF400A3C8C7 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		E12A006F220085B5005D05FB /* IDETemplateMacros.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = IDETemplateMacros.plist; path = QuickPaySDK.xcodeproj/xcshareddata/IDETemplateMacros.plist; sourceTree = SOURCE_ROOT; };
 		E12A00832200C754005D05FB /* QPCreateSubscriptionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPCreateSubscriptionRequest.swift; sourceTree = "<group>"; };
 		E12A00852200C77F005D05FB /* QPCreateSubscriptionParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPCreateSubscriptionParameters.swift; sourceTree = "<group>"; };
@@ -134,6 +154,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E11820FF225B341300A3C8C7 /* PaymentView */ = {
+			isa = PBXGroup;
+			children = (
+				E1182100225B341300A3C8C7 /* PaymentViewCellMobilePay.xib */,
+				E1182101225B341300A3C8C7 /* PaymentView.swift */,
+				E1182102225B341300A3C8C7 /* PaymentViewCell.swift */,
+				E1182103225B341300A3C8C7 /* PaymentViewCellApplePay.xib */,
+				E1182104225B341300A3C8C7 /* PaymentView.xib */,
+				E1182105225B341300A3C8C7 /* PaymentViewCellCreditCard.xib */,
+			);
+			path = PaymentView;
+			sourceTree = "<group>";
+		};
+		E118210C225B374300A3C8C7 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E11820FF225B341300A3C8C7 /* PaymentView */,
+				E11820FB225B33C900A3C8C7 /* UIBorderView.swift */,
+				E1182111225B3CF400A3C8C7 /* Media.xcassets */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		E12A006E220085A0005D05FB /* Macros */ = {
 			isa = PBXGroup;
 			children = (
@@ -246,6 +289,8 @@
 		E1708A092205BFD20060AB1C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E118210F225B37B400A3C8C7 /* UIViewExtensions.swift */,
+				E118210D225B378400A3C8C7 /* UIColorExtensions.swift */,
 				E1708A0B2205C0020060AB1C /* URLRequestExtensions.swift */,
 				E18490922219A3B900CB734C /* StringExtensions.swift */,
 			);
@@ -308,6 +353,7 @@
 		E1A82123220303EF0017EE4F /* SDK */ = {
 			isa = PBXGroup;
 			children = (
+				E118210C225B374300A3C8C7 /* UI */,
 				E15788332223EB3700C86EB7 /* Core */,
 				E1708A092205BFD20060AB1C /* Extensions */,
 				E1A821212203038B0017EE4F /* Networking */,
@@ -416,6 +462,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1182106225B341300A3C8C7 /* PaymentViewCellMobilePay.xib in Resources */,
+				E118210A225B341300A3C8C7 /* PaymentView.xib in Resources */,
+				E118210B225B341300A3C8C7 /* PaymentViewCellCreditCard.xib in Resources */,
+				E1182109225B341300A3C8C7 /* PaymentViewCellApplePay.xib in Resources */,
+				E1182112225B3CF400A3C8C7 /* Media.xcassets in Resources */,
 				E12A0070220085B5005D05FB /* IDETemplateMacros.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,6 +492,7 @@
 				E12EE4ED219EE76E00843B0D /* QPPayment.swift in Sources */,
 				E13893AD2208990D00789826 /* QPNin.swift in Sources */,
 				E13893AF22089A1000789826 /* QPAuthorizePaymentRequest.swift in Sources */,
+				E1182107225B341300A3C8C7 /* PaymentView.swift in Sources */,
 				E1897CAC219C6B00002CE64A /* QPShipping.swift in Sources */,
 				E12A00862200C77F005D05FB /* QPCreateSubscriptionParameters.swift in Sources */,
 				E12EE4EF219EEEB100843B0D /* QPOperation.swift in Sources */,
@@ -455,9 +507,11 @@
 				E1897CB7219C6B20002CE64A /* QuickPayHttpStatusCodes.swift in Sources */,
 				E1C3984C21A4342100086C9D /* QPPaymentLink.swift in Sources */,
 				E1897CB4219C6B00002CE64A /* QPPaymentWindowController.swift in Sources */,
+				E1182110225B37B400A3C8C7 /* UIViewExtensions.swift in Sources */,
 				E1897CB9219C6B74002CE64A /* QuickPay.swift in Sources */,
 				E158068E22427B9C000F8954 /* QPGetAcquireSettingsClearhausRequest.swift in Sources */,
 				E12A008A2200CD07005D05FB /* QPSubscription.swift in Sources */,
+				E11820FD225B33C900A3C8C7 /* UIBorderView.swift in Sources */,
 				E1708A132205DBE60060AB1C /* QPGetSubscriptionRequest.swift in Sources */,
 				E1A9DF4A22427025005424BF /* QPGetAcquireSettingsMobilePayRequest.swift in Sources */,
 				E15788382223EC8400C86EB7 /* EncodableValue.swift in Sources */,
@@ -465,6 +519,8 @@
 				E1849095221A058D00CB734C /* QPCreatePaymentSessionRequest.swift in Sources */,
 				E1CA62EC2201A65700C8592F /* QPCreateSubscriptionLinkParameters.swift in Sources */,
 				E157883D2224003A00C86EB7 /* PrintLogger.swift in Sources */,
+				E1182108225B341300A3C8C7 /* PaymentViewCell.swift in Sources */,
+				E118210E225B378400A3C8C7 /* UIColorExtensions.swift in Sources */,
 				E1CA62EA2201A5FC00C8592F /* QPCreateSubscriptionLinkRequest.swift in Sources */,
 				E1C3984A21A432D600086C9D /* QPMetadata.swift in Sources */,
 				E1897CB3219C6B00002CE64A /* QPAddress.swift in Sources */,
