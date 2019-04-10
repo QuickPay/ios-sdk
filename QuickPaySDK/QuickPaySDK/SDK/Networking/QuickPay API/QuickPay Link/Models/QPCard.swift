@@ -47,4 +47,9 @@ public class QPCard: Codable {
     public init() {
         
     }
+    
+    convenience public init(applePayToken: PKPaymentToken) {
+        self.init()
+        self.apple_pay_token = QPApplePayToken(pkPaymentToken: applePayToken)
+    }
 }

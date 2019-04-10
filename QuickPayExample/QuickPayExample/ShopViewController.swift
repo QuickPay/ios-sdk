@@ -18,12 +18,12 @@ class ShopViewController: UIViewController {
     
     // MARK: - Properties
     
-    var currentPaymentId: Int? // The id of the current payment that is being processed
+    // The id of the current payment that is being processed.
+    var currentPaymentId: Int?
     
     // Basket
     let tshirtPrice = 0.5
     let footballPrice = 1.0
-    
     var tshirtCount = 0
     var footballCount = 0
     
@@ -62,23 +62,21 @@ class ShopViewController: UIViewController {
         
         if let paymentOption = paymentView.getSelectedPaymentOption() {
             switch paymentOption {
-            case .mobilePay:
+            case .mobilepay:
                 if !QuickPay.isMobilePayAvailableOnDevice() {
                     displayOkAlert(title: "MobilePay Error", message: "MobilePay is not installed on this device.")
                 }
                 else {
-                    handleMobilePayPayment()
+                    handleMobilePay()
                 }
                 break
 
-            case .creditCard:
-                handleCreditCardPayment()
+            case .paymentcard:
+                handlePaymentWindow()
                 break
                 
-            case .applePay:
-                
-                
-                handleApplePayPayment()
+            case .applepay:
+                handleApplePay()
                 break
             }
         }
@@ -185,7 +183,7 @@ class ShopViewController: UIViewController {
  */
 extension ShopViewController {
 
-    func handleMobilePayPayment() {
+    func handleMobilePay() {
         // Show a progress indicator
         showSpinner(onView: self.view)
         
@@ -195,7 +193,7 @@ extension ShopViewController {
             // Step 2) Create a payment session
             // You need to specify a return url that MobilePay can query to get back to your app
             let mpp = MobilePayParameters(returnUrl: "quickpayexampleshop://", language: "dk", shopLogoUrl: "https://quickpay.net/images/payment-methods/payment-methods.png")
-            let createSessionRequestParameters = CreatePaymenSessionParameters(amount: Int(self.totalBasketValue() * 100), mobilePay: mpp)
+            let createSessionRequestParameters = QPCreatePaymenSessionParameters(amount: Int(self.totalBasketValue() * 100), mobilePay: mpp)
             QPCreatePaymenSessionRequest(id: payment.id, parameters: createSessionRequestParameters).sendRequest(success: { (payment) in
                 
                 // Step 3) Authorize the payment through MobilePay
@@ -228,7 +226,7 @@ extension ShopViewController {
 /**
  Example code to demonstrate the use of Apple Pay
  
- Apple Pay is a bit different since Apple handles most of the payment process.
+ Apple Pay is a bit different from the other payment methods since Apple handles most of the payment process.
  We recommend you to read this article that descripes all the posibilities you have with Apple Pay.
  https://www.weareintersect.com/news-and-insights/better-guide-setting-apple-pay/
  
@@ -239,11 +237,11 @@ extension ShopViewController {
  4) Authorize the payment with the token stored in the PKPayment
  5) Validate that the authoprization went well
  
- NOTE: YOU WILL NOT BE ABLE TO COMPLETE A PAYMENT WITH APPLE PAY WITHOUT A VALID SIGNING CERTIFICATE!!
+ NOTE: YOU WILL NOT BE ABLE TO COMPLETE A PAYMENT WITH APPLE PAY IN THIS EXAMPLE APP WITHOUT A VALID SIGNING CERTIFICATE!!
  */
 extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
     
-    func handleApplePayPayment() {
+    func handleApplePay() {
         // Test if Apple Pay is available on the phone
         if !PKPaymentAuthorizationViewController.canMakePayments() {
             displayOkAlert(title: "Error", message: "Sorry but Apple Pay is not supported on your iPhone")
@@ -300,8 +298,7 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
             
             // Step 4) Authorize the payment with the token stored in the PKPayment
             let authParams = QPAuthorizePaymentParams(id: qpPayment.id, amount: Int(self.totalBasketValue() * 100))
-            authParams.card = QPCard()
-            authParams.card?.apple_pay_token = QPApplePayToken(pkPaymentToken: payment.token)
+            authParams.card = QPCard(applePayToken: payment.token)
             
             let authRequest = QPAuthorizePaymentRequest(parameters: authParams)
             
@@ -359,10 +356,9 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
  3) Open the payment URL in a WebView (the SDK handles this part for you)
  4) Validate that the authoprization went well
  */
-
 extension ShopViewController {
     
-    func handleCreditCardPayment() {
+    func handlePaymentWindow() {
         showSpinner(onView: self.view)
 
         // Step 1) Create a payment
@@ -401,6 +397,7 @@ extension ShopViewController {
     
 }
 
+// MARK: - PaymentViewDelegate
 extension ShopViewController: PaymentViewDelegate {
     
     func titleForPaymentMethod(_ paymentView: PaymentView, paymentMethod: PaymentView.PaymentMethod) -> String {

@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PaymentView" customModule="QuickPayExample" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PaymentView" customModule="QuickPaySDK">
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="1s2-hn-gtV"/>
                 <outlet property="tableView" destination="JQb-wK-JNO" id="cxx-b4-hV0"/>
@@ -24,10 +24,6 @@
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="70" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="JQb-wK-JNO">
                     <rect key="frame" x="0.0" y="20" width="738" height="524"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="zWQ-hm-5Gu"/>
-                        <outlet property="delegate" destination="-1" id="DIP-6M-m7d"/>
-                    </connections>
                 </tableView>
             </subviews>
             <constraints>

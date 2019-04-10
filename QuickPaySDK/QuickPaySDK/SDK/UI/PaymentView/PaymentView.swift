@@ -25,17 +25,17 @@ public class PaymentView: UIView {
     // MARK: - Enums
     
     public enum PaymentMethod: String {
-        case applePay = "PaymentApplePay"
-        case mobilePay = "PaymentMobilePay"
-        case creditCard = "PaymentCreditCard"
+        case applepay = "PaymentApplePay"
+        case mobilepay = "PaymentMobilePay"
+        case paymentcard = "PaymentCreditCard"
         
         public func defaultTitle() -> String {
             switch self {
-            case .applePay:
+            case .applepay:
                 return "Apple Pay"
-            case .mobilePay:
+            case .mobilepay:
                 return "MobilePay"
-            case .creditCard:
+            case .paymentcard:
                 return "Cards"
             }
         }
@@ -72,17 +72,20 @@ public class PaymentView: UIView {
             contentView.fixInView(self)
 
             // Init all the payment cells
-            self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: bundle), forCellReuseIdentifier: PaymentMethod.creditCard.rawValue)
-            self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.mobilePay.rawValue)
-            self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.applePay.rawValue)
+            self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: bundle), forCellReuseIdentifier: PaymentMethod.paymentcard.rawValue)
+            self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.mobilepay.rawValue)
+            self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.applepay.rawValue)
         }
         else {
             QuickPay.logDelegate?.log("Could not load the needed Nib files from bundle")
         }
+
+        tableView.delegate = self
+        tableView.dataSource = self
         
         updateAvailablePaymentMethods()
     }
-    
+
     
     // MARK: API
     
@@ -96,14 +99,14 @@ public class PaymentView: UIView {
     }
 
     private func updateAvailablePaymentMethods() {
-        availablePaymentMethods = [PaymentView.PaymentMethod.creditCard]
+        availablePaymentMethods = [PaymentView.PaymentMethod.paymentcard]
         
         if QuickPay.isMobilePayOnlineEnabled ?? false && QuickPay.isMobilePayAvailableOnDevice() {
-            availablePaymentMethods?.insert(PaymentMethod.mobilePay, at: 0)
+            availablePaymentMethods?.insert(PaymentMethod.mobilepay, at: 0)
         }
         
         if QuickPay.isApplePayEnabled ?? false && QuickPay.isApplePayAvailableOnDevice() {
-            availablePaymentMethods?.insert(PaymentMethod.applePay, at: 0)
+            availablePaymentMethods?.insert(PaymentMethod.applepay, at: 0)
         }
     }
 
@@ -131,9 +134,7 @@ extension PaymentView: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let paymentMethod = availablePaymentMethods?[indexPath.row],
             let cell = tableView.dequeueReusableCell(withIdentifier: paymentMethod.rawValue) as? PaymentViewCell else {
-                let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "BAHH")
-                cell.detailTextLabel?.text = "NOOOO"
-                return cell
+                return UITableViewCell(style: .subtitle, reuseIdentifier: nil)
         }
         
         if let delegateTitle = delegate?.titleForPaymentMethod(self, paymentMethod: paymentMethod) {
@@ -147,11 +148,11 @@ extension PaymentView: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    private func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
 
-    private func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let delegate = delegate, let paymentMethod = availablePaymentMethods?[indexPath.row] {
             delegate.didSelectPaymentMethod(self, paymentMethod: paymentMethod)
         }

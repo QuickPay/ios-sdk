@@ -13,12 +13,12 @@ public class QPCreatePaymenSessionRequest: QPRequest {
     // MARK: - Properties
     
     var id: Int
-    var parameters: CreatePaymenSessionParameters
+    var parameters: QPCreatePaymenSessionParameters
 
     
     // MARK: Init
     
-    public init(id: Int, parameters: CreatePaymenSessionParameters) {
+    public init(id: Int, parameters: QPCreatePaymenSessionParameters) {
         self.id = id;
         self.parameters = parameters
     }
@@ -40,11 +40,19 @@ public class QPCreatePaymenSessionRequest: QPRequest {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        super.sendRequest(request: request, success: success, failure: failure)
+        super.sendRequest(request: request, success: success) { (data, response, error) in
+            if let httpUrlResponse = response as? HTTPURLResponse {
+                if httpUrlResponse.statusCode == QuickPayHttpStatusCodes.unauthorized.rawValue {
+                    QuickPay.logDelegate?.log("The API key needs permissions for 'POST /payments/:id/session'")
+                }
+            }
+            
+            failure?(data, response, error)
+        }
     }
 }
 
-public class CreatePaymenSessionParameters: Encodable {
+public class QPCreatePaymenSessionParameters: Encodable {
     
     // MARK: - Properties
     

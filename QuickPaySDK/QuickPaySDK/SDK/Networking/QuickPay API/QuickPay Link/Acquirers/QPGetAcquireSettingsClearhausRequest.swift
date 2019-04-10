@@ -31,7 +31,15 @@ public class QPGetAcquireSettingsClearhausRequest: QPRequest {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        super.sendRequest(request: request, success: success, failure: failure)
+        super.sendRequest(request: request, success: success) { (data, response, error) in
+            if let httpUrlResponse = response as? HTTPURLResponse {
+                if httpUrlResponse.statusCode == QuickPayHttpStatusCodes.unauthorized.rawValue {
+                    QuickPay.logDelegate?.log("The API key needs permissions for 'GET  /acquirers/clearhaus'")
+                }
+            }
+            
+            failure?(data, response, error)
+        }
     }
     
 }

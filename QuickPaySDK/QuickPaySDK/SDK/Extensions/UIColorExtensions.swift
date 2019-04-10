@@ -2,7 +2,7 @@
 //  UIColorExtensions.swift
 //  QuickPayExample
 //
-//  Created by Steffen Lund Andersen on 17/03/2019.
+//  Created on 17/03/2019.
 //  Copyright © 2019 QuickPay. All rights reserved.
 //
 
