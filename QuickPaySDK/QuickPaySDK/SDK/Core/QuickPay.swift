@@ -174,7 +174,7 @@ public extension QuickPay {
     
     // MARK: API
     
-    public static func authorizeWithMobilePay(payment: QPPayment, completion: ((_ payment: QPPayment) -> Void)?, failure: (() -> Void)?) {
+    static func authorizeWithMobilePay(payment: QPPayment, completion: ((_ payment: QPPayment) -> Void)?, failure: (() -> Void)?) {
         guard let mobilePayToken = payment.operations?[0].data?["session_token"] else {
             QuickPay.logDelegate?.log("The operations of the Payment does not contain the needed information to authorize through MobilePay")
             failure?()
