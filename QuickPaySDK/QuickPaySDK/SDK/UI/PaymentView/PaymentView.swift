@@ -47,7 +47,7 @@ public class PaymentView: UIView {
     @IBInspectable var cellBorderColorSelected: UIColor = UIColor(red: 220, green: 230, blue: 255)
     @IBInspectable var cellBorderColorUnselected: UIColor = UIColor(red: 170, green: 170, blue: 170)
 
-    @IBOutlet var contentView: UIView!
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var tableView: UITableView!
     
     private var availablePaymentMethods: [PaymentMethod]?

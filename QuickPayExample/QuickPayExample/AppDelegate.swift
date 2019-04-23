@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // This is only nessesary in this example app because the PaymentView is displayed
         // before the SDK has had a change to communicate with the QuickPay API to determine
-        // which paymenet methods are available.
+        // which paymenet methods is available.
         while QuickPay.isInitializing {
             sleep(1)
         }

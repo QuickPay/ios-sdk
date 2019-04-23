@@ -6,7 +6,7 @@
 	<dict>
 		<key>Assets.car</key>
 		<data>
-		0JgQpUWX7kN9ETTxi9m8BxV6VQs=
+		RPdQM1h9u1+31m+zihefQZiYGek=
 		</data>
 		<key>Headers/QuickPaySDK-Swift.h</key>
 		<data>
@@ -22,7 +22,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		eBCIm+s72zxoWIm8rLOLNNw3ELE=
+		xWXcguszWuyViTC3Wp33g2q/4L8=
 		</data>
 		<key>Modules/QuickPaySDK.swiftmodule/arm64.swiftdoc</key>
 		<data>
@@ -30,7 +30,7 @@
 		</data>
 		<key>Modules/QuickPaySDK.swiftmodule/arm64.swiftmodule</key>
 		<data>
-		pMHBI9pfZNf1Lq/l6toCUbz+vNI=
+		3Mfs1uYcTS2JhjyXSB0Js84ARfY=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -38,19 +38,19 @@
 		</data>
 		<key>PaymentView.nib</key>
 		<data>
-		UZ3PVIj1zEpfJw/NBEdUOSxhZwo=
+		+QB7wEQ8KUQY35RooWGUBZsLAbI=
 		</data>
 		<key>PaymentViewCellApplePay.nib</key>
 		<data>
-		HQpcAyxyIMnQln0VZl5FQrliGtU=
+		WB3bdNfnw3nox981hm3awkO4ePA=
 		</data>
 		<key>PaymentViewCellCreditCard.nib</key>
 		<data>
-		+gHDACoRhTL/FmSPrA8imX84fXI=
+		57MQgD2nJzNwT6ksy34HggXxZPI=
 		</data>
 		<key>PaymentViewCellMobilePay.nib</key>
 		<data>
-		F+jUVlVHeLOed4t5QYt0kKLYegQ=
+		pB7mqaSjjKohLy3bHFoDudS64Wk=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -59,7 +59,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			6c7SP8eZHKa/D99bcAJDEEIoSdBnRQYOW/did2sRfDQ=
+			EZd1hvD3YC2+065ODse7v/y8U2sbAp+Y0/xO/rWpMFs=
 			</data>
 		</dict>
 		<key>Headers/QuickPaySDK-Swift.h</key>
@@ -94,7 +94,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			NuwSgg1rC59qR2eyUs3iF51o+cLIJLDxAEx4TVJZCQ8=
+			j2GZYTmU3sRpVqssJ6f5oryDdTM1Ya7iKIqj7OCXVCA=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -108,28 +108,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			k0sDxQv4ItLdZry/ClP04RteEzYpH9dyltyQDC6Xd50=
+			Dmj8rLZ3uewoMbc0op0u5+RGZq+G97HMp3B8b3y0R1U=
 			</data>
 		</dict>
 		<key>PaymentViewCellApplePay.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			HIt7iHNtegrJnxPRjQ3vDO8KO+VhJBYxf+1t2lBOQmg=
+			L2PpplrRZMESpahPAZhUYAU7czVdmmK9zdmd76tG4ZI=
 			</data>
 		</dict>
 		<key>PaymentViewCellCreditCard.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			S5WHxIc125vU6Pn9z2prfKiQUiBnL9vjdBpR88e5/Fg=
+			mPr5FVySTXh6kQwvIc9ChB70IAOAaUACQve9t8MV9yc=
 			</data>
 		</dict>
 		<key>PaymentViewCellMobilePay.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			b32pStmIYa5zpswTvGuwLe8E0R7mDorx1HbbByls2i4=
+			5xYg0fwmMuNrrkWU5gV94wluHIu+xRAn5tTnWwwLUMk=
 			</data>
 		</dict>
 	</dict>
