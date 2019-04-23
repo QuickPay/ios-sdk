@@ -33,8 +33,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0DE127B8E1ECD683B7ED4699 /* Pods-QuickPayExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickPayExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-QuickPayExample/Pods-QuickPayExample.release.xcconfig"; sourceTree = "<group>"; };
-		314C44D0CDA91E976685F897 /* Pods-QuickPayExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickPayExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QuickPayExample/Pods-QuickPayExample.debug.xcconfig"; sourceTree = "<group>"; };
 		E11814E021E2B07D00BC5558 /* QuickPayExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickPayExample.entitlements; sourceTree = "<group>"; };
 		E13DFC4621ED10AA000DE6B2 /* ShopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopViewController.swift; sourceTree = "<group>"; };
 		E14DF85D222983D500DD931F /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
@@ -61,15 +59,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2BE0AD70406E017B279073E7 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				314C44D0CDA91E976685F897 /* Pods-QuickPayExample.debug.xcconfig */,
-				0DE127B8E1ECD683B7ED4699 /* Pods-QuickPayExample.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		E106A7A4219A403400F85538 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -93,7 +82,6 @@
 				E163131A2192261900A75B73 /* QuickPayExample */,
 				E16313192192261900A75B73 /* Products */,
 				E106A7A4219A403400F85538 /* Frameworks */,
-				2BE0AD70406E017B279073E7 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -128,12 +116,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E163132A2192261A00A75B73 /* Build configuration list for PBXNativeTarget "QuickPayExample" */;
 			buildPhases = (
-				600AD714145ACDD61E0244CD /* [CP] Check Pods Manifest.lock */,
 				E16313142192261900A75B73 /* Sources */,
 				E16313152192261900A75B73 /* Frameworks */,
 				E16313162192261900A75B73 /* Resources */,
 				E1EDD0D1221B1A930057581D /* Embed Frameworks */,
-				E1DEDB35223A900C007C54DD /* ShellScript */,
+				E1DEDB35223A900C007C54DD /* Strip Architectures From Fat Libraries */,
 			);
 			buildRules = (
 			);
@@ -197,25 +184,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		600AD714145ACDD61E0244CD /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-QuickPayExample-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E1DEDB35223A900C007C54DD /* ShellScript */ = {
+		E1DEDB35223A900C007C54DD /* Strip Architectures From Fat Libraries */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -224,6 +193,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Strip Architectures From Fat Libraries";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -388,7 +358,6 @@
 		};
 		E163132B2192261A00A75B73 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 314C44D0CDA91E976685F897 /* Pods-QuickPayExample.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -418,7 +387,6 @@
 		};
 		E163132C2192261A00A75B73 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0DE127B8E1ECD683B7ED4699 /* Pods-QuickPayExample.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
