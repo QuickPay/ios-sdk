@@ -22,7 +22,8 @@ ENV["IOS_FRAMEWORK_PATH"] =       "#{ENV['DERIVED_DATA_PATH']}/Build/Products/Re
 ENV["SIMULATOR_FRAMEWORK_PATH"] = "#{ENV['DERIVED_DATA_PATH']}/Build/Products/Release-iphonesimulator/QuickPaySDK.framework"
 ENV["RELEASE_PATH"] =             "#{ENV['PWD']}/../Release"
 ENV["README_FILE"] =              "#{ENV['PWD']}/../README.md"
-ENV["LICENSE_FILE"] =              "#{ENV['PWD']}/../LICENSE"
+ENV["LICENSE_FILE"] =             "#{ENV['PWD']}/../LICENSE"
+ENV["EXAMPLE_APP"] =              "#{ENV['PWD']}/../QuickPayExample"
 
 
 default_platform(:ios)
@@ -67,6 +68,9 @@ platform :ios do
     # Copy the frameworks, license file and the README.md into the release folder
     FileUtils.cp("#{ENV['README_FILE']}", "#{ENV["RELEASE_PATH"]}")
     FileUtils.cp("#{ENV['LICENSE_FILE']}", "#{ENV["RELEASE_PATH"]}")
+
+    # Copy the Example app into the release folder
+    FileUtils.cp_r("#{ENV['EXAMPLE_APP']}", "#{ENV["RELEASE_PATH"]}")
 
     # Build a Fat library in the Release folder
     FileUtils.cp_r("#{ENV['IOS_FRAMEWORK_PATH']}", "#{ENV["RELEASE_PATH"]}/QuickPaySDK.framework")
