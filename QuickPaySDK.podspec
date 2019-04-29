@@ -5,7 +5,7 @@ Pod::Spec.new do |spec|
   spec.homepage     = 'http://quickpay.net'
 
   spec.authors      = 'QuickPay'
-  spec.license      = { :type => 'Apache-2.0', :file => 'LICENSE' }
+  spec.license      = { :type => 'EULA', :file => 'LICENSE' }
 
   spec.platform     = :ios
   spec.source       = { :git => 'https://github.com/QuickPay/ios-sdk-pod.git', :tag => 'v1.0' }
