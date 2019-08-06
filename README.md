@@ -140,7 +140,7 @@ QuickPay.openLink(paymentLink: paymentLink, onCancel: {
     // Handle if the user cancels
 }, onResponse: { (success) in
     // Handle success/failure
-}
+}, presenter: self)
 ```
 
 If success is true the payment has been handled but we do not yet know if the payment has actually been authorized. For that, we need to check the status of the payment which is done with the `QPGetPaymentRequest`.
