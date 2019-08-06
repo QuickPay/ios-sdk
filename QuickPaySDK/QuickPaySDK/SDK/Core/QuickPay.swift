@@ -21,7 +21,7 @@ public class QuickPay: NSObject {
     
     // MARK: Properties
 
-    public static private(set) var isMobilePayOnlineEnabled: Bool?
+//    public static private(set) var isMobilePayOnlineEnabled: Bool?
     public static private(set) var isApplePayEnabled: Bool?
     public static private(set) var isInitializing: Bool = true
 
@@ -58,11 +58,11 @@ public class QuickPay: NSObject {
 
         let dispatchGroup = DispatchGroup();
 
-        dispatchGroup.enter()
-        isMobilePayOnlineEnabled { (enabled) in
-            isMobilePayOnlineEnabled = enabled
-            dispatchGroup.leave()
-        }
+//        dispatchGroup.enter()
+//        isMobilePayOnlineEnabled { (enabled) in
+//            isMobilePayOnlineEnabled = enabled
+//            dispatchGroup.leave()
+//        }
         
         dispatchGroup.enter()
         isApplePayEnabled { (enabled) in
@@ -152,11 +152,12 @@ public class QuickPay: NSObject {
     
     @objc static func applicationDidBecomeActive() {
         stopObservingLifecycle()
-        onCallbackFromMobilePay()
+//        onCallbackFromMobilePay()
     }
 
 }
 
+/*
 // MARK: - MobilePay Online
 public extension QuickPay {
     
@@ -223,21 +224,22 @@ public extension QuickPay {
     }
     
 }
+*/
 
 // MARK: - Capabilities
 extension QuickPay {
     
-    static func isMobilePayOnlineEnabled(completion: @escaping (_ enabled: Bool)->Void) {
-        QPGetAcquireSettingsMobilePayRequest().sendRequest(success: { (settings) in
-            completion(settings.active)
-        }) { (data, response, error) in
-            completion(false)
-        }
-    }
-    
-    public static func isMobilePayAvailableOnDevice() -> Bool {
-        return canOpenUrl(url: mobilePayOnlineScheme)
-    }
+//    static func isMobilePayOnlineEnabled(completion: @escaping (_ enabled: Bool)->Void) {
+//        QPGetAcquireSettingsMobilePayRequest().sendRequest(success: { (settings) in
+//            completion(settings.active)
+//        }) { (data, response, error) in
+//            completion(false)
+//        }
+//    }
+//
+//    public static func isMobilePayAvailableOnDevice() -> Bool {
+//        return canOpenUrl(url: mobilePayOnlineScheme)
+//    }
 
     static func isApplePayEnabled(completion: @escaping (_ enabled: Bool)->Void) {
         QPGetAcquireSettingsClearhausRequest().sendRequest(success: { (settings) in

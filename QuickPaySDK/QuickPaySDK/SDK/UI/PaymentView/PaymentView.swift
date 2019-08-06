@@ -26,15 +26,15 @@ public class PaymentView: UIView {
     
     public enum PaymentMethod: String {
         case applepay = "PaymentApplePay"
-        case mobilepay = "PaymentMobilePay"
+//        case mobilepay = "PaymentMobilePay"
         case paymentcard = "PaymentCreditCard"
         
         public func defaultTitle() -> String {
             switch self {
             case .applepay:
                 return "Apple Pay"
-            case .mobilepay:
-                return "MobilePay"
+//            case .mobilepay:
+//                return "MobilePay"
             case .paymentcard:
                 return "Cards"
             }
@@ -73,7 +73,7 @@ public class PaymentView: UIView {
 
             // Init all the payment cells
             self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: bundle), forCellReuseIdentifier: PaymentMethod.paymentcard.rawValue)
-            self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.mobilepay.rawValue)
+//            self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.mobilepay.rawValue)
             self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.applepay.rawValue)
         }
         else {
@@ -101,9 +101,9 @@ public class PaymentView: UIView {
     private func updateAvailablePaymentMethods() {
         availablePaymentMethods = [PaymentView.PaymentMethod.paymentcard]
         
-        if QuickPay.isMobilePayOnlineEnabled ?? false && QuickPay.isMobilePayAvailableOnDevice() {
-            availablePaymentMethods?.insert(PaymentMethod.mobilepay, at: 0)
-        }
+//        if QuickPay.isMobilePayOnlineEnabled ?? false && QuickPay.isMobilePayAvailableOnDevice() {
+//            availablePaymentMethods?.insert(PaymentMethod.mobilepay, at: 0)
+//        }
         
         if QuickPay.isApplePayEnabled ?? false && QuickPay.isApplePayAvailableOnDevice() {
             availablePaymentMethods?.insert(PaymentMethod.applepay, at: 0)
