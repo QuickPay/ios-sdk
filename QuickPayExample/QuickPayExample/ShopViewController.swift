@@ -193,8 +193,8 @@ extension ShopViewController {
             // Step 2) Create a payment session
             // You need to specify a return url that MobilePay can query to get back to your app
             let mpp = MobilePayParameters(returnUrl: "quickpayexampleshop://", language: "dk", shopLogoUrl: "https://quickpay.net/images/payment-methods/payment-methods.png")
-            let createSessionRequestParameters = QPCreatePaymenSessionParameters(amount: Int(self.totalBasketValue() * 100), mobilePay: mpp)
-            QPCreatePaymenSessionRequest(id: payment.id, parameters: createSessionRequestParameters).sendRequest(success: { (payment) in
+            let createSessionRequestParameters = QPCreatePaymentSessionParameters(amount: Int(self.totalBasketValue() * 100), mobilePay: mpp)
+            QPCreatePaymentSessionRequest(id: payment.id, parameters: createSessionRequestParameters).sendRequest(success: { (payment) in
                 
                 // Step 3) Authorize the payment through MobilePay
                 // This step will query the MobilePay app and the completion handler will be invoked when your app is opened up again
@@ -390,7 +390,7 @@ extension ShopViewController {
                             self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
                         }
                     }, failure: self.handleQuickPayNetworkErrors)
-                })
+                }, presenter: self)
             }, failure: self.handleQuickPayNetworkErrors)
         }, failure: self.handleQuickPayNetworkErrors)
     }

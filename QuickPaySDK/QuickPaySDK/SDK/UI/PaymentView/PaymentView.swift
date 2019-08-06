@@ -174,11 +174,11 @@ extension PaymentView: PaymentViewCellDelegate {
 
 extension PaymentView: InitializeDelegate {
 
-    public func initializaationStarted() {
+    public func initializationStarted() {
         // NOP
     }
     
-    public func initializaationCompleted() {
+    public func initializationCompleted() {
         self.updateAvailablePaymentMethods()
         self.tableView.reloadData()
         self.invalidateIntrinsicContentSize()

@@ -18,12 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Init the SDK with your API key
         QuickPay.initWith(apiKey: "f1a4b80189c73862655552d06f9419dd7574c65de916fef88cf9854f6907f1b4")
 
-        // Optionally you can attach a LogDelegate to the static QuickPay class in order to recieve additional error messages.
-        // This will be very helpful in your debugging procedures
-        #if DEBUG
-        QuickPay.logDelegate = PrintLogger()
-        #endif
-
         // This is only nessesary in this example app because the PaymentView is displayed
         // before the SDK has had a change to communicate with the QuickPay API to determine
         // which paymenet methods is available.

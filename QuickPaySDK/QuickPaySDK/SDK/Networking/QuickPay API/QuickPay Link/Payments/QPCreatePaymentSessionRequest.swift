@@ -8,17 +8,17 @@
 
 import Foundation
 
-public class QPCreatePaymenSessionRequest: QPRequest {
+public class QPCreatePaymentSessionRequest: QPRequest {
     
     // MARK: - Properties
     
     var id: Int
-    var parameters: QPCreatePaymenSessionParameters
+    var parameters: QPCreatePaymentSessionParameters
 
     
     // MARK: Init
     
-    public init(id: Int, parameters: QPCreatePaymenSessionParameters) {
+    public init(id: Int, parameters: QPCreatePaymentSessionParameters) {
         self.id = id;
         self.parameters = parameters
     }
@@ -52,7 +52,7 @@ public class QPCreatePaymenSessionRequest: QPRequest {
     }
 }
 
-public class QPCreatePaymenSessionParameters: Encodable {
+public class QPCreatePaymentSessionParameters: Encodable {
     
     // MARK: - Properties
     

@@ -1,6 +1,6 @@
 # QuickPay SDK
 
-The QuickPay SDK wraps the [QuickPay API](https://learn.quickpay.net/tech-talk/api/services/#services "QuickPay API") and provides the necessary functionality to add native payments to your app.
+The QuickPay SDK wraps the [QuickPay API](https://learn.quickpay.net/tech-talk/api/services/#services "QuickPay API") and provides the necessary functionality and convenience to add native payments to your app.
 
 
 ## Installation
@@ -20,7 +20,7 @@ end
 
 ### Fat library
 
-The SDK is built as a fat library meaning it contains symbols for both the simulator and device architectures. This is done so you can develop on both platforms with the same binary without having to mess around with build paths or swapping out binaries. Unfortunately, Apple requires you to remove all simulator related symbols before submitting your app. The easiest way to do this is to add an additional build step that strips the unused architectures. If you don't have a script to do this already you can copy the one provided here. Select your build target, go to `Build Phases` and add a new run script phase. Copy and paste the code below into your script and you will be good to go.
+The SDK is built as a fat library meaning it contains symbols for both the simulator and device architectures. This is done so you can develop on both platforms with the same binary without having to mess around with build paths or swapping out binaries. Unfortunately, Apple requires you to remove all simulator related symbols before submitting your app. The easiest way to do this is to add an additional build step that strips the unused architectures. If you don't have a script that does this already you can copy the one provided here. Select your build target, go to `Build Phases` and add a new run script phase. Copy and paste the code below into your script and you will be good to go.
 
 ```bash
 echo "Target architectures: $ARCHS"
@@ -88,19 +88,6 @@ QuickPay.initWith(apiKey: String)
 As soon as you pass your API key to the SDK, it will begin to communicate with the QuickPay API in order to determine which payment methods that are available for the given API key. You can ask the SDK if it is done initializing by looking at the `isInitializing` property. If the property is true it means that the SDK is currently communicating with the QuickPay API. If you don't want to observe this property you can instead attach an `InitializeDelegate` to the QuickPay class. This will notify you when the SDK begins the initialization and when it is completed.
 
 
-### Debugging
-
-The QuickPay SDK supports a simple log delegate that forwards some debugging info which can be very helpful during the development process. This debug info is not stored anywhere by the SDK since log handling is the responsibility of the application developers.
-
-To use this mechanism you must conform to the `LogDelegate` protocol and pass it to the QuickPay class.
-
-If you just want the debug info being outputted to the XCode console, the SDK comes bundled with a very simple Logger that uses the 'print' function to output. To use this simple PrintLogger add the following snippet to your AppDelegate.
-
-```swift
-QuickPay.logDelegate = PrintLogger()
-```
-
-
 ### Payment flow
 
 To make a payment and authorize it you need to follow these four steps
@@ -114,7 +101,7 @@ All payments need to go through these four steps but some services, like the pay
 
 ### Payment Window
 
-The payment windows are the easiest and quickest way to get payments up and running, it is also the only way you can accept payments with credit cards through the QuickPay SDK. The payment window handles step 2 and 3 of the payment flow for you, so the order of operations looks like this.
+The payment windows are the easiest and quickest way to get payments up and running, it is currently also the only way you can accept payments with credit cards through the QuickPay SDK. The payment window handles step 2 and 3 of the payment flow for you, so the order of operations looks like this.
 
 1. Create payment
 2. Generate a payment URL and display the payment window
@@ -281,7 +268,7 @@ func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthoriz
 ```
 
 
-## Native Payment View
+## Payment UI
 
 If you don't want to spend too much time on making your own UI for a payment selection, the SDK comes bundles with a UI component you can use. The payment view will automatically determine which payment options are available through the QuickPay API and will also check which payment apps are available on the user's phone. This payment view is used in the example app.
 

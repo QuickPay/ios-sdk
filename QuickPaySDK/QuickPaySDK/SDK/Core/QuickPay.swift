@@ -12,8 +12,8 @@ import UIKit
 
 public protocol InitializeDelegate {
     
-    func initializaationStarted()
-    func initializaationCompleted()
+    func initializationStarted()
+    func initializationCompleted()
     
 }
 
@@ -30,7 +30,7 @@ public class QuickPay: NSObject {
     static private(set) var apiKey: String? {
         get {
             if _apiKey == nil {
-                logDelegate?.log("\nQuickPay SDK has not been initialized, please do so before usage.\nQuickPay.initWith(authorization: \"<YOU_API_KEY>\")\n")
+                logDelegate?.log("\nQuickPay SDK has not been initialized, please do so before usage.\nQuickPay.initWith(authorization: \"<API_KEY>\")\n")
             }
             return _apiKey
         }
@@ -39,7 +39,7 @@ public class QuickPay: NSObject {
         }
     }
     
-    public static var logDelegate: LogDelegate?
+    public static var logDelegate: LogDelegate? = PrintLogger()
     public static var initializeDelegate: InitializeDelegate?
 
     
@@ -54,7 +54,7 @@ public class QuickPay: NSObject {
     
     public static func fetchAquires() {
         isInitializing = true
-        initializeDelegate?.initializaationStarted()
+        initializeDelegate?.initializationStarted()
 
         let dispatchGroup = DispatchGroup();
 
@@ -72,7 +72,7 @@ public class QuickPay: NSObject {
         
         dispatchGroup.notify(queue: .global(qos: DispatchQoS.QoSClass.background)) {
             isInitializing = false
-            initializeDelegate?.initializaationCompleted()
+            initializeDelegate?.initializationCompleted()
         }
         
     }
@@ -80,26 +80,24 @@ public class QuickPay: NSObject {
     
     // MARK: API
     
-    public static func openLink(paymentLink: QPPaymentLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void) {
-        QuickPay.openLink(url: paymentLink.url, onCancel: onCancel, onResponse: onResponse, animated: true, completion: nil)
+    public static func openLink(paymentLink: QPPaymentLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController) {
+        QuickPay.openLink(url: paymentLink.url, onCancel: onCancel, onResponse: onResponse, animated: true, completion: nil, presenter: presenter)
     }
     
-    public static func openLink(paymentLink: QPPaymentLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, animated: Bool, completion: (()->Void)?) {
-        QuickPay.openLink(url: paymentLink.url, onCancel: onCancel, onResponse: onResponse, animated: animated, completion: completion)
+    public static func openLink(paymentLink: QPPaymentLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController, animated: Bool, completion: (()->Void)?) {
+        QuickPay.openLink(url: paymentLink.url, onCancel: onCancel, onResponse: onResponse, animated: animated, completion: completion, presenter: presenter)
     }
     
-    public static func openLink(subscriptionLink: QPSubscriptionLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void) {
-        QuickPay.openLink(url: subscriptionLink.url, onCancel: onCancel, onResponse: onResponse, animated: true, completion: nil)
+    public static func openLink(subscriptionLink: QPSubscriptionLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController) {
+        QuickPay.openLink(url: subscriptionLink.url, onCancel: onCancel, onResponse: onResponse, animated: true, completion: nil, presenter: presenter)
     }
 
-    public static func openLink(subscriptionLink: QPSubscriptionLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, animated: Bool, completion: (()->Void)?) {
-        QuickPay.openLink(url: subscriptionLink.url, onCancel: onCancel, onResponse: onResponse, animated: animated, completion: completion)
+    public static func openLink(subscriptionLink: QPSubscriptionLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController, animated: Bool, completion: (()->Void)?) {
+        QuickPay.openLink(url: subscriptionLink.url, onCancel: onCancel, onResponse: onResponse, animated: animated, completion: completion, presenter: presenter)
     }
     
-    static func openLink(url: String, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, animated: Bool, completion: (()->Void)?) {
+    static func openLink(url: String, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, animated: Bool, completion: (()->Void)?, presenter: UIViewController) {
         OperationQueue.main.addOperation {
-            let mainController = UIApplication.shared.keyWindow?.rootViewController
-            
             let controller = QPPaymentWindowController()
             controller.gotoUrl = url
             controller.onCancel = onCancel
@@ -108,8 +106,8 @@ public class QuickPay: NSObject {
             let navController = UINavigationController(rootViewController: controller)
             
             controller.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: controller, action: #selector(controller.cancel))
-            
-            mainController?.present(navController, animated: animated, completion: completion)
+
+            presenter.present(navController, animated: animated, completion: completion)
         }
     }
     
