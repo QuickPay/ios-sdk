@@ -74,7 +74,6 @@ public class QuickPay: NSObject {
             isInitializing = false
             initializeDelegate?.initializationCompleted()
         }
-        
     }
     
     

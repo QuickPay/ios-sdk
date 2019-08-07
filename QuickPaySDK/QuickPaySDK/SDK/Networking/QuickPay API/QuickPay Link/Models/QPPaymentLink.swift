@@ -12,6 +12,6 @@ public class QPPaymentLink: Codable {
     
     // MARK: Properties
     
-    public internal(set) var url: String
+    public var url: String
     
 }

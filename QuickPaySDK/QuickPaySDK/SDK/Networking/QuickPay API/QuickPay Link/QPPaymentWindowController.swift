@@ -91,7 +91,8 @@ extension QPPaymentWindowController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        decisionHandler(.allow)    }
+        decisionHandler(.allow)
+    }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         QuickPay.logDelegate?.log("An error occured in QPPaymentWindowController, didFailNavigation: \nError: \(error.localizedDescription)")
