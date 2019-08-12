@@ -14,4 +14,10 @@ public class QPSubscriptionLink : Codable {
     
     public var url: String
     
+
+    // MARK: Init
+    
+    public init(url: String) {
+        self.url = url
+    }
 }

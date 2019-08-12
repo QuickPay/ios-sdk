@@ -63,6 +63,7 @@ class ShopViewController: UIViewController {
         if let paymentOption = paymentView.getSelectedPaymentOption() {
             switch paymentOption {
             case .paymentcard:
+//                handleSubscriptionWindow()
                 handlePaymentWindow()
                 break
                 
@@ -129,6 +130,27 @@ class ShopViewController: UIViewController {
 
         return params
     }
+
+    private func createSubscriptionParametersFromBasket() -> QPCreateSubscriptionParameters {
+        // Create the params needed for creating a payment
+        let params = QPCreateSubscriptionParameters(currency: "DKK", order_id: String.randomString(len: 20), description: "Some description")
+        params.text_on_statement = "QuickPay Example Shop"
+
+        let invoiceAddress = QPAddress()
+        invoiceAddress.name = "Some Street"
+        invoiceAddress.city = "Aarhus"
+        invoiceAddress.country_code = "DNK"
+        params.invoice_address = invoiceAddress
+        
+        // Fill the basket with the tshirts and footballs
+        let tshirtBasket =   QPBasket(qty: tshirtCount, item_no: "1", item_name: "T-Shirt", item_price: tshirtPrice, vat_rate: 0.25)
+        let footballBasket = QPBasket(qty: footballCount, item_no: "2", item_name: "Football", item_price: footballPrice, vat_rate: 0.25)
+        params.basket?.append(tshirtBasket)
+        params.basket?.append(footballBasket)
+        
+        return params
+    }
+
     
     private func handleQuickPayNetworkErrors(data: Data?, response: URLResponse?, error: Error?) {
         if let data = data {
@@ -305,6 +327,7 @@ extension ShopViewController {
         QPCreatePaymentRequest(parameters: createPaymentParametersFromBasket()).sendRequest(success: { (payment) in
             // Step 2) Create a payment URL
             let linkParams = QPCreatePaymentLinkParameters(id: payment.id, amount: self.totalBasketValue() * 100.0)
+            linkParams.payment_methods = "creditcard"
             
             QPCreatePaymentLinkRequest(parameters: linkParams).sendRequest(success: { (paymentLink) in
                 // Step 3) Open the payment URL in a WebView
@@ -333,6 +356,26 @@ extension ShopViewController {
                 }, presenter: self)
             }, failure: self.handleQuickPayNetworkErrors)
         }, failure: self.handleQuickPayNetworkErrors)
+    }
+    
+}
+
+
+extension ShopViewController {
+    
+    func handleSubscriptionWindow() {
+        QPCreateSubscriptionRequest(parameters: createSubscriptionParametersFromBasket()).sendRequest(success: { (subscription) in
+            let linkParams = QPCreateSubscriptionLinkParameters(id: subscription.id, amount: 100)
+            linkParams.payment_methods = "visa"
+            
+            QPCreateSubscriptionLinkRequest(parameters: linkParams).sendRequest(success: { (subLink) in
+                QuickPay.openLink(subscriptionLink: subLink, onCancel: {
+                    self.displayOkAlert(title: "Payment Cancelled", message: "The payment was cancelled")
+                }, onResponse: { (success) in
+                    self.displayOkAlert(title: "GOT THE CALLBACK", message: "GOT THE CALLBACK")
+                }, presenter: self)
+            }, failure: self.handleQuickPayNetworkErrors(data:response:error:))
+        }, failure: self.handleQuickPayNetworkErrors(data:response:error:))
     }
     
 }

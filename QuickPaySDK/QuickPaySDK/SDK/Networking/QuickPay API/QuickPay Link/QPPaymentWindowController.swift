@@ -37,14 +37,10 @@ class QPPaymentWindowController: UIViewController {
     override func loadView() {
         super.loadView()
         
-        let containerView = UIView(frame: UIScreen.main.bounds)
-        
-        webView = WKWebView(frame: containerView.bounds, configuration: WKWebViewConfiguration())
-
+        webView = WKWebView(frame: self.view.bounds, configuration: WKWebViewConfiguration())
         webView!.navigationDelegate = self
         
-        self.view = containerView
-        containerView.addSubview(webView!)
+        self.view.addSubview(webView!)
 
         if let gotoUrl = self.gotoUrl, let url = URL(string: gotoUrl) {
             webView!.load(URLRequest(url: url))
@@ -76,7 +72,7 @@ extension QPPaymentWindowController: WKNavigationDelegate {
             decisionHandler(.allow)
             return
         }
-
+        
         if urlString.contains(StateToken.success.rawValue) {
             onWebViewRedirectToToken(token: .success)
             decisionHandler(.cancel);

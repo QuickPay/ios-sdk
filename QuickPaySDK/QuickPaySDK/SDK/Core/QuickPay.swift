@@ -226,6 +226,7 @@ public extension QuickPay {
 */
 
 // MARK: - Capabilities
+
 extension QuickPay {
     
 //    static func isMobilePayOnlineEnabled(completion: @escaping (_ enabled: Bool)->Void) {
