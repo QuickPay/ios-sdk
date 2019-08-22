@@ -1,3 +1,15 @@
+In order for the SDK to communicate with QuickPay, you will need an API key. You can create one by logging in to your QuickPay account and navigate to Settings -> Users. The API key you use with the SDK needs some additional permissions in order to work with Apple Pay and MobilePay. Select the user to which the API key belongs and add the following permissions.
+
+```html
+GET  /acquirers/clearhaus   (Apple Pay)
+GET  /acquirers/mobilepay   (MobilePay)
+POST /payments/:id/session  (MobilePay)
+```
+
+
+
+
+
 ### MobilePay Online
 
 QuickPay SDK supports MobilePay natively so you can create a great app experience. To query the MobilePay App you need to make some changes to your project settings and implement the payment as shown later in this guide.

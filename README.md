@@ -66,20 +66,20 @@ done
 
 ### API key and permissions
 
-In order for the SDK to communicate with QuickPay, you will need an API key. You can create one by logging in to your QuickPay account and navigate to Settings -> Users. The API key you use with the SDK needs some additional permissions in order to work with Apple Pay and MobilePay. Select the user to which the API key belongs and add the following permissions.
+In order for the SDK to communicate with QuickPay, you will need an API key. You can create one by logging in to your QuickPay account and navigate to Settings -> Users. The API key you use with the SDK needs an additional permission in order to work with Apple Pay. Select the user to which the API key belongs and add the following permission.
 
 ```html
-GET  /acquirers/clearhaus   (Apple Pay)
-GET  /acquirers/mobilepay   (MobilePay)
-POST /payments/:id/session  (MobilePay)
+GET  /acquirers/clearhaus
 ```
 
 
 ## Usage
+
 This guide will take you through the steps needed to integrate the QuickPay SDK with your code and demonstrate how to make basic payments with the different payment methods the SDK supports.
 
 
 ### Initialization
+
 In your AppDelegate, you need to initialize the SDK with your API key.
 ```swift
 QuickPay.initWith(apiKey: String)
@@ -133,17 +133,19 @@ linkRequest.sendRequest(success: { (paymentLink) in
 })
 ```
 
-The last step is to use the `QPPaymentLink` to open the payment window. This is done by passing the paymentLink to the QuickPay class.
+The last step is to use the `QPPaymentLink` to open the payment window and here you have two choices. You can either use a build-in convenience mechanism that will display the payment window and handle the interaction and responses for you, or you can handle that yourself and get full flexibility on how you want to present the payment window.
+
+If you want to use the convenience mechanism you will have to pass the payment url to the QuickPay class.
 
 ```swift
-QuickPay.openLink(paymentLink: paymentLink, onCancel: {
+QuickPay.openPaymentLink(paymentUrl: paymentLink.url, onCancel: {
     // Handle if the user cancels
 }, onResponse: { (success) in
     // Handle success/failure
-}, presenter: self)
+}, presenter: self, animated: true, completion: nil, presentModal: true)
 ```
 
-If success is true the payment has been handled but we do not yet know if the payment has actually been authorized. For that, we need to check the status of the payment which is done with the `QPGetPaymentRequest`.
+If success is true the payment has been handled but we do not yet know if the payment has been authorized. For that, we need to check the status of the payment which is done with the `QPGetPaymentRequest`.
 
 ```swift
 QPGetPaymentRequest(id: payment.id).sendRequest(success: { (payment) in
@@ -154,6 +156,8 @@ QPGetPaymentRequest(id: payment.id).sendRequest(success: { (payment) in
     // Handle the failure
 })
 ```
+
+If you want more control of the payment window and want to handle the navigation yourself, you can create a `QPPaymentWindowController` and pass the payment url in its initializer. Next, you set a `QPPaymentWindowControllerDelegate` to the payment window controller and you can now have full control over how to present the payment view. Through the delegate, you can also create a custom loading view that will be shown while the payment window is getting loaded and rendered.
 
 
 ### Apple Pay

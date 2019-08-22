@@ -13,7 +13,9 @@ import WebKit
 public protocol QPPaymentWindowControllerDelegate {
     func onPaymentResponse(success: Bool)
     func onPaymentCancelled()
+    
     func populateLoadingView(loadingView: UIView)
+    func loadingProgress(estimatedLoadingProgress: Float)
 }
 
 class QPPaymentWindowControllerDelegateCallbacksWrapper: QPPaymentWindowControllerDelegate {
@@ -32,7 +34,12 @@ class QPPaymentWindowControllerDelegateCallbacksWrapper: QPPaymentWindowControll
         let ai = UIActivityIndicatorView.init(style: .gray)
         ai.startAnimating()
         ai.center = loadingView.center
+        
         loadingView.addSubview(ai)
+    }
+    
+    func loadingProgress(estimatedLoadingProgress: Float) {
+        
     }
 }
 
@@ -53,6 +60,7 @@ public class QPPaymentWindowController: UIViewController {
     
     // MARK: - Properties
     
+    private let estimatedProgressKey = "estimatedProgress"
     private var paymentUrl: String
     private var loadingView: UIView?
     
@@ -93,6 +101,8 @@ public class QPPaymentWindowController: UIViewController {
         if let webView = self.view as? WKWebView, let url = URL(string: paymentUrl) {
             webView.navigationDelegate = self
             webView.load(URLRequest(url: url))
+            
+            webView.addObserver(self, forKeyPath: estimatedProgressKey, options: .new, context: nil)
         }
         
         loadingView = UIView(frame: self.view.bounds)
@@ -115,6 +125,12 @@ public class QPPaymentWindowController: UIViewController {
         }
         else {
             delegate?.onPaymentResponse(success: false)
+        }
+    }
+    
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == estimatedProgressKey, loadingView != nil, let webView = self.view as? WKWebView {
+            delegate?.loadingProgress(estimatedLoadingProgress: Float(webView.estimatedProgress))
         }
     }
 }
