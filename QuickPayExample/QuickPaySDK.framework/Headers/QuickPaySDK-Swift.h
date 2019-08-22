@@ -223,6 +223,12 @@ SWIFT_CLASS("_TtC11QuickPaySDK25QPPaymentWindowController")
 @end
 
 @class WKWebView;
+@class WKFrameInfo;
+
+@interface QPPaymentWindowController (SWIFT_EXTENSION(QuickPaySDK)) <WKUIDelegate>
+- (void)webView:(WKWebView * _Nonnull)webView runJavaScriptConfirmPanelWithMessage:(NSString * _Nonnull)message initiatedByFrame:(WKFrameInfo * _Nonnull)frame completionHandler:(void (^ _Nonnull)(BOOL))completionHandler;
+@end
+
 @class WKNavigationAction;
 @class WKNavigation;
 @class WKNavigationResponse;

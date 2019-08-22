@@ -100,6 +100,7 @@ public class QPPaymentWindowController: UIViewController {
         self.view = WKWebView(frame: self.view.bounds, configuration: WKWebViewConfiguration())
         if let webView = self.view as? WKWebView, let url = URL(string: paymentUrl) {
             webView.navigationDelegate = self
+            webView.uiDelegate = self
             webView.load(URLRequest(url: url))
             
             webView.addObserver(self, forKeyPath: estimatedProgressKey, options: .new, context: nil)
@@ -166,11 +167,37 @@ extension QPPaymentWindowController: WKNavigationDelegate {
     }
     
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        QuickPay.logDelegate?.log("An error occured in QPPaymentWindowController, didFailNavigation: \nError: \(error.localizedDescription)")
+//        QuickPay.logDelegate?.log("An error occured in QPPaymentWindowController, didFailNavigation: \nError: \(error.localizedDescription)")
     }
     
     public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        QuickPay.logDelegate?.log("An error occured in QPPaymentWindowController, didFailProvisionalNavigation: \nError: \(error.localizedDescription)")
+//        QuickPay.logDelegate?.log("An error occured in QPPaymentWindowController, didFailProvisionalNavigation: \nError: \(error.localizedDescription)")
     }
+    
+}
+
+extension QPPaymentWindowController: WKUIDelegate {
+    
+    public func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
+        let ac = UIAlertController(title: "", message: message, preferredStyle: .alert)
+
+        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+            completionHandler(true)
+        }))
+        
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (UIAlertAction) in
+            completionHandler(false)
+        }))
+
+        present(ac, animated: true)
+    }
+
+//    public func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+//
+//    }
+//
+//    public func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
+//
+//    }
     
 }
