@@ -10,7 +10,33 @@ import Foundation
 import UIKit
 import WebKit
 
-class QPPaymentWindowController: UIViewController {
+public protocol QPPaymentWindowControllerDelegate {
+    func onPaymentResponse(success: Bool)
+    func onPaymentCancelled()
+    func populateLoadingView(loadingView: UIView)
+}
+
+class QPPaymentWindowControllerDelegateCallbacksWrapper: QPPaymentWindowControllerDelegate {
+    var onCancel: (() -> Void)?
+    var onResponse: ((Bool) -> Void)?
+
+    func onPaymentResponse(success: Bool) {
+        onResponse?(success)
+    }
+    
+    func onPaymentCancelled() {
+        onCancel?()
+    }
+    
+    func populateLoadingView(loadingView: UIView) {
+        let ai = UIActivityIndicatorView.init(style: .gray)
+        ai.startAnimating()
+        ai.center = loadingView.center
+        loadingView.addSubview(ai)
+    }
+}
+
+public class QPPaymentWindowController: UIViewController {
 
     // MARK: - Enums
     
@@ -20,54 +46,82 @@ class QPPaymentWindowController: UIViewController {
     }
     
     
-    // MARK: - Callbacks
+    // MARK: - Delegates
     
-    var onCancel: (() -> Void)?
-    var onResponse: ((Bool) -> Void)?
+    public var delegate: QPPaymentWindowControllerDelegate?
     
     
     // MARK: - Properties
     
-    var gotoUrl: String?
-    var webView: WKWebView?
+    private var paymentUrl: String
+    private var loadingView: UIView?
+    
+    
+    // MARK: - Init
+    
+    public required init(paymentUrl: String) {
+        self.paymentUrl = paymentUrl
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.paymentUrl = ""
+        super.init(coder: aDecoder)
+    }
+    
+    public convenience init(paymentUrl: String, delegate: QPPaymentWindowControllerDelegate ) {
+        self.init(paymentUrl: paymentUrl)
+        self.delegate = delegate
+    }
+
+    public convenience init(paymentUrl: String, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void) {
+        self.init(paymentUrl: paymentUrl)
+        
+        let delegateWrapper = QPPaymentWindowControllerDelegateCallbacksWrapper()
+        delegateWrapper.onCancel = onCancel
+        delegateWrapper.onResponse = onResponse
+        self.delegate = delegateWrapper
+    }
     
     
     // MARK: - Lifecycle
     
-    override func loadView() {
+    public override func loadView() {
         super.loadView()
         
-        webView = WKWebView(frame: self.view.bounds, configuration: WKWebViewConfiguration())
-        webView!.navigationDelegate = self
+        self.view = WKWebView(frame: self.view.bounds, configuration: WKWebViewConfiguration())
+        if let webView = self.view as? WKWebView, let url = URL(string: paymentUrl) {
+            webView.navigationDelegate = self
+            webView.load(URLRequest(url: url))
+        }
         
-        self.view.addSubview(webView!)
-
-        if let gotoUrl = self.gotoUrl, let url = URL(string: gotoUrl) {
-            webView!.load(URLRequest(url: url))
+        loadingView = UIView(frame: self.view.bounds)
+        if let loadingView = loadingView {
+            loadingView.backgroundColor = UIColor.white
+            delegate?.populateLoadingView(loadingView: loadingView)
+            self.view.addSubview(loadingView)
         }
     }
     
-    @objc func cancel() {
-        dismiss(animated: true, completion: {
-            self.onCancel?()
-        })
+    @objc public func cancel() {
+        delegate?.onPaymentCancelled()
     }
 
     private func onWebViewRedirectToToken(token: StateToken) {
         dismiss(animated: true, completion: nil)
         
         if token == .success {
-            onResponse?(true)
+            delegate?.onPaymentResponse(success: true)
         }
         else {
-            onResponse?(false)
+            delegate?.onPaymentResponse(success: false)
         }
     }
 }
 
 extension QPPaymentWindowController: WKNavigationDelegate {
     
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let urlString = navigationAction.request.url?.absoluteString else {
             decisionHandler(.allow)
             return
@@ -85,16 +139,21 @@ extension QPPaymentWindowController: WKNavigationDelegate {
             decisionHandler(.allow)
         }
     }
+    
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        loadingView?.removeFromSuperview()
+        loadingView = nil
+    }
 
-    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         decisionHandler(.allow)
     }
     
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         QuickPay.logDelegate?.log("An error occured in QPPaymentWindowController, didFailNavigation: \nError: \(error.localizedDescription)")
     }
     
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         QuickPay.logDelegate?.log("An error occured in QPPaymentWindowController, didFailProvisionalNavigation: \nError: \(error.localizedDescription)")
     }
     

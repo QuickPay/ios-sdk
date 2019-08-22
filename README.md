@@ -66,12 +66,12 @@ done
 
 ### API key and permissions
 
-In order for the SDK to communicate with QuickPay, you will need an API key. You can create one by logging in to your QuickPay account and navigate to Settings -> Users. The API key you use with the SDK needs some additional permissions than what is provided as default. Select the user to which the API key belongs and add the following permissions.
+In order for the SDK to communicate with QuickPay, you will need an API key. You can create one by logging in to your QuickPay account and navigate to Settings -> Users. The API key you use with the SDK needs some additional permissions in order to work with Apple Pay and MobilePay. Select the user to which the API key belongs and add the following permissions.
 
 ```html
-GET  /acquirers/clearhaus  
-GET  /acquirers/mobilepay  
-POST /payments/:id/session
+GET  /acquirers/clearhaus   (Apple Pay)
+GET  /acquirers/mobilepay   (MobilePay)
+POST /payments/:id/session  (MobilePay)
 ```
 
 
@@ -107,7 +107,7 @@ The payment windows are the easiest and quickest way to get payments up and runn
 2. Generate a payment URL and display the payment window
 3. Check the payment status
 
-To create a payment you first to specify some parameters which are wrapped in the `QPCreatePaymentParameters` class. Afterward, you pass the parameters to the constructor of a `QPCreatePaymentRequest`. Last you need to send the request to QuickPay, this is done with the `sendRequest` function on the request itself which requires a success and failure handler.
+To create a payment you first need to specify some parameters which are wrapped in the `QPCreatePaymentParameters` class. Afterward, you pass the parameters to the constructor of a `QPCreatePaymentRequest`. Last you need to send the request to QuickPay, this is done with the `sendRequest` function on the request itself which requires a success and failure handler.
 
 ```swift
 let params = QPCreatePaymentParameters(currency: "DKK", order_id: "SomeOrderId")

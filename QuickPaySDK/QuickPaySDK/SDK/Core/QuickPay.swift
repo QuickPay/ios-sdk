@@ -79,34 +79,37 @@ public class QuickPay: NSObject {
     
     // MARK: API
     
-    public static func openLink(paymentLink: QPPaymentLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController) {
-        QuickPay.openLink(url: paymentLink.url, onCancel: onCancel, onResponse: onResponse, animated: true, completion: nil, presenter: presenter)
-    }
-    
-    public static func openLink(paymentLink: QPPaymentLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController, animated: Bool, completion: (()->Void)?) {
-        QuickPay.openLink(url: paymentLink.url, onCancel: onCancel, onResponse: onResponse, animated: animated, completion: completion, presenter: presenter)
-    }
-    
-    public static func openLink(subscriptionLink: QPSubscriptionLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController) {
-        QuickPay.openLink(url: subscriptionLink.url, onCancel: onCancel, onResponse: onResponse, animated: true, completion: nil, presenter: presenter)
-    }
-
-    public static func openLink(subscriptionLink: QPSubscriptionLink, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController, animated: Bool, completion: (()->Void)?) {
-        QuickPay.openLink(url: subscriptionLink.url, onCancel: onCancel, onResponse: onResponse, animated: animated, completion: completion, presenter: presenter)
-    }
-    
-    static func openLink(url: String, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, animated: Bool, completion: (()->Void)?, presenter: UIViewController) {
+    public static func openPaymentLink(paymentUrl: String, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController, animated: Bool = true, completion: (()->Void)? = nil, presentModal: Bool = true) {
         OperationQueue.main.addOperation {
-            let controller = QPPaymentWindowController()
-            controller.gotoUrl = url
-            controller.onCancel = onCancel
-            controller.onResponse = onResponse
-            
-            let navController = UINavigationController(rootViewController: controller)
-            
-            controller.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: controller, action: #selector(controller.cancel))
+            let controller = QPPaymentWindowController(paymentUrl: paymentUrl)
 
-            presenter.present(navController, animated: animated, completion: completion)
+            let delegate = QPPaymentWindowControllerDelegateCallbacksWrapper()
+            delegate.onResponse = onResponse
+            controller.delegate = delegate
+            
+            if !presentModal, let navigationController = presenter.navigationController {
+                navigationController.pushViewController(controller, animated: animated)
+
+                delegate.onCancel = {
+                    OperationQueue.main.addOperation {
+                        navigationController.popViewController(animated: animated)
+                        onCancel()
+                    }
+                }
+            }
+            else {
+                let navController = UINavigationController(rootViewController: controller)
+
+                delegate.onCancel = {
+                    OperationQueue.main.addOperation {
+                        navController.dismiss(animated: animated, completion: nil)
+                        onCancel()
+                    }
+                }
+                
+                controller.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: controller, action: #selector(controller.cancel))
+                presenter.present(navController, animated: animated, completion: completion)
+            }
         }
     }
     
@@ -121,13 +124,8 @@ public class QuickPay: NSObject {
     static func canOpenUrl(url: URL) -> Bool {
         var canOpen = false
         
-        if Thread.isMainThread {
+        DispatchQueue.main.sync {
             canOpen = UIApplication.shared.canOpenURL(url)
-        }
-        else {
-            DispatchQueue.main.sync {
-                canOpen = UIApplication.shared.canOpenURL(url)
-            }
         }
         
         return canOpen

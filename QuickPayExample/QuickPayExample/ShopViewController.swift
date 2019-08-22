@@ -10,6 +10,10 @@
 //  and you should read the technical documentation at the QuickPay website in order to get
 //  a better understanding of all the possibilities.
 //  https://learn.quickpay.net/tech-talk/
+//
+//  WARNING:
+//  This example app does not handle complex scenarios like if the view is unloaded due to memory management.
+//  Therefore you should only look at this code as inspiration and not a final solution.
 
 import QuickPaySDK
 import PassKit
@@ -27,7 +31,8 @@ class ShopViewController: UIViewController {
     var tshirtCount = 0
     var footballCount = 0
     
-    // UI Outlets
+    
+    // MARK: Outlets
     @IBOutlet weak var basketThshirtLabel: UILabel!
     @IBOutlet weak var basketTshirtTotalLabel: UILabel!
     @IBOutlet weak var basketTshirtSection: UIStackView!
@@ -55,7 +60,7 @@ class ShopViewController: UIViewController {
     }
 
     @IBAction func handlePayment(_ sender: Any) {
-        guard !basketEmpty() else {
+        guard !isBasketEmpty() else {
             displayOkAlert(title: "Basket is empty", message: "Your basket is empty. Please add some items before paying.")
             return
         }
@@ -63,7 +68,6 @@ class ShopViewController: UIViewController {
         if let paymentOption = paymentView.getSelectedPaymentOption() {
             switch paymentOption {
             case .paymentcard:
-//                handleSubscriptionWindow()
                 handlePaymentWindow()
                 break
                 
@@ -92,7 +96,12 @@ class ShopViewController: UIViewController {
         updateBasket()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.removeSpinner()
+    }
 
+    
     // MARK: - UI
     
     private func updateBasket() {
@@ -150,7 +159,6 @@ class ShopViewController: UIViewController {
         
         return params
     }
-
     
     private func handleQuickPayNetworkErrors(data: Data?, response: URLResponse?, error: Error?) {
         if let data = data {
@@ -172,7 +180,7 @@ class ShopViewController: UIViewController {
         return Double(tshirtCount) * tshirtPrice + Double(footballCount) * footballPrice
     }
     
-    private func basketEmpty() -> Bool {
+    private func isBasketEmpty() -> Bool {
         if tshirtCount == 0 && footballCount == 0 {
             return true;
         }
@@ -243,9 +251,9 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
         request.paymentSummaryItems.append(PKPaymentSummaryItem(label: "Total", amount: NSDecimalNumber(floatLiteral: totalBasketValue())))
         
         // Step 2) Init the Apple Pay controller with the payment and display it
-        if let viewController = PKPaymentAuthorizationViewController(paymentRequest: request) {
-            viewController.delegate = self
-            self.present(viewController, animated: true, completion: nil)
+        if let applePayController = PKPaymentAuthorizationViewController(paymentRequest: request) {
+            applePayController.delegate = self
+            self.present(applePayController, animated: true, completion: nil)
         }
         else {
             displayOkAlert(title: "Error", message: "We could not display the Apple Pay window")
@@ -253,7 +261,6 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
     }
 
     func paymentAuthorizationViewController(_ controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
-        
         // Step 3) Create a payment
         QPCreatePaymentRequest(parameters: createPaymentParametersFromBasket()).sendRequest(success: { (qpPayment) in
             self.currentPaymentId = qpPayment.id
@@ -330,20 +337,14 @@ extension ShopViewController {
             linkParams.payment_methods = "creditcard"
             
             QPCreatePaymentLinkRequest(parameters: linkParams).sendRequest(success: { (paymentLink) in
+                QuickPay.logDelegate?.log("Payment Link: \(paymentLink.url)")
+                
                 // Step 3) Open the payment URL in a WebView
-                QuickPay.openLink(paymentLink: paymentLink, onCancel: {
-                    self.removeSpinner()
+                QuickPay.openPaymentLink(paymentUrl: paymentLink.url, onCancel: {
                     self.displayOkAlert(title: "Payment Cancelled", message: "The payment was cancelled")
                 }, onResponse: { (success) in
-                    if success == false {
-                        self.removeSpinner()
-                        self.displayOkAlert(title: "Payment Failed", message: "The payment failed")
-                        return
-                    }
-                    
                     // Step 4) Validate that the authoprization went well
                     QPGetPaymentRequest(id: payment.id).sendRequest(success: { (payment) in
-                        self.removeSpinner()
                         if payment.accepted {
                             self.displayOkAlert(title: "Payment Accepted", message: "The payment was accepted and the acquirer is \(payment.acquirer ?? "unknown")")
                             // Congratulations, you have successfully authorized the payment.
@@ -353,32 +354,12 @@ extension ShopViewController {
                             self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
                         }
                     }, failure: self.handleQuickPayNetworkErrors)
-                }, presenter: self)
+                }, presenter: self, animated: true, completion: nil, presentModal: true)
             }, failure: self.handleQuickPayNetworkErrors)
         }, failure: self.handleQuickPayNetworkErrors)
     }
-    
 }
 
-
-extension ShopViewController {
-    
-    func handleSubscriptionWindow() {
-        QPCreateSubscriptionRequest(parameters: createSubscriptionParametersFromBasket()).sendRequest(success: { (subscription) in
-            let linkParams = QPCreateSubscriptionLinkParameters(id: subscription.id, amount: 100)
-            linkParams.payment_methods = "visa"
-            
-            QPCreateSubscriptionLinkRequest(parameters: linkParams).sendRequest(success: { (subLink) in
-                QuickPay.openLink(subscriptionLink: subLink, onCancel: {
-                    self.displayOkAlert(title: "Payment Cancelled", message: "The payment was cancelled")
-                }, onResponse: { (success) in
-                    self.displayOkAlert(title: "GOT THE CALLBACK", message: "GOT THE CALLBACK")
-                }, presenter: self)
-            }, failure: self.handleQuickPayNetworkErrors(data:response:error:))
-        }, failure: self.handleQuickPayNetworkErrors(data:response:error:))
-    }
-    
-}
 
 // MARK: - PaymentViewDelegate
 extension ShopViewController: PaymentViewDelegate {
