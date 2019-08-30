@@ -10,6 +10,11 @@ import PassKit
 import Foundation
 import UIKit
 
+public enum Presentation {
+    case push(controller: UIViewController, animated: Bool, completion: (()->Void)?)
+    case present(navigationController: UINavigationController, animated: Bool)
+}
+
 public protocol InitializeDelegate {
     
     func initializationStarted()
@@ -79,27 +84,28 @@ public class QuickPay: NSObject {
     
     // MARK: API
     
-    public static func openPaymentLink(paymentUrl: String, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presenter: UIViewController, animated: Bool = true, completion: (()->Void)? = nil, presentModal: Bool = true) {
+    public static func openPaymentLink(paymentUrl: String, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presentation: Presentation) {
         OperationQueue.main.addOperation {
-            let controller = QPPaymentWindowController(paymentUrl: paymentUrl)
+            let paymentController = QPPaymentWindowController(paymentUrl: paymentUrl)
 
             let delegate = QPPaymentWindowControllerDelegateCallbacksWrapper()
             delegate.onResponse = onResponse
-            controller.delegate = delegate
+            paymentController.delegate = delegate
             
-            if !presentModal, let navigationController = presenter.navigationController {
-                navigationController.pushViewController(controller, animated: animated)
+            switch presentation {
+            case .present(let navController, let animated):
+                navController.pushViewController(paymentController, animated: animated)
 
                 delegate.onCancel = {
                     OperationQueue.main.addOperation {
-                        navigationController.popViewController(animated: animated)
+                        navController.popViewController(animated: animated)
                         onCancel()
                     }
                 }
-            }
-            else {
-                let navController = UINavigationController(rootViewController: controller)
 
+            case .push(let presenter, let animated, let completion):
+                let navController = UINavigationController(rootViewController: paymentController)
+                
                 delegate.onCancel = {
                     OperationQueue.main.addOperation {
                         navController.dismiss(animated: animated, completion: nil)
@@ -107,7 +113,7 @@ public class QuickPay: NSObject {
                     }
                 }
                 
-                controller.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: controller, action: #selector(controller.cancel))
+                paymentController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: paymentController, action: #selector(paymentController.cancel))
                 presenter.present(navController, animated: animated, completion: completion)
             }
         }
