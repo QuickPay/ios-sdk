@@ -11,8 +11,8 @@ import Foundation
 import UIKit
 
 public enum Presentation {
-    case push(controller: UIViewController, animated: Bool, completion: (()->Void)?)
-    case present(navigationController: UINavigationController, animated: Bool)
+    case present(controller: UIViewController, animated: Bool, completion: (()->Void)?)
+    case push(navigationController: UINavigationController, animated: Bool)
 }
 
 public protocol InitializeDelegate {
@@ -93,7 +93,7 @@ public class QuickPay: NSObject {
             paymentController.delegate = delegate
             
             switch presentation {
-            case .present(let navController, let animated):
+            case .push(let navController, let animated):
                 navController.pushViewController(paymentController, animated: animated)
 
                 delegate.onCancel = {
@@ -103,7 +103,7 @@ public class QuickPay: NSObject {
                     }
                 }
 
-            case .push(let presenter, let animated, let completion):
+            case .present(let presenter, let animated, let completion):
                 let navController = UINavigationController(rootViewController: paymentController)
                 
                 delegate.onCancel = {
