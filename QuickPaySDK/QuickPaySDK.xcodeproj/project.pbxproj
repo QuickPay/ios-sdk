@@ -61,6 +61,7 @@
 		E1CA62EE2201B2BF00C8592F /* QPSubscriptionLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA62ED2201B2BF00C8592F /* QPSubscriptionLink.swift */; };
 		E1D7500E22033ED900ED17DF /* QuickPaySDKTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D7500D22033ED900ED17DF /* QuickPaySDKTestCase.swift */; };
 		E1D7501022033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D7500F22033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift */; };
+		F965AC0A23356635001F8F0B /* DispatchQueueExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F965AC0923356635001F8F0B /* DispatchQueueExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +132,7 @@
 		E1CA62ED2201B2BF00C8592F /* QPSubscriptionLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPSubscriptionLink.swift; sourceTree = "<group>"; };
 		E1D7500D22033ED900ED17DF /* QuickPaySDKTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPaySDKTestCase.swift; sourceTree = "<group>"; };
 		E1D7500F22033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = QuickPaySDKSubscriptionTests.swift; path = QuickPaySDKTests/QuickPaySDKSubscriptionTests.swift; sourceTree = SOURCE_ROOT; };
+		F965AC0923356635001F8F0B /* DispatchQueueExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -290,6 +292,7 @@
 				E118210F225B37B400A3C8C7 /* UIViewExtensions.swift */,
 				E118210D225B378400A3C8C7 /* UIColorExtensions.swift */,
 				E1708A0B2205C0020060AB1C /* URLRequestExtensions.swift */,
+				F965AC0923356635001F8F0B /* DispatchQueueExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				E1C3984A21A432D600086C9D /* QPMetadata.swift in Sources */,
 				E1897CB3219C6B00002CE64A /* QPAddress.swift in Sources */,
 				E12EE4EB219EE30C00843B0D /* QPGetPaymentRequest.swift in Sources */,
+				F965AC0A23356635001F8F0B /* DispatchQueueExtensions.swift in Sources */,
 				E15788352223EBB100C86EB7 /* QuickPayAcquires.swift in Sources */,
 				E1CA62EE2201B2BF00C8592F /* QPSubscriptionLink.swift in Sources */,
 			);
@@ -677,6 +681,7 @@
 		E163130A2192249900A75B73 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -705,6 +710,7 @@
 		E163130B2192249900A75B73 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
