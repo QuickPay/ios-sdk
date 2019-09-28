@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'QuickPaySDK'
-  spec.version      = '1.0.0'
+  spec.version      = '1.1.0'
   spec.summary      = 'QuickPay is a web based Payment Service Provider, allowing you to accept payments online.'
   spec.homepage     = 'http://quickpay.net'
 
