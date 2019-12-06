@@ -83,6 +83,10 @@ class ShopViewController: UIViewController {
             case .applepay:
                 handleApplePay()
                 break
+                
+            case .vipps:
+                handleVipps()
+                break
             }
         }
     }
@@ -374,6 +378,16 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
     
 }
 
+// MARK: - Vipps
+extension ShopViewController {
+    
+    func handleVipps() {
+        //TODO: Implement
+        
+        print("VIPPS!!")
+    }
+    
+}
 
 // MARK: - Payment Window
 /**

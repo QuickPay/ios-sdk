@@ -28,6 +28,7 @@ public class PaymentView: UIView {
         case applepay = "PaymentApplePay"
         case mobilepay = "PaymentMobilePay"
         case paymentcard = "PaymentCreditCard"
+        case vipps = "PaymentVipps"
         
         public func defaultTitle() -> String {
             switch self {
@@ -37,6 +38,8 @@ public class PaymentView: UIView {
                 return "MobilePay"
             case .paymentcard:
                 return "Cards"
+            case .vipps:
+                return "Vipps"
             }
         }
     }
@@ -75,6 +78,7 @@ public class PaymentView: UIView {
             self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: bundle), forCellReuseIdentifier: PaymentMethod.paymentcard.rawValue)
             self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.mobilepay.rawValue)
             self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.applepay.rawValue)
+//            self.tableView.register(UINib.init(nibName: "PaymentViewCellVipps", bundle: bundle), forCellReuseIdentifier: PaymentMethod.vipps.rawValue)
         }
         else {
             QuickPay.logDelegate?.log("Could not load the needed Nib files from bundle")

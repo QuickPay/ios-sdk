@@ -28,6 +28,7 @@ public class QuickPay: NSObject {
 
     public static private(set) var isMobilePayOnlineEnabled: Bool?
     public static private(set) var isApplePayEnabled: Bool?
+    public static private(set) var isVippsEnabled: Bool?
     public static private(set) var isInitializing: Bool = true
 
     internal static let sdkBundleIdentifier = "net.quickpay.quickpaysdk"
@@ -72,6 +73,12 @@ public class QuickPay: NSObject {
         dispatchGroup.enter()
         isApplePayEnabled { (enabled) in
             isApplePayEnabled = enabled
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        isVippsEnabled { (enabled) in
+            isVippsEnabled = enabled
             dispatchGroup.leave()
         }
         
@@ -169,6 +176,8 @@ public extension QuickPay {
     private static let mobilePayOnlineScheme = "mobilepayonline://"
     private static let mobilePayUrlSource = "com.danskebank.mobilepay" // The source URL when the app is opened by MobilePay
     
+    private static let vippsScheme = "vipps://"
+    
     private static var mobilePayCompletion: ((_ payment: QPPayment) -> Void)?
     private static var mobilePayFailure: (() -> Void)?
     private static var mobilePayPayment: QPPayment?
@@ -231,6 +240,24 @@ public extension QuickPay {
 
 // MARK: - Capabilities
 
+// Apple
+extension QuickPay {
+    
+    static func isApplePayEnabled(completion: @escaping (_ enabled: Bool)->Void) {
+        QPGetAcquireSettingsClearhausRequest().sendRequest(success: { (settings) in
+            completion(settings.active && settings.apple_pay)
+        }) { (data, response, error) in
+            completion(false)
+        }
+    }
+    
+    public static func isApplePayAvailableOnDevice() -> Bool {
+        return PKPaymentAuthorizationController.canMakePayments()
+    }
+    
+}
+
+// MobilePay
 extension QuickPay {
     
     static func isMobilePayOnlineEnabled(completion: @escaping (_ enabled: Bool)->Void) {
@@ -244,17 +271,23 @@ extension QuickPay {
     public static func isMobilePayAvailableOnDevice() -> Bool {
         return canOpenUrl(url: mobilePayOnlineScheme)
     }
+    
+}
 
-    static func isApplePayEnabled(completion: @escaping (_ enabled: Bool)->Void) {
-        QPGetAcquireSettingsClearhausRequest().sendRequest(success: { (settings) in
-            completion(settings.active && settings.apple_pay)
+// Vipps
+extension QuickPay {
+    
+    static func isVippsEnabled(completion: @escaping (_ enabled: Bool)->Void) {
+        QPGetAcquireSettingsVippsRequest().sendRequest(success: { (settings) in
+            completion(settings.active)
         }) { (data, response, error) in
             completion(false)
         }
     }
+
     
-    public static func isApplePayAvailableOnDevice() -> Bool {
-        return PKPaymentAuthorizationController.canMakePayments()
+    public static func isVippsAvailableOnDevice() -> Bool {
+        return canOpenUrl(url: vippsScheme)
     }
     
 }

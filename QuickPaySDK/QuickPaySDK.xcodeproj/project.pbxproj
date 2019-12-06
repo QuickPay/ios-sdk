@@ -62,6 +62,7 @@
 		E1D7500E22033ED900ED17DF /* QuickPaySDKTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D7500D22033ED900ED17DF /* QuickPaySDKTestCase.swift */; };
 		E1D7501022033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D7500F22033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift */; };
 		F965AC0A23356635001F8F0B /* DispatchQueueExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F965AC0923356635001F8F0B /* DispatchQueueExtensions.swift */; };
+		F9F9BCC0239A6962001D7E86 /* QPGetAcquireSettingsVippsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F9BCBF239A6962001D7E86 /* QPGetAcquireSettingsVippsRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +134,7 @@
 		E1D7500D22033ED900ED17DF /* QuickPaySDKTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPaySDKTestCase.swift; sourceTree = "<group>"; };
 		E1D7500F22033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = QuickPaySDKSubscriptionTests.swift; path = QuickPaySDKTests/QuickPaySDKSubscriptionTests.swift; sourceTree = SOURCE_ROOT; };
 		F965AC0923356635001F8F0B /* DispatchQueueExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueExtensions.swift; sourceTree = "<group>"; };
+		F9F9BCBF239A6962001D7E86 /* QPGetAcquireSettingsVippsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPGetAcquireSettingsVippsRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -366,6 +368,7 @@
 			children = (
 				E1A9DF4922427025005424BF /* QPGetAcquireSettingsMobilePayRequest.swift */,
 				E158068D22427B9C000F8954 /* QPGetAcquireSettingsClearhausRequest.swift */,
+				F9F9BCBF239A6962001D7E86 /* QPGetAcquireSettingsVippsRequest.swift */,
 			);
 			path = Acquirers;
 			sourceTree = "<group>";
@@ -504,6 +507,7 @@
 				E1708A112205CA1B0060AB1C /* QPHeaders.swift in Sources */,
 				E12A00842200C754005D05FB /* QPCreateSubscriptionRequest.swift in Sources */,
 				E1897CAE219C6B00002CE64A /* QPCreatePaymentRequest.swift in Sources */,
+				F9F9BCC0239A6962001D7E86 /* QPGetAcquireSettingsVippsRequest.swift in Sources */,
 				E1897CB7219C6B20002CE64A /* QuickPayHttpStatusCodes.swift in Sources */,
 				E1C3984C21A4342100086C9D /* QPPaymentLink.swift in Sources */,
 				E1897CB4219C6B00002CE64A /* QPPaymentWindowController.swift in Sources */,
