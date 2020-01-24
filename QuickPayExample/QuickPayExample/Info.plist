@@ -32,6 +32,7 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>mobilepayonline</string>
+		<string>vipps</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

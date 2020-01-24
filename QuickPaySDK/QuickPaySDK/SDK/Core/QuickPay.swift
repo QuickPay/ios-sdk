@@ -94,13 +94,14 @@ public class QuickPay: NSObject {
     public static func openPaymentLink(paymentUrl: String, onCancel: @escaping () -> Void, onResponse: @escaping (Bool) -> Void, presentation: Presentation) {
         OperationQueue.main.addOperation {
             let paymentController = QPPaymentWindowController(paymentUrl: paymentUrl)
-
+            
             let delegate = QPPaymentWindowControllerDelegateCallbacksWrapper()
             delegate.onResponse = onResponse
             paymentController.delegate = delegate
             
             switch presentation {
             case .push(let navController, let animated):
+                navController.modalPresentationStyle = .fullScreen
                 navController.pushViewController(paymentController, animated: animated)
 
                 delegate.onCancel = {

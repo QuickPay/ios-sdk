@@ -61,6 +61,7 @@
 		E1CA62EE2201B2BF00C8592F /* QPSubscriptionLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CA62ED2201B2BF00C8592F /* QPSubscriptionLink.swift */; };
 		E1D7500E22033ED900ED17DF /* QuickPaySDKTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D7500D22033ED900ED17DF /* QuickPaySDKTestCase.swift */; };
 		E1D7501022033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D7500F22033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift */; };
+		F94657BD23DB19D10000A37C /* PaymentViewCellVipps.xib in Resources */ = {isa = PBXBuildFile; fileRef = F94657BC23DB19D00000A37C /* PaymentViewCellVipps.xib */; };
 		F965AC0A23356635001F8F0B /* DispatchQueueExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F965AC0923356635001F8F0B /* DispatchQueueExtensions.swift */; };
 		F9F9BCC0239A6962001D7E86 /* QPGetAcquireSettingsVippsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F9BCBF239A6962001D7E86 /* QPGetAcquireSettingsVippsRequest.swift */; };
 /* End PBXBuildFile section */
@@ -133,6 +134,7 @@
 		E1CA62ED2201B2BF00C8592F /* QPSubscriptionLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPSubscriptionLink.swift; sourceTree = "<group>"; };
 		E1D7500D22033ED900ED17DF /* QuickPaySDKTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPaySDKTestCase.swift; sourceTree = "<group>"; };
 		E1D7500F22033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = QuickPaySDKSubscriptionTests.swift; path = QuickPaySDKTests/QuickPaySDKSubscriptionTests.swift; sourceTree = SOURCE_ROOT; };
+		F94657BC23DB19D00000A37C /* PaymentViewCellVipps.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentViewCellVipps.xib; sourceTree = "<group>"; };
 		F965AC0923356635001F8F0B /* DispatchQueueExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueExtensions.swift; sourceTree = "<group>"; };
 		F9F9BCBF239A6962001D7E86 /* QPGetAcquireSettingsVippsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPGetAcquireSettingsVippsRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -159,6 +161,7 @@
 		E11820FF225B341300A3C8C7 /* PaymentView */ = {
 			isa = PBXGroup;
 			children = (
+				F94657BC23DB19D00000A37C /* PaymentViewCellVipps.xib */,
 				E1182100225B341300A3C8C7 /* PaymentViewCellMobilePay.xib */,
 				E1182101225B341300A3C8C7 /* PaymentView.swift */,
 				E1182102225B341300A3C8C7 /* PaymentViewCell.swift */,
@@ -469,6 +472,7 @@
 				E1182106225B341300A3C8C7 /* PaymentViewCellMobilePay.xib in Resources */,
 				E118210A225B341300A3C8C7 /* PaymentView.xib in Resources */,
 				E118210B225B341300A3C8C7 /* PaymentViewCellCreditCard.xib in Resources */,
+				F94657BD23DB19D10000A37C /* PaymentViewCellVipps.xib in Resources */,
 				E1182109225B341300A3C8C7 /* PaymentViewCellApplePay.xib in Resources */,
 				E1182112225B3CF400A3C8C7 /* Media.xcassets in Resources */,
 				E12A0070220085B5005D05FB /* IDETemplateMacros.plist in Resources */,

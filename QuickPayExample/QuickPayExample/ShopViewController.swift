@@ -415,6 +415,7 @@ extension ShopViewController {
                 
                 // Step 3) Open the payment URL in a WebView
                 QuickPay.openPaymentLink(paymentUrl: paymentLink.url, onCancel: {
+                    self.removeSpinner()
                     self.displayOkAlert(title: "Payment Cancelled", message: "The payment was cancelled")
                 }, onResponse: { (success) in
                     // Step 4) Validate that the authoprization went well

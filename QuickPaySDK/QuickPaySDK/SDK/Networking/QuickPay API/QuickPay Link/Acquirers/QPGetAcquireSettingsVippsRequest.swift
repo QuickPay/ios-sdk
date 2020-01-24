@@ -44,7 +44,6 @@ public class QPGetAcquireSettingsVippsRequest: QPRequest {
 
 }
 
-
 public class QPVippsSettings: Codable {
 
     public var active: Bool

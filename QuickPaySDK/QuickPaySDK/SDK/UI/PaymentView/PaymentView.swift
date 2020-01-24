@@ -78,7 +78,7 @@ public class PaymentView: UIView {
             self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: bundle), forCellReuseIdentifier: PaymentMethod.paymentcard.rawValue)
             self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.mobilepay.rawValue)
             self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.applepay.rawValue)
-//            self.tableView.register(UINib.init(nibName: "PaymentViewCellVipps", bundle: bundle), forCellReuseIdentifier: PaymentMethod.vipps.rawValue)
+            self.tableView.register(UINib.init(nibName: "PaymentViewCellVipps", bundle: bundle), forCellReuseIdentifier: PaymentMethod.vipps.rawValue)
         }
         else {
             QuickPay.logDelegate?.log("Could not load the needed Nib files from bundle")
@@ -105,6 +105,10 @@ public class PaymentView: UIView {
     private func updateAvailablePaymentMethods() {
         availablePaymentMethods = [PaymentView.PaymentMethod.paymentcard]
         
+        if QuickPay.isVippsEnabled ?? false && QuickPay.isVippsAvailableOnDevice() {
+            availablePaymentMethods?.insert(PaymentMethod.vipps, at: 0);
+        }
+        
         if QuickPay.isMobilePayOnlineEnabled ?? false && QuickPay.isMobilePayAvailableOnDevice() {
             availablePaymentMethods?.insert(PaymentMethod.mobilepay, at: 0)
         }
@@ -112,6 +116,7 @@ public class PaymentView: UIView {
         if QuickPay.isApplePayEnabled ?? false && QuickPay.isApplePayAvailableOnDevice() {
             availablePaymentMethods?.insert(PaymentMethod.applepay, at: 0)
         }
+        
     }
 
     
