@@ -136,6 +136,7 @@
 		E1D7500F22033FE500ED17DF /* QuickPaySDKSubscriptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = QuickPaySDKSubscriptionTests.swift; path = QuickPaySDKTests/QuickPaySDKSubscriptionTests.swift; sourceTree = SOURCE_ROOT; };
 		F94657BC23DB19D00000A37C /* PaymentViewCellVipps.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentViewCellVipps.xib; sourceTree = "<group>"; };
 		F965AC0923356635001F8F0B /* DispatchQueueExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueExtensions.swift; sourceTree = "<group>"; };
+		F974905524A9274E0088011B /* QuickPaySDKTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = QuickPaySDKTests.xctestplan; sourceTree = "<group>"; };
 		F9F9BCBF239A6962001D7E86 /* QPGetAcquireSettingsVippsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QPGetAcquireSettingsVippsRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -279,6 +280,7 @@
 				E1D7500D22033ED900ED17DF /* QuickPaySDKTestCase.swift */,
 				E1A9DF4B22427275005424BF /* QuickPaySDKAcquirersTests.swift */,
 				E1648C332200F7A200C0AABC /* Info.plist */,
+				F974905524A9274E0088011B /* QuickPaySDKTests.xctestplan */,
 			);
 			path = QuickPaySDKTests;
 			sourceTree = "<group>";
