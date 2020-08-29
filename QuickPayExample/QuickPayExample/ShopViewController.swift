@@ -232,10 +232,10 @@ extension ShopViewController {
                 
                 // Step 3) Authorize the payment through MobilePay
                 // This step will query the MobilePay app and the completion handler will be invoked when your app is opened up again
-                QuickPay.authorizeWithMobilePay(payment: payment, completion: { (payment) in
+                QuickPay.authorizeWithMobilePay(payment: payment, completion: { (paymentId) in
                     
                     // Step 4) Validate that the authoprization went well
-                    QPGetPaymentRequest(id: payment.id).sendRequest(success: { (payment) in
+                    QPGetPaymentRequest(id: paymentId).sendRequest(success: { (payment) in
                         self.removeSpinner()
                         
                         if payment.accepted {
@@ -382,9 +382,41 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
 extension ShopViewController {
     
     func handleVipps() {
-        //TODO: Implement
+        // Show a progress indicator
+        showSpinner(onView: self.view)
         
-        print("VIPPS!!")
+        // Step 1) Create a payment
+        let paymentParams = createPaymentParametersFromBasket()
+        paymentParams.currency = "NOK"
+        QPCreatePaymentRequest(parameters: paymentParams).sendRequest(success: { (payment) in
+            
+            // Step 2) Create a payment session
+            let vippsParams = VippsParameters(returnUrl: "quickpayexampleshop://")
+            let createSessionRequestParameters = QPCreatePaymentSessionParameters(amount: Int(self.totalBasketValue() * 100), vipps: vippsParams)
+            QPCreatePaymentSessionRequest(id: payment.id, parameters: createSessionRequestParameters).sendRequest(success: { (payment) in
+                
+                // Step 3) Authorize the payment through Vipps
+                // This step will query the Vipps app and the completion handler will be invoked when your app is opened up again
+                QuickPay.authorizeWithVipps(payment: payment, completion: { (paymentId) in
+                    
+                    // Step 4) Validate that the authoprization went well
+                    QPGetPaymentRequest(id: paymentId).sendRequest(success: { (payment) in
+                        self.removeSpinner()
+                        
+                        if payment.accepted {
+                            self.displayOkAlert(title: "Payment Accepted", message: "The payment was accepted and the acquirer is \(payment.acquirer ?? "unknown")")
+                            // Congratulations, you have successfully authorized the payment.
+                            // You can now capture the payment when you have shipped the items.
+                        }
+                        else {
+                            self.displayOkAlert(title: "Payment Not Accepted", message: "The payment was not accepted")
+                        }
+                    }, failure: self.handleQuickPayNetworkErrors)
+                }, failure: {
+                    self.displayOkAlert(title: "Vipps Failed", message: "Could not authorize with MobilePay")
+                })
+            }, failure: self.handleQuickPayNetworkErrors)
+        }, failure: self.handleQuickPayNetworkErrors)
     }
     
 }

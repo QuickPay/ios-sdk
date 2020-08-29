@@ -109,7 +109,7 @@ public class PaymentView: UIView {
             availablePaymentMethods?.insert(PaymentMethod.vipps, at: 0);
         }
         
-        if QuickPay.isMobilePayOnlineEnabled ?? false && QuickPay.isMobilePayAvailableOnDevice() {
+        if QuickPay.isMobilePayEnabled ?? false && QuickPay.isMobilePayAvailableOnDevice() {
             availablePaymentMethods?.insert(PaymentMethod.mobilepay, at: 0)
         }
         

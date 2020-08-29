@@ -26,7 +26,7 @@ public class QuickPay: NSObject {
     
     // MARK: Properties
 
-    public static private(set) var isMobilePayOnlineEnabled: Bool?
+    public static private(set) var isMobilePayEnabled: Bool?
     public static private(set) var isApplePayEnabled: Bool?
     public static private(set) var isVippsEnabled: Bool?
     public static private(set) var isInitializing: Bool = true
@@ -66,7 +66,7 @@ public class QuickPay: NSObject {
 
         dispatchGroup.enter()
         isMobilePayOnlineEnabled { (enabled) in
-            isMobilePayOnlineEnabled = enabled
+            isMobilePayEnabled = enabled
             dispatchGroup.leave()
         }
         
@@ -126,7 +126,7 @@ public class QuickPay: NSObject {
             }
         }
     }
-    
+        
     static func canOpenUrl(url: String) -> Bool {
         guard let url = URL(string: url) else {
             return false
@@ -163,10 +163,84 @@ public class QuickPay: NSObject {
     
     @objc static func applicationDidBecomeActive() {
         stopObservingLifecycle()
-        onCallbackFromMobilePay()
+        onCallbackFromAppSwitch()
+    }
+}
+
+
+
+// MARK: - App Switch
+
+public extension QuickPay {
+    private static var appSwitchCompletion: ((_ paymentId: Int) -> Void)?
+    private static var appSwitchFailure: (() -> Void)?
+    private static var appSwitchPaymentId: Int?
+    
+    static func onCallbackFromAppSwitch() {
+        guard let paymentId = appSwitchPaymentId, let completion = appSwitchCompletion else {
+            appSwitchFailure?()
+            
+            appSwitchCompletion = nil
+            appSwitchFailure = nil
+            appSwitchPaymentId = nil
+            return
+        }
+
+        completion(paymentId)
+
+        appSwitchCompletion = nil
+        appSwitchFailure = nil
+        appSwitchPaymentId = nil
     }
 
 }
+
+
+
+// MARK: - Vipps
+public extension QuickPay {
+    private static let vippsScheme = "vipps://"
+    
+    // MARK: - API
+    
+    static func authorizeWithVipps(payment: QPPayment, completion: ((_ paymentId: Int) -> Void)?, failure: (() -> Void)?) {
+        // TODO - We need to get the correct token from QP before we can switch to the Vipps app
+
+        /*
+        guard let mobilePayToken = payment.operations?[0].data?["session_token"] else {
+            QuickPay.logDelegate?.log("The operations of the Payment does not contain the needed information to authorize through MobilePay")
+            failure?()
+            return
+        }
+        
+        if let mobilePayUrl = URL(string: "\(mobilePayOnlineScheme)online?sessiontoken=\(mobilePayToken)&version=2&paymentId=\(payment.id)") {
+            if canOpenUrl(url: mobilePayUrl) {
+                if completion != nil {
+                    appSwitchCompletion = completion
+                    appSwitchFailure = failure
+                    appSwitchPaymentId = payment.id
+                    
+                    startObservingLifecycle()
+                }
+                
+                OperationQueue.main.addOperation {
+                    UIApplication.shared.open(mobilePayUrl)
+                }
+                
+                return
+            }
+            else {
+                QuickPay.logDelegate?.log("Cannot open MobilePay App.")
+                QuickPay.logDelegate?.log("Make sure the 'mobilepayonline' URL Scheme is added to your plist and make sure the MobilePay App is installed on the users phone before presenting this payment option.")
+                QuickPay.logDelegate?.log("You can test if MobilePay can be opened by calling QuickPay.mobilePayAvailable()")
+            }
+        }
+        
+        failure?()
+ */
+    }
+}
+
 
 
 // MARK: - MobilePay Online
@@ -176,29 +250,23 @@ public extension QuickPay {
     
     private static let mobilePayOnlineScheme = "mobilepayonline://"
     private static let mobilePayUrlSource = "com.danskebank.mobilepay" // The source URL when the app is opened by MobilePay
-    
-    private static let vippsScheme = "vipps://"
-    
-    private static var mobilePayCompletion: ((_ payment: QPPayment) -> Void)?
-    private static var mobilePayFailure: (() -> Void)?
-    private static var mobilePayPayment: QPPayment?
-    
-    
+        
+
     // MARK: API
     
-    static func authorizeWithMobilePay(payment: QPPayment, completion: ((_ payment: QPPayment) -> Void)?, failure: (() -> Void)?) {
+    static func authorizeWithMobilePay(payment: QPPayment, completion: ((_ paymentId: Int) -> Void)?, failure: (() -> Void)?) {
         guard let mobilePayToken = payment.operations?[0].data?["session_token"] else {
             QuickPay.logDelegate?.log("The operations of the Payment does not contain the needed information to authorize through MobilePay")
             failure?()
             return
         }
         
-        if let mobilePayUrl = URL(string: "\(mobilePayOnlineScheme)online?sessiontoken=\(mobilePayToken)&version=2") {
+        if let mobilePayUrl = URL(string: "\(mobilePayOnlineScheme)online?sessiontoken=\(mobilePayToken)&version=2&paymentId=\(payment.id)") {
             if canOpenUrl(url: mobilePayUrl) {
                 if completion != nil {
-                    mobilePayCompletion = completion
-                    mobilePayFailure = failure
-                    mobilePayPayment = payment
+                    appSwitchCompletion = completion
+                    appSwitchFailure = failure
+                    appSwitchPaymentId = payment.id
                     
                     startObservingLifecycle()
                 }
@@ -218,24 +286,7 @@ public extension QuickPay {
         
         failure?()
     }
-    
-    static func onCallbackFromMobilePay() {
-        guard let payment = mobilePayPayment, let completion = mobilePayCompletion else {
-            mobilePayFailure?()
-            
-            mobilePayCompletion = nil
-            mobilePayFailure = nil
-            mobilePayPayment = nil
-            return
-        }
-
-        completion(payment)
-
-        mobilePayCompletion = nil
-        mobilePayFailure = nil
-        mobilePayPayment = nil
-    }
-    
+        
 }
 
 

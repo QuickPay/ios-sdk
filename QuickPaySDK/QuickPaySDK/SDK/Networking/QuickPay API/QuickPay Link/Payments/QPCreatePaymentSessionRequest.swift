@@ -80,7 +80,47 @@ public class QPCreatePaymentSessionParameters: Encodable {
         self.extras = Dictionary<String,EncodableValue>()
         self.extras?[Acquires.mobilepay.rawValue] = EncodableValue(value: mobilePay.toEncodableDictionary())
     }
+    
+    public convenience init(amount: Int, vipps: VippsParameters) {
+        self.init(amount: amount)
+        
+        self.acquirer = Acquires.vipps.rawValue
+        
+        self.extras = Dictionary<String,EncodableValue>()
+        self.extras = vipps.toEncodableDictionary()
+    }
 }
+
+
+public struct VippsParameters: Encodable {
+
+    // MARK: - Properties
+
+    public var return_url: String
+    public var app_switch: Bool
+    
+    
+    // MARK: Init
+    
+    public init(returnUrl: String) {
+        self.return_url = returnUrl
+        self.app_switch = true
+    }
+ 
+    
+    // MARK: Convertion
+    
+    func toEncodableDictionary() -> Dictionary<String,EncodableValue> {
+        var vippsDict = Dictionary<String,EncodableValue>()
+        
+        vippsDict["return_url"] = EncodableValue(value: self.return_url)
+        vippsDict["app_switch"] = EncodableValue(value: self.app_switch)
+        
+        return vippsDict
+    }
+    
+}
+
 
 public struct MobilePayParameters: Encodable {
 
