@@ -49,7 +49,7 @@ public class QPRequest {
         
         // Create a new data-task for the session, which queues the HTTP call and parse the response
         let task = session.dataTask(with: request) { (data, response, error) in
-            guard error == nil else {
+            guard let responseData = data, error == nil else {
                 failure?(data, response, error)
                 return
             }
@@ -63,7 +63,12 @@ public class QPRequest {
             // If HTTP Success state we parse the result into the corresponding API Model
             if(QuickPayHttpStatusCodes.isSuccessCode(statusCode: httpResponse.statusCode)) {
                 do {
-                    let result: T = try JSONDecoder().decode(T.self, from: data!)
+                    if let responseString = String(data: responseData, encoding: String.Encoding.utf8) {
+                        QuickPay.logDelegate?.log("Response")
+                        QuickPay.logDelegate?.log(responseString)
+                    }
+                    
+                    let result: T = try JSONDecoder().decode(T.self, from: responseData)
                     success(result)
                 }
                 catch {
@@ -72,7 +77,7 @@ public class QPRequest {
                 }
             }
             else {
-                QuickPay.logDelegate?.log("HTTP response code is not in the success range (200-299(: \(httpResponse.statusCode)")
+                QuickPay.logDelegate?.log("HTTP response code is not in the success range (200-299): \(httpResponse.statusCode)")
                 failure?(data, response, error)
             }
         }

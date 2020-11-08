@@ -38,4 +38,18 @@ class QuickPaySDKAcquirersTests: QuickPaySDKTestCase {
             XCTAssertNotNil(clearhausSettings)
         }
     }
+    
+    func testVippsSettings() {
+        let vippsExpectation = expectation(description: "GET Vipps")
+        var vippsSettings: QPVippsSettings?
+        
+        QPGetAcquireSettingsVippsRequest().sendRequest(success: { (settings) in
+            vippsSettings = settings
+            vippsExpectation.fulfill()
+        }, failure: super.onError)
+        
+        waitForExpectations(timeout: QuickPaySDKTestCase.globalTimeout) { (error) in
+            XCTAssertNotNil(vippsSettings)
+        }
+    }
 }

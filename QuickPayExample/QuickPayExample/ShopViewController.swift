@@ -187,6 +187,8 @@ class ShopViewController: UIViewController {
         }
         
         displayOkAlert(title: "Request failed", message: error?.localizedDescription ?? "Unknown error")
+        
+        self.removeSpinner()
     }
     
     private func totalBasketValue() -> Double {
@@ -249,6 +251,7 @@ extension ShopViewController {
                     }, failure: self.handleQuickPayNetworkErrors)
                 }, failure: {
                     self.displayOkAlert(title: "MobilePay Failed", message: "Could not authorize with MobilePay")
+                    self.removeSpinner()
                 })
             }, failure: self.handleQuickPayNetworkErrors)
         }, failure: self.handleQuickPayNetworkErrors)
@@ -379,6 +382,16 @@ extension ShopViewController: PKPaymentAuthorizationViewControllerDelegate {
 }
 
 // MARK: - Vipps
+/**
+ Example code to demonstrate the use of Vipps
+ 
+ The steps needed to use Vipps is
+ 1) Create a payment
+ 2) Create a payment session
+ 3) Authorize the payment through Vipps
+ 4) Validate that the authoprization went well
+ */
+
 extension ShopViewController {
     
     func handleVipps() {
@@ -413,7 +426,8 @@ extension ShopViewController {
                         }
                     }, failure: self.handleQuickPayNetworkErrors)
                 }, failure: {
-                    self.displayOkAlert(title: "Vipps Failed", message: "Could not authorize with MobilePay")
+                    self.displayOkAlert(title: "Vipps Failed", message: "Could not authorize with Vipps")
+                    self.removeSpinner()
                 })
             }, failure: self.handleQuickPayNetworkErrors)
         }, failure: self.handleQuickPayNetworkErrors)

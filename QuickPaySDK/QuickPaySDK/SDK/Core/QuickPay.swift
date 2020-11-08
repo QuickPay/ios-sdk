@@ -199,22 +199,23 @@ public extension QuickPay {
 
 // MARK: - Vipps
 public extension QuickPay {
+    
+    //MARK: Properties
+    
     private static let vippsScheme = "vipps://"
+    
     
     // MARK: - API
     
     static func authorizeWithVipps(payment: QPPayment, completion: ((_ paymentId: Int) -> Void)?, failure: (() -> Void)?) {
-        // TODO - We need to get the correct token from QP before we can switch to the Vipps app
-
-        /*
-        guard let mobilePayToken = payment.operations?[0].data?["session_token"] else {
-            QuickPay.logDelegate?.log("The operations of the Payment does not contain the needed information to authorize through MobilePay")
+        guard let vippsUrlString = payment.operations?[0].data?["redirect_url"] else {
+            QuickPay.logDelegate?.log("The operations of the Payment does not contain the needed information to authorize through Vipps")
             failure?()
             return
         }
-        
-        if let mobilePayUrl = URL(string: "\(mobilePayOnlineScheme)online?sessiontoken=\(mobilePayToken)&version=2&paymentId=\(payment.id)") {
-            if canOpenUrl(url: mobilePayUrl) {
+                
+        if let vippsUrl = URL(string: vippsUrlString) {
+            if canOpenUrl(url: vippsUrl) {
                 if completion != nil {
                     appSwitchCompletion = completion
                     appSwitchFailure = failure
@@ -224,20 +225,19 @@ public extension QuickPay {
                 }
                 
                 OperationQueue.main.addOperation {
-                    UIApplication.shared.open(mobilePayUrl)
+                    UIApplication.shared.open(vippsUrl)
                 }
                 
                 return
             }
             else {
-                QuickPay.logDelegate?.log("Cannot open MobilePay App.")
-                QuickPay.logDelegate?.log("Make sure the 'mobilepayonline' URL Scheme is added to your plist and make sure the MobilePay App is installed on the users phone before presenting this payment option.")
-                QuickPay.logDelegate?.log("You can test if MobilePay can be opened by calling QuickPay.mobilePayAvailable()")
+                QuickPay.logDelegate?.log("Cannot open Vipps App.")
+                QuickPay.logDelegate?.log("Make sure the 'vippsmt' URL Scheme is added to your plist and make sure the Vipps App is installed on the users phone before presenting this payment option.")
+                QuickPay.logDelegate?.log("You can test if Vipps can be opened by calling QuickPay.isVippsAvailableOnDevice()")
             }
         }
         
         failure?()
- */
     }
 }
 
@@ -280,7 +280,7 @@ public extension QuickPay {
             else {
                 QuickPay.logDelegate?.log("Cannot open MobilePay App.")
                 QuickPay.logDelegate?.log("Make sure the 'mobilepayonline' URL Scheme is added to your plist and make sure the MobilePay App is installed on the users phone before presenting this payment option.")
-                QuickPay.logDelegate?.log("You can test if MobilePay can be opened by calling QuickPay.mobilePayAvailable()")
+                QuickPay.logDelegate?.log("You can test if MobilePay can be opened by calling QuickPay.isMobilePayAvailableOnDevice()")
             }
         }
         
