@@ -74,7 +74,7 @@ public class PaymentView: UIView {
         contentView.fixInView(self)
         
         // Init all the payment cells
-//        self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.paymentcard.rawValue)
+        self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.paymentcard.rawValue)
 //        self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.mobilepay.rawValue)
 //        self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.applepay.rawValue)
 //        self.tableView.register(UINib.init(nibName: "PaymentViewCellVipps", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.vipps.rawValue)
