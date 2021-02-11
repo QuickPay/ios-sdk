@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "QuickPaySDK",
+        "repositoryURL": "https://github.com/QuickPay/ios-sdk",
+        "state": {
+          "branch": "SwiftPackageTest",
+          "revision": "3cbefe506e6e601a546798d55b3db3d6c40c4d6d",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
