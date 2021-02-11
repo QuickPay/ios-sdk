@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UIBorderView: UIView {
+public class UIBorderView: UIView {
 
     @IBInspectable var cornerRadius: Double {
         get {
