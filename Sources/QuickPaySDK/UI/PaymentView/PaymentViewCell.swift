@@ -26,7 +26,7 @@ public class PaymentViewCell: UITableViewCell {
 
     // MARK: - Init
     
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .none
     }
@@ -34,7 +34,7 @@ public class PaymentViewCell: UITableViewCell {
     
     // MARK: - Lifecycle
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
+    public override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         borderView.backgroundColor = delegate?.cellBackgroundColor(selected)
         borderView.borderColor = delegate?.cellBorderColor(selected)
