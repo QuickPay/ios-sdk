@@ -10,7 +10,7 @@ import UIKit
 
 public class UIBorderView: UIView {
 
-    @IBInspectable var cornerRadius: Double {
+    @IBInspectable public var cornerRadius: Double {
         get {
             return Double(self.layer.cornerRadius)
         }
@@ -19,7 +19,7 @@ public class UIBorderView: UIView {
         }
     }
 
-    @IBInspectable var borderWidth: Double {
+    @IBInspectable public var borderWidth: Double {
         get {
             return Double(self.layer.borderWidth)
         }
@@ -28,7 +28,7 @@ public class UIBorderView: UIView {
         }
     }
 
-    @IBInspectable var borderColor: UIColor? {
+    @IBInspectable public var borderColor: UIColor? {
         get {
             return UIColor(cgColor: self.layer.borderColor!)
         }

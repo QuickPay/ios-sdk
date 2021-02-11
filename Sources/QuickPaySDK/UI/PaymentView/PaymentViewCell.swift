@@ -19,8 +19,8 @@ public class PaymentViewCell: UITableViewCell {
     
     // MARK: - Properties and Outlets
     
-    @IBOutlet weak var borderView: UIBorderView!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet public weak var borderView: UIBorderView!
+    @IBOutlet public weak var titleLabel: UILabel!
     var delegate: PaymentViewCellDelegate?
     
 
