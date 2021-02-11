@@ -16,10 +16,8 @@ public enum Presentation {
 }
 
 public protocol InitializeDelegate {
-    
     func initializationStarted()
     func initializationCompleted()
-    
 }
 
 public class QuickPay: NSObject {
@@ -192,7 +190,6 @@ public extension QuickPay {
         appSwitchFailure = nil
         appSwitchPaymentId = nil
     }
-
 }
 
 
@@ -203,6 +200,7 @@ public extension QuickPay {
     //MARK: Properties
     
     private static let vippsScheme = "vipps://"
+    private static let vippsMTScheme = "vippsmt://"
     
     
     // MARK: - API
@@ -213,7 +211,7 @@ public extension QuickPay {
             failure?()
             return
         }
-                
+        
         if let vippsUrl = URL(string: vippsUrlString) {
             if canOpenUrl(url: vippsUrl) {
                 if completion != nil {
@@ -232,7 +230,7 @@ public extension QuickPay {
             }
             else {
                 QuickPay.logDelegate?.log("Cannot open Vipps App.")
-                QuickPay.logDelegate?.log("Make sure the 'vippsmt' URL Scheme is added to your plist and make sure the Vipps App is installed on the users phone before presenting this payment option.")
+                QuickPay.logDelegate?.log("Make sure the 'vipps://' URL Scheme is added to your plist and make sure the Vipps App is installed on the users phone before presenting this payment option.")
                 QuickPay.logDelegate?.log("You can test if Vipps can be opened by calling QuickPay.isVippsAvailableOnDevice()")
             }
         }
@@ -249,19 +247,19 @@ public extension QuickPay {
     //MARK: Properties
     
     private static let mobilePayOnlineScheme = "mobilepayonline://"
-    private static let mobilePayUrlSource = "com.danskebank.mobilepay" // The source URL when the app is opened by MobilePay
+    private static let mobilePayUrlSource = "com.danskebank.mobilepay"
         
 
     // MARK: API
     
     static func authorizeWithMobilePay(payment: QPPayment, completion: ((_ paymentId: Int) -> Void)?, failure: (() -> Void)?) {
-        guard let mobilePayToken = payment.operations?[0].data?["session_token"] else {
+        guard let redirectURLString = payment.operations?[0].data?["redirect_url"], let redirectURL = URL(string: redirectURLString) else {
             QuickPay.logDelegate?.log("The operations of the Payment does not contain the needed information to authorize through MobilePay")
             failure?()
             return
         }
         
-        if let mobilePayUrl = URL(string: "\(mobilePayOnlineScheme)online?sessiontoken=\(mobilePayToken)&version=2&paymentId=\(payment.id)") {
+        if let mobilePayToken = redirectURL.valueOf("id"), let mobilePayUrl = URL(string: "\(mobilePayOnlineScheme)online?paymentid=\(mobilePayToken)") {
             if canOpenUrl(url: mobilePayUrl) {
                 if completion != nil {
                     appSwitchCompletion = completion
@@ -279,7 +277,7 @@ public extension QuickPay {
             }
             else {
                 QuickPay.logDelegate?.log("Cannot open MobilePay App.")
-                QuickPay.logDelegate?.log("Make sure the 'mobilepayonline' URL Scheme is added to your plist and make sure the MobilePay App is installed on the users phone before presenting this payment option.")
+                QuickPay.logDelegate?.log("Make sure the 'mobilepayonline://' URL Scheme is added to your plist and make sure the MobilePay App is installed on the users phone before presenting this payment option.")
                 QuickPay.logDelegate?.log("You can test if MobilePay can be opened by calling QuickPay.isMobilePayAvailableOnDevice()")
             }
         }
@@ -314,6 +312,9 @@ extension QuickPay {
     
     static func isMobilePayOnlineEnabled(completion: @escaping (_ enabled: Bool)->Void) {
         QPGetAcquireSettingsMobilePayRequest().sendRequest(success: { (settings) in
+            print("LOOK HERE: isMobilePayOnlineEnabled: \(settings.active)")
+            print("LOOK HERE: isMobilePayOnlineEnabled: \(settings)")
+            
             completion(settings.active)
         }) { (data, response, error) in
             completion(false)

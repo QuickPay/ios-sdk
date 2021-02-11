@@ -16,6 +16,7 @@ enum Acquires: String {
     case handelsbanken
     case klarna
     case mobilepay
+    case mobilepayonline
     case nets
     case paypal
     case paysafecard

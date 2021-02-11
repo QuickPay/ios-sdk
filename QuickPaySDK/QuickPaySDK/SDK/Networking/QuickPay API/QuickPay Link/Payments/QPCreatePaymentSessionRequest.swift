@@ -75,7 +75,7 @@ public class QPCreatePaymentSessionParameters: Encodable {
     public convenience init(amount: Int, mobilePay: MobilePayParameters) {
         self.init(amount: amount)
         
-        self.acquirer = Acquires.mobilepay.rawValue
+        self.acquirer = Acquires.mobilepayonline.rawValue
         
         self.extras = Dictionary<String,EncodableValue>()
         self.extras?[Acquires.mobilepay.rawValue] = EncodableValue(value: mobilePay.toEncodableDictionary())
@@ -133,7 +133,7 @@ public struct MobilePayParameters: Encodable {
     
     // MARK: Init
     
-    public init(returnUrl: String, language: String? = "dk", shopLogoUrl: String? = nil) {
+    public init(returnUrl: String, language: String? = "da", shopLogoUrl: String? = nil) {
         self.return_url = returnUrl
         self.language = language
         self.shop_logo_url = shopLogoUrl
