@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol PaymentViewCellDelegate {
+public protocol PaymentViewCellDelegate {
 
     func cellBackgroundColor(_ selected: Bool) -> UIColor
     func cellBorderColor(_ selected: Bool) -> UIColor
     
 }
 
-class PaymentViewCell: UITableViewCell {
+public class PaymentViewCell: UITableViewCell {
     
     // MARK: - Properties and Outlets
     
