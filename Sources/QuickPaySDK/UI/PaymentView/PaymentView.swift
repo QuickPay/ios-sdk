@@ -167,11 +167,11 @@ extension PaymentView: UITableViewDelegate, UITableViewDataSource {
 
 extension PaymentView: PaymentViewCellDelegate {
 
-    func cellBackgroundColor(_ selected: Bool) -> UIColor {
+    public func cellBackgroundColor(_ selected: Bool) -> UIColor {
         return selected ? cellBackgroundColorSelected : cellBackgroundColorUnselected
     }
     
-    func cellBorderColor(_ selected: Bool) -> UIColor {
+    public func cellBorderColor(_ selected: Bool) -> UIColor {
         return selected ? cellBorderColorSelected : cellBorderColorUnselected
     }
     
