@@ -29,7 +29,6 @@ public class QuickPay: NSObject {
     public static private(set) var isVippsEnabled: Bool?
     public static private(set) var isInitializing: Bool = true
 
-    internal static let sdkBundleIdentifier = "net.quickpay.quickpaysdk"
     private static var _apiKey: String?
     static private(set) var apiKey: String? {
         get {

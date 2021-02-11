@@ -70,7 +70,7 @@ public class PaymentView: UIView {
     }
     
     func commonInit() {
-        if let bundle = Bundle(identifier: QuickPay.sdkBundleIdentifier) {
+        if let bundle = Bundle(identifier: "QuickPaySDKModule") {
             bundle.loadNibNamed("PaymentView", owner: self, options: nil)
             contentView.fixInView(self)
 

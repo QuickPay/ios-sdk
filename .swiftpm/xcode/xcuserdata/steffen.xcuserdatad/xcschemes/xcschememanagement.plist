@@ -10,5 +10,23 @@
 			<integer>0</integer>
 		</dict>
 	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>QuickPaySDK</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>QuickPaySDKTests</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>QuickPaySDK_QuickPaySDK</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
 </dict>
 </plist>
