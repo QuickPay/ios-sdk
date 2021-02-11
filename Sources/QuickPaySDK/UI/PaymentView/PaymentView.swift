@@ -44,11 +44,11 @@ public class PaymentView: UIView {
         }
     }
     
-    @IBInspectable var cellBackgroundColorSelected: UIColor = UIColor(red: 220, green: 230, blue: 255, alpha: 0)
+    @IBInspectable var cellBackgroundColorSelected: UIColor = UIColor(red: 220, green: 230, blue: 255)
     @IBInspectable var cellBackgroundColorUnselected: UIColor = UIColor.clear
 
-    @IBInspectable var cellBorderColorSelected: UIColor = UIColor(red: 220, green: 230, blue: 255, alpha: 0)
-    @IBInspectable var cellBorderColorUnselected: UIColor = UIColor(red: 170, green: 170, blue: 170, alpha: 0)
+    @IBInspectable var cellBorderColorSelected: UIColor = UIColor(red: 220, green: 230, blue: 255)
+    @IBInspectable var cellBorderColorUnselected: UIColor = UIColor(red: 170, green: 170, blue: 170)
 
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var tableView: UITableView!
