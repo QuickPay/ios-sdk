@@ -70,28 +70,14 @@ public class PaymentView: UIView {
     }
     
     func commonInit() {
-//        if let bundle = Bundle(identifier: "QuickPaySDKModule") {
-//            bundle.loadNibNamed("PaymentView", owner: self, options: nil)
-//            contentView.fixInView(self)
-//
-//            // Init all the payment cells
-//            self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: bundle), forCellReuseIdentifier: PaymentMethod.paymentcard.rawValue)
-//            self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.mobilepay.rawValue)
-//            self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: bundle), forCellReuseIdentifier: PaymentMethod.applepay.rawValue)
-//            self.tableView.register(UINib.init(nibName: "PaymentViewCellVipps", bundle: bundle), forCellReuseIdentifier: PaymentMethod.vipps.rawValue)
-//        }
-//        else {
-//            QuickPay.logDelegate?.log("Could not load the needed Nib files from bundle")
-//        }
-
         Bundle.module.loadNibNamed("PaymentView", owner: self, options: nil)
-                    contentView.fixInView(self)
+        contentView.fixInView(self)
         
-                    // Init all the payment cells
-                    self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.paymentcard.rawValue)
-                    self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.mobilepay.rawValue)
-                    self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.applepay.rawValue)
-                    self.tableView.register(UINib.init(nibName: "PaymentViewCellVipps", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.vipps.rawValue)
+        // Init all the payment cells
+        self.tableView.register(UINib.init(nibName: "PaymentViewCellCreditCard", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.paymentcard.rawValue)
+        self.tableView.register(UINib.init(nibName: "PaymentViewCellMobilePay", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.mobilepay.rawValue)
+        self.tableView.register(UINib.init(nibName: "PaymentViewCellApplePay", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.applepay.rawValue)
+        self.tableView.register(UINib.init(nibName: "PaymentViewCellVipps", bundle: Bundle.module), forCellReuseIdentifier: PaymentMethod.vipps.rawValue)
 
         
         tableView.delegate = self
