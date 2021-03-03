@@ -55,6 +55,7 @@ public class QPCreatePaymentParameters: Codable {
     public var shipping: QPShipping?
     public var invoice_address: QPAddress?
     public var shipping_address:QPAddress?
+    public var shopSystem:QPShopSystem?
     
     
     // MARK: Init
@@ -62,6 +63,10 @@ public class QPCreatePaymentParameters: Codable {
     public init(currency: String, order_id: String) {
         self.currency = currency
         self.order_id = order_id
+        
+        self.shopSystem = QPShopSystem()
+        self.shopSystem?.name = "iOS-SDK"
+        self.shopSystem?.version = "2.0.0"
     }
     
 }

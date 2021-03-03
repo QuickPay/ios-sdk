@@ -40,5 +40,6 @@ public class QPPayment: Codable {
     public var shipping: QPShipping?
     public var metadata: QPMetadata?
     public var link: QPPaymentLink?
+    public var shopsystem: QPShopSystem?
     
 }
