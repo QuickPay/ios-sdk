@@ -1,4 +1,2 @@
-QuickPaySDK/DerivedData/*
-Release/*
-QuickPaySDK/fastlane/report.xml
-QuickPayExample/.DS_Store
+.DS_Store
+.swiftpm/
