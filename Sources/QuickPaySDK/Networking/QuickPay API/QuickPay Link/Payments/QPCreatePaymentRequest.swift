@@ -64,9 +64,7 @@ public class QPCreatePaymentParameters: Codable {
         self.currency = currency
         self.order_id = order_id
         
-        self.shopSystem = QPShopSystem()
-        self.shopSystem?.name = "iOS-SDK"
-        self.shopSystem?.version = "2.0.0"
+        self.shopSystem = QPShopSystem(name: "iOS-SDK", version: "2.0.0")
     }
     
 }

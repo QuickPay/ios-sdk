@@ -62,7 +62,7 @@ public class QuickPay: NSObject {
         let dispatchGroup = DispatchGroup();
 
         dispatchGroup.enter()
-        isMobilePayOnlineEnabled { (enabled) in
+        isMobilePayEnabled { (enabled) in
             isMobilePayEnabled = enabled
             dispatchGroup.leave()
         }
@@ -309,11 +309,8 @@ extension QuickPay {
 // MobilePay
 extension QuickPay {
     
-    static func isMobilePayOnlineEnabled(completion: @escaping (_ enabled: Bool)->Void) {
+    static func isMobilePayEnabled(completion: @escaping (_ enabled: Bool)->Void) {
         QPGetAcquireSettingsMobilePayRequest().sendRequest(success: { (settings) in
-            print("LOOK HERE: isMobilePayOnlineEnabled: \(settings.active)")
-            print("LOOK HERE: isMobilePayOnlineEnabled: \(settings)")
-            
             completion(settings.active)
         }) { (data, response, error) in
             completion(false)

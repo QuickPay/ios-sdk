@@ -93,19 +93,6 @@ public class QPRequest {
  A model representation of the error json returned by QuickPay in case of an error
  */
 public struct QPRequestError : Codable {
-    /*
-     NOTE: This is not used at the momement, but in the future it will be a part of the request/response cycle
-     
-     Code snippet:
-     if (QuickPayHttpStatusCodes(rawValue: httpResponse.statusCode) == QuickPayHttpStatusCodes.badRequest) {
-     // On bad requests, QuickPay has their own error format, we parse it and return to ease the use
-     if let data = data, let qpRequstError = try? JSONDecoder().decode(QPRequestError.self, from: data) {
-     self.errorDelegate?.onError(request: self, qpError: qpRequstError)
-     return
-     }
-     }
-     */
-    
     public let message: String
     public let errors: Dictionary<String, Array<String>>
     public let error_code: String
