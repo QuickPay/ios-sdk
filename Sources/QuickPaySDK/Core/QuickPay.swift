@@ -24,6 +24,7 @@ public class QuickPay: NSObject {
     
     // MARK: Properties
 
+    public static private(set) var isInTestMode: Bool = false
     public static private(set) var isMobilePayEnabled: Bool?
     public static private(set) var isApplePayEnabled: Bool?
     public static private(set) var isVippsEnabled: Bool?
@@ -50,8 +51,9 @@ public class QuickPay: NSObject {
     
     private override init() {} // Only static access to the SDK
     
-    public static func initWith(apiKey: String) {
+    public static func initWith(apiKey: String, isInTestMode: Bool = false) {
         self.apiKey = apiKey
+        self.isInTestMode = isInTestMode
         fetchAquires()
     }
     

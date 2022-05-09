@@ -19,7 +19,7 @@ class QuickPaySDKTestCase: XCTestCase {
     // MARK: Test lifecycle
     
     override func setUp() {
-        QuickPay.initWith(apiKey: "f1a4b80189c73862655552d06f9419dd7574c65de916fef88cf9854f6907f1b4")
+        QuickPay.initWith(apiKey: "f1a4b80189c73862655552d06f9419dd7574c65de916fef88cf9854f6907f1b4", isInTestMode: false)
     }
 
     
