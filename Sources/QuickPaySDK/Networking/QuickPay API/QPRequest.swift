@@ -16,7 +16,14 @@ public class QPRequest {
     
     // MARK: - Properties
     
-    internal let quickPayAPIBaseUrl = "https://api.quickpay.net"
+    internal var quickPayAPIBaseUrl: String {
+        if QuickPay.isInTestMode {
+            return "https://api.staging.quickpay.net"
+        } else {
+            return "https://api.quickpay.net"
+        }
+    }
+
     internal let headers = QPHeaders()
     
     
